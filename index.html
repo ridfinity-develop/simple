@@ -1740,6 +1740,9 @@ function renderTeamNames() {
             row:
                 18,
 
+            hasCopy:
+                false,
+
             download:
                 false
 
@@ -2097,51 +2100,55 @@ function createInputRow(
         };
 
 
-    /* =================================================
-       COPY
-    ================================================= */
-
-    const copy =
-        document.createElement(
-            "button"
-        );
-
-
-    copy.className =
-        "btn btn-copy";
-
-
-    copy.textContent =
-        "คัดลอก";
-
-
-    copy.onclick =
-        async function() {
-
-            setButtonLoading(copy, true);
-
-            /*
-              Copy จากข้อมูลล่าสุด
-              ใน Google Sheet
-            */
-
-            await copySheetValue(
-                options.row
-            );
-
-            setButtonLoading(copy, false);
-
-        };
-
-
     actions.appendChild(
         send
     );
 
 
-    actions.appendChild(
-        copy
-    );
+    /* =================================================
+       COPY
+    ================================================= */
+
+    if (options.hasCopy !== false) {
+
+        const copy =
+            document.createElement(
+                "button"
+            );
+
+
+        copy.className =
+            "btn btn-copy";
+
+
+        copy.textContent =
+            "คัดลอก";
+
+
+        copy.onclick =
+            async function() {
+
+                setButtonLoading(copy, true);
+
+                /*
+                  Copy จากข้อมูลล่าสุด
+                  ใน Google Sheet
+                */
+
+                await copySheetValue(
+                    options.row
+                );
+
+                setButtonLoading(copy, false);
+
+            };
+
+
+        actions.appendChild(
+            copy
+        );
+
+    }
 
 
     /* =================================================
