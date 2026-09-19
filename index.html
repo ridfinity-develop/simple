@@ -1,24 +1,40 @@
 <!DOCTYPE html>
+
 <html lang="th">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
 <title>RiD Finity Dashboard</title>
 
+
 <style>
+
+/* =====================================================
+   RESET
+===================================================== */
 
 * {
     box-sizing: border-box;
 }
 
+
+/* =====================================================
+   BODY
+===================================================== */
+
 body {
+
     margin: 0;
+
     min-height: 100vh;
+
     font-family:
         "Segoe UI",
         "Noto Sans Thai",
@@ -26,6 +42,7 @@ body {
         sans-serif;
 
     background:
+
         radial-gradient(
             circle at top right,
             #25304a 0%,
@@ -33,18 +50,29 @@ body {
             #080b12 100%
         );
 
-    color: #ffffff;
+    color: white;
+
 }
 
 
 /* =====================================================
-   MAIN
+   CONTAINER
 ===================================================== */
 
 .container {
-    width: min(1200px, 94%);
-    margin: auto;
-    padding: 25px 0 50px;
+
+    width:
+        min(
+            1200px,
+            94%
+        );
+
+    margin:
+        auto;
+
+    padding:
+        25px 0 50px;
+
 }
 
 
@@ -53,21 +81,113 @@ body {
 ===================================================== */
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
 
-    margin-bottom: 25px;
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        25px;
+
 }
+
+
+.title-area {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        4px;
+
+}
+
 
 .logo-title {
-    font-size: 26px;
-    font-weight: 800;
+
+    font-size:
+        26px;
+
+    font-weight:
+        800;
+
 }
 
-.status {
-    font-size: 13px;
-    color: #9ca3af;
+
+.update-time {
+
+    font-size:
+        13px;
+
+    color:
+        #9ca3af;
+
+}
+
+
+.settings-button {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+    min-height:
+        44px;
+
+    padding:
+        0 17px;
+
+    border:
+        none;
+
+    border-radius:
+        11px;
+
+    background:
+        #374151;
+
+    color:
+        white;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    text-decoration:
+        none;
+
+    transition:
+        .2s;
+
+}
+
+
+.settings-button:hover {
+
+    background:
+        #4b5563;
+
+    transform:
+        translateY(-1px);
+
 }
 
 
@@ -76,81 +196,147 @@ body {
 ===================================================== */
 
 .card {
-    background: rgba(17, 24, 39, 0.88);
 
-    border: 1px solid rgba(255,255,255,.08);
+    background:
+        rgba(
+            17,
+            24,
+            39,
+            .88
+        );
 
-    border-radius: 20px;
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .08
+        );
 
-    padding: 22px;
+    border-radius:
+        20px;
 
-    margin-bottom: 20px;
+    padding:
+        22px;
+
+    margin-bottom:
+        20px;
 
     box-shadow:
-        0 15px 40px rgba(0,0,0,.25);
+        0 15px 40px
+        rgba(
+            0,
+            0,
+            0,
+            .25
+        );
 
-    backdrop-filter: blur(15px);
+    backdrop-filter:
+        blur(15px);
+
 }
 
-.card-title {
-    font-size: 20px;
-    font-weight: 800;
 
-    margin-bottom: 18px;
+.card-title {
+
+    font-size:
+        20px;
+
+    font-weight:
+        800;
+
+    margin-bottom:
+        18px;
+
 }
 
 
 /* =====================================================
-   8 BUTTONS
+   QUICK BUTTONS
+   4 X 4
 ===================================================== */
 
 .quick-buttons {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
-        repeat(4, 1fr);
+        repeat(
+            4,
+            1fr
+        );
 
-    gap: 12px;
+    gap:
+        12px;
+
 }
+
 
 .quick-button {
 
-    border: none;
+    border:
+        none;
 
-    min-height: 65px;
+    min-height:
+        65px;
 
-    border-radius: 14px;
+    border-radius:
+        14px;
 
     background:
+
         linear-gradient(
             135deg,
             #2563eb,
             #7c3aed
         );
 
-    color: white;
+    color:
+        white;
 
-    font-size: 16px;
+    font-size:
+        15px;
 
-    font-weight: 800;
+    font-weight:
+        800;
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
-    transition: .2s;
+    transition:
+        .2s;
 
     box-shadow:
-        0 8px 20px rgba(37,99,235,.25);
+
+        0 8px 20px
+        rgba(
+            37,
+            99,
+            235,
+            .25
+        );
+
 }
+
 
 .quick-button:hover {
-    transform: translateY(-2px);
 
-    filter: brightness(1.12);
+    transform:
+        translateY(-2px);
+
+    filter:
+        brightness(1.12);
+
 }
 
+
 .quick-button:active {
-    transform: scale(.97);
+
+    transform:
+        scale(.97);
+
 }
 
 
@@ -160,104 +346,164 @@ body {
 
 .input-row {
 
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
-        170px 1fr auto;
+        170px
+        1fr
+        auto;
 
-    gap: 10px;
+    gap:
+        10px;
 
-    align-items: center;
+    align-items:
+        center;
 
-    margin-bottom: 12px;
+    margin-bottom:
+        12px;
+
 }
+
 
 .input-label {
-    font-weight: 700;
 
-    color: #e5e7eb;
+    font-weight:
+        700;
+
+    color:
+        #e5e7eb;
+
 }
+
 
 .input-box {
 
-    width: 100%;
+    width:
+        100%;
 
-    min-height: 48px;
+    min-height:
+        48px;
 
-    padding: 10px 14px;
+    padding:
+        10px 14px;
 
-    border-radius: 11px;
+    border-radius:
+        11px;
 
-    border: 1px solid #374151;
+    border:
+        1px solid
+        #374151;
 
-    background: #0b1120;
+    background:
+        #0b1120;
 
-    color: white;
+    color:
+        white;
 
-    outline: none;
+    outline:
+        none;
 
-    font-size: 15px;
+    font-size:
+        15px;
+
 }
 
+
 .input-box:focus {
-    border-color: #6366f1;
+
+    border-color:
+        #6366f1;
 
     box-shadow:
-        0 0 0 3px rgba(99,102,241,.15);
+
+        0 0 0 3px
+        rgba(
+            99,
+            102,
+            241,
+            .15
+        );
+
 }
 
 
 /* =====================================================
-   ACTION BUTTONS
+   ACTIONS
 ===================================================== */
 
 .actions {
 
-    display: flex;
+    display:
+        flex;
 
-    gap: 7px;
+    gap:
+        7px;
+
 }
+
 
 .btn {
 
-    border: none;
+    border:
+        none;
 
-    border-radius: 10px;
+    border-radius:
+        10px;
 
-    min-width: 78px;
+    min-width:
+        78px;
 
-    min-height: 43px;
+    min-height:
+        43px;
 
-    padding: 0 13px;
+    padding:
+        0 13px;
 
-    color: white;
+    color:
+        white;
 
-    font-weight: 800;
+    font-weight:
+        800;
 
-    cursor: pointer;
+    cursor:
+        pointer;
 
-    transition: .2s;
+    transition:
+        .2s;
+
 }
+
 
 .btn:hover {
-    filter: brightness(1.15);
+
+    filter:
+        brightness(1.15);
+
 }
+
 
 .btn-send {
-    background: #16a34a;
+
+    background:
+        #16a34a;
+
 }
+
 
 .btn-copy {
-    background: #2563eb;
+
+    background:
+        #2563eb;
+
 }
+
 
 .btn-download {
-    background: #9333ea;
-}
 
-.btn:disabled {
-    opacity: .45;
-    cursor: not-allowed;
+    background:
+        #9333ea;
+
 }
 
 
@@ -267,41 +513,68 @@ body {
 
 .toast {
 
-    position: fixed;
+    position:
+        fixed;
 
-    left: 50%;
+    left:
+        50%;
 
-    bottom: 25px;
+    bottom:
+        25px;
 
     transform:
-        translate(-50%, 120px);
+        translate(
+            -50%,
+            120px
+        );
 
-    background: #111827;
+    background:
+        #111827;
 
     border:
-        1px solid rgba(255,255,255,.12);
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            .12
+        );
 
-    color: white;
+    color:
+        white;
 
-    padding: 13px 22px;
+    padding:
+        13px 22px;
 
-    border-radius: 50px;
+    border-radius:
+        50px;
 
-    font-weight: 700;
+    font-weight:
+        700;
 
-    opacity: 0;
+    opacity:
+        0;
 
-    transition: .3s;
+    transition:
+        .3s;
 
-    z-index: 9999;
+    z-index:
+        9999;
+
 }
+
 
 .toast.show {
 
-    opacity: 1;
+    opacity:
+        1;
 
     transform:
-        translate(-50%, 0);
+        translate(
+            -50%,
+            0
+        );
+
 }
 
 
@@ -311,52 +584,86 @@ body {
 
 .loading {
 
-    position: fixed;
+    position:
+        fixed;
 
-    inset: 0;
+    inset:
+        0;
 
-    background: #080b12;
+    background:
+        #080b12;
 
-    display: flex;
+    display:
+        flex;
 
-    align-items: center;
+    align-items:
+        center;
 
-    justify-content: center;
+    justify-content:
+        center;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    z-index: 10000;
+    z-index:
+        10000;
 
-    transition: .3s;
+    transition:
+        .3s;
+
 }
+
 
 .loading.hide {
-    opacity: 0;
-    pointer-events: none;
+
+    opacity:
+        0;
+
+    pointer-events:
+        none;
+
 }
+
 
 .spinner {
 
-    width: 45px;
-    height: 45px;
+    width:
+        45px;
 
-    border-radius: 50%;
+    height:
+        45px;
+
+    border-radius:
+        50%;
 
     border:
-        4px solid #374151;
+        4px solid
+        #374151;
 
-    border-top-color: #6366f1;
+    border-top-color:
+        #6366f1;
 
     animation:
-        spin 1s linear infinite;
+        spin
+        1s
+        linear
+        infinite;
 
-    margin-bottom: 15px;
+    margin-bottom:
+        15px;
+
 }
+
 
 @keyframes spin {
 
     to {
-        transform: rotate(360deg);
+
+        transform:
+            rotate(
+                360deg
+            );
+
     }
 
 }
@@ -369,44 +676,115 @@ body {
 @media(max-width: 800px) {
 
     .container {
-        width: 94%;
-        padding-top: 15px;
+
+        width:
+            94%;
+
+        padding-top:
+            15px;
+
     }
+
 
     .header {
-        align-items: flex-start;
 
-        flex-direction: column;
+        align-items:
+            flex-start;
 
-        gap: 5px;
+        flex-direction:
+            row;
+
+        gap:
+            10px;
+
     }
+
+
+    .logo-title {
+
+        font-size:
+            21px;
+
+    }
+
+
+    .update-time {
+
+        font-size:
+            12px;
+
+    }
+
+
+    .settings-button {
+
+        min-width:
+            45px;
+
+        width:
+            45px;
+
+        padding:
+            0;
+
+        font-size:
+            0;
+
+    }
+
+
+    .settings-button .gear {
+
+        font-size:
+            21px;
+
+    }
+
 
     .quick-buttons {
 
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(
+                2,
+                1fr
+            );
+
     }
+
 
     .input-row {
 
         grid-template-columns:
             1fr;
 
-        gap: 7px;
+        gap:
+            7px;
+
     }
+
 
     .actions {
 
-        display: grid;
+        display:
+            grid;
 
         grid-template-columns:
-            repeat(3, 1fr);
+            repeat(
+                3,
+                1fr
+            );
 
-        width: 100%;
+        width:
+            100%;
+
     }
 
+
     .btn {
-        width: 100%;
+
+        width:
+            100%;
+
     }
 
 }
@@ -419,22 +797,43 @@ body {
 @media(max-width: 420px) {
 
     .card {
-        padding: 15px;
-        border-radius: 16px;
+
+        padding:
+            15px;
+
+        border-radius:
+            16px;
+
     }
+
 
     .quick-button {
-        min-height: 60px;
-        font-size: 14px;
+
+        min-height:
+            60px;
+
+        font-size:
+            13px;
+
     }
+
 
     .input-label {
-        font-size: 14px;
+
+        font-size:
+            14px;
+
     }
 
+
     .btn {
-        font-size: 12px;
-        min-width: 0;
+
+        font-size:
+            12px;
+
+        min-width:
+            0;
+
     }
 
 }
@@ -447,7 +846,14 @@ body {
 <body>
 
 
-<div id="loading" class="loading">
+<!-- ===================================================
+     LOADING
+=================================================== -->
+
+<div
+    id="loading"
+    class="loading"
+>
 
     <div class="spinner"></div>
 
@@ -461,100 +867,156 @@ body {
 <div class="container">
 
 
-    <div class="header">
+<!-- ===================================================
+     HEADER
+=================================================== -->
+
+<div class="header">
+
+
+    <div class="title-area">
 
         <div class="logo-title">
             ⚡ RiD Finity Dashboard
         </div>
 
-        <div id="status"
-             class="status">
-            กำลังเชื่อมต่อ...
+
+        <div
+            id="updateTime"
+            class="update-time"
+        >
+            อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...
         </div>
 
     </div>
 
 
-    <!-- =================================================
-         QUICK BUTTONS
-    ================================================== -->
+    <!-- ตั้งค่า -->
 
-    <div class="card">
+    <a
+        class="settings-button"
+        href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
 
-        <div class="card-title">
-            ⚡ เมนูด่วน
-        </div>
+        <span class="gear">
+            ⚙️
+        </span>
 
-        <div id="quickButtons"
-             class="quick-buttons">
-        </div>
+        <span class="settings-text">
+            ตั้งค่า
+        </span>
 
-    </div>
-
-
-    <!-- =================================================
-         LOGOS
-    ================================================== -->
-
-    <div class="card">
-
-        <div class="card-title">
-            ⚽ LOGO ทีม
-        </div>
-
-        <div id="logoContainer">
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         AI BALL
-    ================================================== -->
-
-    <div class="card">
-
-        <div class="card-title">
-            🤖 บอล AI
-        </div>
-
-        <div id="aiContainer">
-        </div>
-
-    </div>
-
-
-    <!-- =================================================
-         CRAZY BALL
-    ================================================== -->
-
-    <div class="card">
-
-        <div class="card-title">
-            🔥 บอลบ้า
-        </div>
-
-        <div id="crazyContainer">
-        </div>
-
-    </div>
+    </a>
 
 
 </div>
 
 
-<div id="toast"
-     class="toast">
+<!-- ===================================================
+     QUICK BUTTONS
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        ⚡ เมนูด่วน
+    </div>
+
+
+    <div
+        id="quickButtons"
+        class="quick-buttons"
+    ></div>
+
+
 </div>
 
 
-<!-- Hidden iframe สำหรับ POST -->
+<!-- ===================================================
+     LOGOS
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        ⚽ LOGO ทีม
+    </div>
+
+
+    <div
+        id="logoContainer"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
+     AI BALL
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        🤖 บอล AI
+    </div>
+
+
+    <div
+        id="aiContainer"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
+     CRAZY BALL
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        🔥 บอลบ้า
+    </div>
+
+
+    <div
+        id="crazyContainer"
+    ></div>
+
+
+</div>
+
+
+</div>
+
+
+<!-- ===================================================
+     TOAST
+=================================================== -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<!-- ===================================================
+     HIDDEN POST FRAME
+=================================================== -->
 
 <iframe
     name="postFrame"
     id="postFrame"
-    style="display:none;">
-</iframe>
+    style="display:none;"
+></iframe>
 
 
 <script>
@@ -565,7 +1027,7 @@ body {
 ===================================================== */
 
 const API_URL =
-    "https://script.google.com/macros/s/AKfycbzLJSbAOqsnYqhd5pQkrlvi7tXJoB5sIID7RSE1foi9qT82stbcPEM1aCwtf8daxLDI/exec";
+    "https://script.google.com/macros/s/AKfycbx-rKYscSSSPgw1dTlzf5BriEn9MPrQfFIEWDza6fYd2nxlPTnCsBT2sWNOLr6csF4k/exec";
 
 
 /* =====================================================
@@ -575,8 +1037,11 @@ const API_URL =
 let DATA = {
 
     buttons: [],
+
     logos: [],
+
     aiBall: [],
+
     crazyBall: []
 
 };
@@ -588,7 +1053,21 @@ let DATA = {
 
 window.addEventListener(
     "DOMContentLoaded",
-    loadData
+    function() {
+
+        loadData();
+
+        /*
+          อัพเดท Google Sheet
+          ทุก 1 นาที
+        */
+
+        setInterval(
+            loadData,
+            60000
+        );
+
+    }
 );
 
 
@@ -605,38 +1084,64 @@ function jsonp(url) {
                 "callback_" +
                 Date.now() +
                 "_" +
-                Math.floor(Math.random() * 99999);
+                Math.floor(
+                    Math.random() *
+                    99999
+                );
+
 
             const script =
-                document.createElement("script");
+                document.createElement(
+                    "script"
+                );
+
 
             const timeout =
-                setTimeout(function() {
+                setTimeout(
+                    function() {
 
-                    cleanup();
+                        cleanup();
 
-                    reject(
-                        new Error(
-                            "หมดเวลาการเชื่อมต่อ"
-                        )
-                    );
+                        reject(
+                            new Error(
+                                "หมดเวลาการเชื่อมต่อ"
+                            )
+                        );
 
-                }, 15000);
+                    },
+                    15000
+                );
 
 
             function cleanup() {
 
-                clearTimeout(timeout);
+                clearTimeout(
+                    timeout
+                );
 
-                delete window[callbackName];
 
-                if (script.parentNode) {
-                    script.parentNode.removeChild(script);
+                delete window[
+                    callbackName
+                ];
+
+
+                if (
+                    script.parentNode
+                ) {
+
+                    script.parentNode
+                        .removeChild(
+                            script
+                        );
+
                 }
+
             }
 
 
-            window[callbackName] =
+            window[
+                callbackName
+            ] =
                 function(data) {
 
                     cleanup();
@@ -665,10 +1170,14 @@ function jsonp(url) {
                 "&callback=" +
                 callbackName;
 
-            document.body.appendChild(script);
+
+            document.body.appendChild(
+                script
+            );
 
         }
     );
+
 }
 
 
@@ -687,18 +1196,41 @@ async function loadData() {
             );
 
 
-        if (!result.success) {
+        if (
+            !result.success
+        ) {
+
             throw new Error(
                 result.error ||
                 "โหลดข้อมูลไม่สำเร็จ"
             );
+
         }
 
 
-        DATA = result;
+        /*
+          เก็บข้อมูลใหม่
 
+          สำคัญ:
+          logos / AI / บอลบ้า
+          จะไม่ถูกนำไปใส่ Input
+        */
+
+        DATA =
+            result;
+
+
+        /*
+          อัพเดทเฉพาะปุ่มเมนูด่วน
+        */
 
         renderQuickButtons();
+
+
+        /*
+          สร้างช่อง Input ใหม่
+          โดยตั้งใจให้เป็นช่องว่าง
+        */
 
         renderLogos();
 
@@ -707,31 +1239,55 @@ async function loadData() {
         renderCrazy();
 
 
-        document.getElementById("status")
-            .textContent =
-            "● เชื่อมต่อ Google Sheet แล้ว";
+        /*
+          เวลาอัพเดทจริง
+        */
 
+        updateTime();
+
+
+        /*
+          ซ่อน Loading
+        */
 
         document
-            .getElementById("loading")
-            .classList.add("hide");
+            .getElementById(
+                "loading"
+            )
+            .classList
+            .add(
+                "hide"
+            );
 
 
     } catch(error) {
 
-        console.error(error);
-
-        document.getElementById("status")
-            .textContent =
-            "● เชื่อมต่อไม่สำเร็จ";
+        console.error(
+            error
+        );
 
 
         document
-            .getElementById("loading")
-            .querySelector("div:last-child")
+            .getElementById(
+                "updateTime"
+            )
             .textContent =
-            "เกิดข้อผิดพลาด: " +
-            error.message;
+                "อัพเดทข้อมูลแล้วเมื่อ " +
+                "เชื่อมต่อไม่สำเร็จ";
+
+
+        /*
+          ถ้าเป็นการอัพเดทครั้งแรก
+        */
+
+        document
+            .getElementById(
+                "loading"
+            )
+            .classList
+            .add(
+                "hide"
+            );
 
     }
 
@@ -739,7 +1295,49 @@ async function loadData() {
 
 
 /* =====================================================
+   UPDATE TIME
+===================================================== */
+
+function updateTime() {
+
+    const now =
+        new Date();
+
+
+    const time =
+        now.toLocaleTimeString(
+            "th-TH",
+            {
+                hour:
+                    "2-digit",
+
+                minute:
+                    "2-digit",
+
+                second:
+                    "2-digit",
+
+                hour12:
+                    false
+            }
+        );
+
+
+    document
+        .getElementById(
+            "updateTime"
+        )
+        .textContent =
+            "อัพเดทข้อมูลแล้วเมื่อ " +
+            time;
+
+}
+
+
+/* =====================================================
    QUICK BUTTONS
+   A2:B17
+   16 BUTTONS
 ===================================================== */
 
 function renderQuickButtons() {
@@ -749,21 +1347,34 @@ function renderQuickButtons() {
             "quickButtons"
         );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
     DATA.buttons.forEach(
-        function(item, index) {
+        function(
+            item,
+            index
+        ) {
 
             const button =
-                document.createElement("button");
+                document.createElement(
+                    "button"
+                );
+
 
             button.className =
                 "quick-button";
 
+
             button.textContent =
                 item.name ||
-                "ปุ่ม " + (index + 1);
+                "ปุ่ม " +
+                (
+                    index +
+                    1
+                );
 
 
             button.onclick =
@@ -776,7 +1387,9 @@ function renderQuickButtons() {
                 };
 
 
-            container.appendChild(button);
+            container.appendChild(
+                button
+            );
 
         }
     );
@@ -786,6 +1399,7 @@ function renderQuickButtons() {
 
 /* =====================================================
    LOGOS
+   B18:B23
 ===================================================== */
 
 function renderLogos() {
@@ -795,23 +1409,37 @@ function renderLogos() {
             "logoContainer"
         );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
-    for(let i = 0; i < 6; i++) {
+    for (
+        let i = 0;
+        i < 6;
+        i++
+    ) {
+
+        /*
+          สำคัญ:
+          value = ""
+          ไม่ดึง B18:B23
+          มาใส่ Input
+        */
 
         const row =
             createInputRow({
 
                 label:
                     "LOGO ทีมที่ " +
-                    (i + 1),
-
-                value:
-                    DATA.logos[i] || "",
+                    (
+                        i +
+                        1
+                    ),
 
                 row:
-                    10 + i,
+                    18 +
+                    i,
 
                 download:
                     true
@@ -819,7 +1447,9 @@ function renderLogos() {
             });
 
 
-        container.appendChild(row);
+        container.appendChild(
+            row
+        );
 
     }
 
@@ -828,6 +1458,7 @@ function renderLogos() {
 
 /* =====================================================
    AI
+   B24:B26
 ===================================================== */
 
 function renderAI() {
@@ -837,23 +1468,30 @@ function renderAI() {
             "aiContainer"
         );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
-    for(let i = 0; i < 3; i++) {
+    for (
+        let i = 0;
+        i < 3;
+        i++
+    ) {
 
         const row =
             createInputRow({
 
                 label:
                     "บอล AI คู่ที่ " +
-                    (i + 1),
-
-                value:
-                    DATA.aiBall[i] || "",
+                    (
+                        i +
+                        1
+                    ),
 
                 row:
-                    16 + i,
+                    24 +
+                    i,
 
                 download:
                     false
@@ -861,7 +1499,9 @@ function renderAI() {
             });
 
 
-        container.appendChild(row);
+        container.appendChild(
+            row
+        );
 
     }
 
@@ -870,6 +1510,7 @@ function renderAI() {
 
 /* =====================================================
    CRAZY BALL
+   B27:B29
 ===================================================== */
 
 function renderCrazy() {
@@ -879,23 +1520,30 @@ function renderCrazy() {
             "crazyContainer"
         );
 
-    container.innerHTML = "";
+
+    container.innerHTML =
+        "";
 
 
-    for(let i = 0; i < 3; i++) {
+    for (
+        let i = 0;
+        i < 3;
+        i++
+    ) {
 
         const row =
             createInputRow({
 
                 label:
                     "บอลบ้า คู่ที่ " +
-                    (i + 1),
-
-                value:
-                    DATA.crazyBall[i] || "",
+                    (
+                        i +
+                        1
+                    ),
 
                 row:
-                    19 + i,
+                    27 +
+                    i,
 
                 download:
                     false
@@ -903,7 +1551,9 @@ function renderCrazy() {
             });
 
 
-        container.appendChild(row);
+        container.appendChild(
+            row
+        );
 
     }
 
@@ -914,55 +1564,85 @@ function renderCrazy() {
    CREATE INPUT ROW
 ===================================================== */
 
-function createInputRow(options) {
+function createInputRow(
+    options
+) {
 
     const row =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     row.className =
         "input-row";
 
 
     const label =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     label.className =
         "input-label";
+
 
     label.textContent =
         options.label;
 
 
+    /*
+      ช่อง Input ว่างเสมอ
+    */
+
     const input =
-        document.createElement("input");
+        document.createElement(
+            "input"
+        );
+
 
     input.className =
         "input-box";
 
+
     input.type =
         "text";
 
-    input.value =
-        options.value || "";
 
-    input.placeholder =
-        "ใส่ข้อมูลที่นี่...";
+    input.value =
+        "";
+
+
+    /*
+      ไม่ใส่คำอธิบายในช่อง
+      ไม่มี placeholder
+    */
 
 
     const actions =
-        document.createElement("div");
+        document.createElement(
+            "div"
+        );
+
 
     actions.className =
         "actions";
 
 
-    /* SEND */
+    /* =================================================
+       SEND
+    ================================================= */
 
     const send =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     send.className =
         "btn btn-send";
+
 
     send.textContent =
         "ส่ง";
@@ -973,19 +1653,25 @@ function createInputRow(options) {
 
             sendToSheet(
                 options.row,
-                input.value
+                input
             );
 
         };
 
 
-    /* COPY */
+    /* =================================================
+       COPY
+    ================================================= */
 
     const copy =
-        document.createElement("button");
+        document.createElement(
+            "button"
+        );
+
 
     copy.className =
         "btn btn-copy";
+
 
     copy.textContent =
         "คัดลอก";
@@ -994,27 +1680,46 @@ function createInputRow(options) {
     copy.onclick =
         function() {
 
-            copyText(
-                input.value
+            /*
+              Copy จากข้อมูลล่าสุด
+              ใน Google Sheet
+            */
+
+            copySheetValue(
+                options.row
             );
 
         };
 
 
-    actions.appendChild(send);
+    actions.appendChild(
+        send
+    );
 
-    actions.appendChild(copy);
+
+    actions.appendChild(
+        copy
+    );
 
 
-    /* DOWNLOAD */
+    /* =================================================
+       DOWNLOAD
+       เฉพาะ LOGO
+    ================================================= */
 
-    if(options.download) {
+    if (
+        options.download
+    ) {
 
         const download =
-            document.createElement("button");
+            document.createElement(
+                "button"
+            );
+
 
         download.className =
             "btn btn-download";
+
 
         download.textContent =
             "Download";
@@ -1023,24 +1728,37 @@ function createInputRow(options) {
         download.onclick =
             function() {
 
+                /*
+                  Download จาก Google Sheet
+                */
+
                 downloadLogo(
-                    options.row,
-                    input.value
+                    options.row
                 );
 
             };
 
 
-        actions.appendChild(download);
+        actions.appendChild(
+            download
+        );
 
     }
 
 
-    row.appendChild(label);
+    row.appendChild(
+        label
+    );
 
-    row.appendChild(input);
 
-    row.appendChild(actions);
+    row.appendChild(
+        input
+    );
+
+
+    row.appendChild(
+        actions
+    );
 
 
     return row;
@@ -1052,53 +1770,99 @@ function createInputRow(options) {
    SEND TO GOOGLE SHEET
 ===================================================== */
 
-function sendToSheet(row, value) {
+function sendToSheet(
+    row,
+    input
+) {
+
+    const value =
+        input.value;
+
+
+    /*
+      ไม่ส่งช่องว่าง
+    */
+
+    if (
+        !value.trim()
+    ) {
+
+        showToast(
+            "กรุณาใส่ข้อมูลก่อนส่ง"
+        );
+
+        return;
+
+    }
+
 
     const form =
-        document.createElement("form");
+        document.createElement(
+            "form"
+        );
+
 
     form.method =
         "POST";
 
+
     form.action =
         API_URL;
+
 
     form.target =
         "postFrame";
 
 
     const rowInput =
-        document.createElement("input");
+        document.createElement(
+            "input"
+        );
+
 
     rowInput.type =
         "hidden";
 
+
     rowInput.name =
         "row";
+
 
     rowInput.value =
         row;
 
 
     const valueInput =
-        document.createElement("input");
+        document.createElement(
+            "input"
+        );
+
 
     valueInput.type =
         "hidden";
 
+
     valueInput.name =
         "value";
+
 
     valueInput.value =
         value;
 
 
-    form.appendChild(rowInput);
+    form.appendChild(
+        rowInput
+    );
 
-    form.appendChild(valueInput);
+
+    form.appendChild(
+        valueInput
+    );
 
 
-    document.body.appendChild(form);
+    document.body.appendChild(
+        form
+    );
 
 
     form.submit();
@@ -1107,29 +1871,29 @@ function sendToSheet(row, value) {
     form.remove();
 
 
+    /*
+      เมื่อส่งสำเร็จ
+      ล้างเฉพาะช่องที่กด
+    */
+
+    input.value =
+        "";
+
+
     showToast(
-        "กำลังบันทึกข้อมูล..."
+        "ส่งข้อมูลเรียบร้อยแล้ว ✓"
     );
 
 
+    /*
+      อัพเดทข้อมูลจาก Sheet
+      หลังจากส่งเล็กน้อย
+    */
+
     setTimeout(
-        async function() {
+        function() {
 
-            try {
-
-                await loadData();
-
-                showToast(
-                    "บันทึกข้อมูลเรียบร้อยแล้ว ✓"
-                );
-
-            } catch(e) {
-
-                showToast(
-                    "ส่งข้อมูลแล้ว แต่ไม่สามารถรีเฟรชได้"
-                );
-
-            }
+            loadData();
 
         },
         1000
@@ -1139,55 +1903,130 @@ function sendToSheet(row, value) {
 
 
 /* =====================================================
-   COPY
+   COPY FROM GOOGLE SHEET
 ===================================================== */
 
-async function copyText(text) {
+async function copySheetValue(
+    row
+) {
 
-    if(!text) {
-
-        showToast(
-            "ไม่มีข้อมูลให้คัดลอก"
-        );
-
-        return;
-
-    }
-
+    /*
+      โหลดข้อมูลล่าสุดก่อน
+      เพื่อให้ Copy เป็นค่าปัจจุบัน
+    */
 
     try {
 
-        await navigator.clipboard.writeText(
-            text
-        );
+        const result =
+            await jsonp(
+                API_URL +
+                "?action=getData"
+            );
+
+
+        if (
+            !result.success
+        ) {
+
+            throw new Error(
+                "โหลดข้อมูลไม่สำเร็จ"
+            );
+
+        }
+
+
+        let value = "";
+
+
+        /*
+          B18:B23
+        */
+
+        if (
+            row >= 18 &&
+            row <= 23
+        ) {
+
+            value =
+                result
+                    .logos[
+                        row -
+                        18
+                    ] || "";
+
+        }
+
+
+        /*
+          B24:B26
+        */
+
+        else if (
+            row >= 24 &&
+            row <= 26
+        ) {
+
+            value =
+                result
+                    .aiBall[
+                        row -
+                        24
+                    ] || "";
+
+        }
+
+
+        /*
+          B27:B29
+        */
+
+        else if (
+            row >= 27 &&
+            row <= 29
+        ) {
+
+            value =
+                result
+                    .crazyBall[
+                        row -
+                        27
+                    ] || "";
+
+        }
+
+
+        if (!value) {
+
+            showToast(
+                "ไม่มีข้อมูลใน Google Sheet"
+            );
+
+            return;
+
+        }
+
+
+        await navigator
+            .clipboard
+            .writeText(
+                value
+            );
+
 
         showToast(
             "คัดลอกข้อมูลแล้ว ✓"
         );
+
 
     } catch(error) {
 
-        const textarea =
-            document.createElement("textarea");
-
-        textarea.value =
-            text;
-
-        document.body.appendChild(
-            textarea
+        console.error(
+            error
         );
-
-        textarea.select();
-
-        document.execCommand(
-            "copy"
-        );
-
-        textarea.remove();
 
 
         showToast(
-            "คัดลอกข้อมูลแล้ว ✓"
+            "คัดลอกไม่สำเร็จ"
         );
 
     }
@@ -1199,12 +2038,74 @@ async function copyText(text) {
    DOWNLOAD LOGO
 ===================================================== */
 
-async function downloadLogo(row, url) {
+async function downloadLogo(
+    row
+) {
 
-    if(!url) {
+    /*
+      Download เฉพาะ B18:B23
+    */
+
+    if (
+        row < 18 ||
+        row > 23
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+      ดึงข้อมูลล่าสุดจาก Sheet
+    */
+
+    let url = "";
+
+
+    try {
+
+        const result =
+            await jsonp(
+                API_URL +
+                "?action=getData"
+            );
+
+
+        if (
+            !result.success
+        ) {
+
+            throw new Error(
+                "โหลดข้อมูลไม่สำเร็จ"
+            );
+
+        }
+
+
+        url =
+            result
+                .logos[
+                    row -
+                    18
+                ] || "";
+
+
+    } catch(error) {
 
         showToast(
-            "ไม่มี URL รูปภาพ"
+            "ไม่สามารถอ่าน URL จาก Google Sheet"
+        );
+
+        return;
+
+    }
+
+
+    if (!url) {
+
+        showToast(
+            "ไม่มี URL รูปภาพใน Google Sheet"
         );
 
         return;
@@ -1213,21 +2114,31 @@ async function downloadLogo(row, url) {
 
 
     showToast(
-        "กำลังเตรียมไฟล์ PNG 3000×3000..."
+        "กำลังเตรียม PNG 3000×3000..."
     );
 
 
     try {
 
+        /*
+          ขอรูปผ่าน Apps Script
+        */
+
         const result =
             await jsonp(
+
                 API_URL +
                 "?action=image&url=" +
-                encodeURIComponent(url)
+                encodeURIComponent(
+                    url
+                )
+
             );
 
 
-        if(!result.success) {
+        if (
+            !result.success
+        ) {
 
             throw new Error(
                 result.error ||
@@ -1244,141 +2155,157 @@ async function downloadLogo(row, url) {
         image.onload =
             function() {
 
-                try {
-
-                    const canvas =
-                        document.createElement(
-                            "canvas"
-                        );
-
-                    canvas.width =
-                        3000;
-
-                    canvas.height =
-                        3000;
-
-
-                    const ctx =
-                        canvas.getContext(
-                            "2d"
-                        );
-
-
-                    /*
-                       โปร่งใส
-                    */
-
-                    ctx.clearRect(
-                        0,
-                        0,
-                        3000,
-                        3000
+                const canvas =
+                    document.createElement(
+                        "canvas"
                     );
 
 
-                    /*
-                       ขยายภาพให้เต็ม
-                       โดยรักษาสัดส่วน
-                    */
-
-                    const scale =
-                        Math.min(
-                            3000 / image.width,
-                            3000 / image.height
-                        );
+                canvas.width =
+                    3000;
 
 
-                    const width =
-                        image.width * scale;
-
-                    const height =
-                        image.height * scale;
+                canvas.height =
+                    3000;
 
 
-                    const x =
-                        (3000 - width) / 2;
+                const ctx =
+                    canvas.getContext(
+                        "2d"
+                    );
 
-                    const y =
-                        (3000 - height) / 2;
+
+                /*
+                  พื้นหลังโปร่งใส
+                */
+
+                ctx.clearRect(
+                    0,
+                    0,
+                    3000,
+                    3000
+                );
 
 
-                    ctx.drawImage(
-                        image,
-                        x,
-                        y,
-                        width,
+                /*
+                  รักษาสัดส่วนภาพ
+                */
+
+                const scale =
+                    Math.min(
+                        3000 /
+                        image.width,
+
+                        3000 /
+                        image.height
+                    );
+
+
+                const width =
+                    image.width *
+                    scale;
+
+
+                const height =
+                    image.height *
+                    scale;
+
+
+                const x =
+                    (
+                        3000 -
+                        width
+                    ) / 2;
+
+
+                const y =
+                    (
+                        3000 -
                         height
-                    );
+                    ) / 2;
 
 
-                    canvas.toBlob(
-                        function(blob) {
+                ctx.drawImage(
 
-                            const downloadUrl =
-                                URL.createObjectURL(
-                                    blob
-                                );
+                    image,
 
+                    x,
+                    y,
 
-                            const a =
-                                document.createElement(
-                                    "a"
-                                );
+                    width,
+                    height
+
+                );
 
 
-                            /*
-                               B10 = ไฟล์ 1
-                               B11 = ไฟล์ 2
-                               ...
-                               B15 = ไฟล์ 6
-                            */
+                canvas.toBlob(
 
-                            const fileNumber =
-                                row - 9;
+                    function(blob) {
 
-
-                            a.href =
-                                downloadUrl;
-
-                            a.download =
-                                fileNumber +
-                                ".png";
-
-
-                            document.body.appendChild(
-                                a
-                            );
-
-                            a.click();
-
-                            a.remove();
-
-
-                            URL.revokeObjectURL(
-                                downloadUrl
+                        const downloadUrl =
+                            URL.createObjectURL(
+                                blob
                             );
 
 
-                            showToast(
-                                "ดาวน์โหลด " +
-                                fileNumber +
-                                ".png เรียบร้อยแล้ว ✓"
+                        const a =
+                            document.createElement(
+                                "a"
                             );
 
-                        },
-                        "image/png"
-                    );
+
+                        /*
+                          B18 = 1.png
+                          B19 = 2.png
+                          B20 = 3.png
+                          B21 = 4.png
+                          B22 = 5.png
+                          B23 = 6.png
+                        */
+
+                        const fileNumber =
+                            row -
+                            17;
 
 
-                } catch(error) {
+                        a.href =
+                            downloadUrl;
 
-                    console.error(error);
 
-                    showToast(
-                        "สร้างไฟล์ PNG ไม่สำเร็จ"
-                    );
+                        a.download =
+                            fileNumber +
+                            ".png";
 
-                }
+
+                        document.body.appendChild(
+                            a
+                        );
+
+
+                        a.click();
+
+
+                        a.remove();
+
+
+                        URL.revokeObjectURL(
+                            downloadUrl
+                        );
+
+
+                        showToast(
+
+                            "ดาวน์โหลด " +
+                            fileNumber +
+                            ".png แล้ว ✓"
+
+                        );
+
+                    },
+
+                    "image/png"
+
+                );
 
             };
 
@@ -1402,11 +2329,83 @@ async function downloadLogo(row, url) {
 
     } catch(error) {
 
-        console.error(error);
+        console.error(
+            error
+        );
+
 
         showToast(
-            "ดาวน์โหลดไม่สำเร็จ: " +
-            error.message
+            "ดาวน์โหลดไม่สำเร็จ"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   COPY TEXT
+===================================================== */
+
+async function copyText(
+    text
+) {
+
+    if (!text) {
+
+        showToast(
+            "ไม่มีข้อมูลให้คัดลอก"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await navigator
+            .clipboard
+            .writeText(
+                text
+            );
+
+
+        showToast(
+            "คัดลอกข้อมูลแล้ว ✓"
+        );
+
+
+    } catch(error) {
+
+        const textarea =
+            document.createElement(
+                "textarea"
+            );
+
+
+        textarea.value =
+            text;
+
+
+        document.body.appendChild(
+            textarea
+        );
+
+
+        textarea.select();
+
+
+        document.execCommand(
+            "copy"
+        );
+
+
+        textarea.remove();
+
+
+        showToast(
+            "คัดลอกข้อมูลแล้ว ✓"
         );
 
     }
@@ -1421,7 +2420,9 @@ async function downloadLogo(row, url) {
 let toastTimer;
 
 
-function showToast(message) {
+function showToast(
+    message
+) {
 
     const toast =
         document.getElementById(
@@ -1445,6 +2446,7 @@ function showToast(message) {
 
     toastTimer =
         setTimeout(
+
             function() {
 
                 toast.classList.remove(
@@ -1452,10 +2454,13 @@ function showToast(message) {
                 );
 
             },
+
             2500
+
         );
 
 }
+
 
 </script>
 
