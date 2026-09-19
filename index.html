@@ -416,6 +416,12 @@ body {
     font-size:
         15px;
 
+    font-family:
+        inherit;
+
+    resize:
+        vertical;
+
 }
 
 
@@ -1699,12 +1705,12 @@ function createInputRow(
 
 
     /*
-      ช่อง Input ว่างเสมอ
+      เปลี่ยนเป็น textarea เพื่อรองรับการขึ้นบรรทัดใหม่
     */
 
     const input =
         document.createElement(
-            "input"
+            "textarea"
         );
 
 
@@ -1712,8 +1718,8 @@ function createInputRow(
         "input-box";
 
 
-    input.type =
-        "text";
+    input.rows =
+        2;
 
 
     input.value =
@@ -1952,12 +1958,12 @@ async function sendToSheet(
 
     const valueInput =
         document.createElement(
-            "input"
+            "textarea"
         );
 
 
-    valueInput.type =
-        "hidden";
+    valueInput.style.display =
+        "none";
 
 
     valueInput.name =
