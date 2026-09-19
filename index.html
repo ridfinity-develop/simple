@@ -1011,6 +1011,26 @@ body {
 
 
 <!-- ===================================================
+     SHORTS AI
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        🎬 Shorts AI
+    </div>
+
+
+    <div
+        id="shortsAiContainer"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
      AI BALL
 =================================================== -->
 
@@ -1044,6 +1064,26 @@ body {
 
     <div
         id="crazyContainer"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
+     GERMANY COVER PROMPT
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        🇩🇪 Prompt ปก Germany
+    </div>
+
+
+    <div
+        id="germanyContainer"
     ></div>
 
 
@@ -1095,9 +1135,13 @@ let DATA = {
 
     logos: [],
 
+    shortsAi: [],
+
     aiBall: [],
 
-    crazyBall: []
+    crazyBall: [],
+
+    germanyCover: []
 
 };
 
@@ -1305,7 +1349,7 @@ async function loadData() {
           เก็บข้อมูลใหม่
 
           สำคัญ:
-          logos / AI / บอลบ้า
+          logos / shortsAi / AI / บอลบ้า / germanyCover
           จะไม่ถูกนำไปใส่ Input
         */
 
@@ -1327,9 +1371,13 @@ async function loadData() {
 
         renderLogos();
 
+        renderShortsAi();
+
         renderAI();
 
         renderCrazy();
+
+        renderGermanyCover();
 
 
         /*
@@ -1569,8 +1617,47 @@ function renderLogos() {
 
 
 /* =====================================================
+   SHORTS AI
+   B24
+===================================================== */
+
+function renderShortsAi() {
+
+    const container =
+        document.getElementById(
+            "shortsAiContainer"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const row =
+        createInputRow({
+
+            label:
+                "Shorts AI",
+
+            row:
+                24,
+
+            download:
+                false
+
+        });
+
+
+    container.appendChild(
+        row
+    );
+
+}
+
+
+/* =====================================================
    AI
-   B24:B26
+   B25:B27
 ===================================================== */
 
 function renderAI() {
@@ -1602,7 +1689,7 @@ function renderAI() {
                     ),
 
                 row:
-                    24 +
+                    25 +
                     i,
 
                 download:
@@ -1622,7 +1709,7 @@ function renderAI() {
 
 /* =====================================================
    CRAZY BALL
-   B27:B29
+   B28:B30
 ===================================================== */
 
 function renderCrazy() {
@@ -1654,7 +1741,7 @@ function renderCrazy() {
                     ),
 
                 row:
-                    27 +
+                    28 +
                     i,
 
                 download:
@@ -1668,6 +1755,45 @@ function renderCrazy() {
         );
 
     }
+
+}
+
+
+/* =====================================================
+   GERMANY COVER PROMPT
+   B31
+===================================================== */
+
+function renderGermanyCover() {
+
+    const container =
+        document.getElementById(
+            "germanyContainer"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const row =
+        createInputRow({
+
+            label:
+                "Prompt ปก Germany",
+
+            row:
+                31,
+
+            download:
+                false
+
+        });
+
+
+    container.appendChild(
+        row
+    );
 
 }
 
@@ -2077,39 +2203,69 @@ async function copySheetValue(
 
 
         /*
-          B24:B26
+          B24
         */
 
         else if (
-            row >= 24 &&
-            row <= 26
+            row === 24
+        ) {
+
+            value =
+                result
+                    .shortsAi[0] || "";
+
+        }
+
+
+        /*
+          B25:B27
+        */
+
+        else if (
+            row >= 25 &&
+            row <= 27
         ) {
 
             value =
                 result
                     .aiBall[
                         row -
-                        24
+                        25
                     ] || "";
 
         }
 
 
         /*
-          B27:B29
+          B28:B30
         */
 
         else if (
-            row >= 27 &&
-            row <= 29
+            row >= 28 &&
+            row <= 30
         ) {
 
             value =
                 result
                     .crazyBall[
                         row -
-                        27
+                        28
                     ] || "";
+
+        }
+
+
+        /*
+          B31
+        */
+
+        else if (
+            row === 31
+        ) {
+
+            value =
+                result
+                    .germanyCover[0] || "";
 
         }
 
