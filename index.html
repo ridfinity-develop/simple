@@ -130,23 +130,6 @@ body {
     color:
         #9ca3af;
 
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 4px;
-
-}
-
-
-/* เอฟเฟกต์หมุนสำหรับตัวอักษร ⟳ */
-
-.spin-icon {
-
-    display: inline-block;
-
-    animation: spin 1s linear infinite;
-
 }
 
 
@@ -399,13 +382,7 @@ body {
     width:
         100%;
 
-    height:
-        48px;
-
     min-height:
-        48px;
-
-    max-height:
         48px;
 
     padding:
@@ -429,16 +406,6 @@ body {
 
     font-size:
         15px;
-
-    font-family: inherit;
-
-    resize: none;
-
-    white-space: pre;
-
-    overflow-x: auto;
-
-    overflow-y: hidden;
 
 }
 
@@ -550,6 +517,30 @@ body {
 
 
 /* =====================================================
+   INLINE SPINNER ANIMATION
+===================================================== */
+
+.inline-spinner {
+
+    display:
+        inline-block;
+
+    animation:
+        spin
+        1s
+        linear
+        infinite;
+
+    font-size:
+        1.2em;
+
+    line-height:
+        1;
+
+}
+
+
+/* =====================================================
    TOAST
 ===================================================== */
 
@@ -621,7 +612,7 @@ body {
 
 
 /* =====================================================
-   LOADING & BUTTON SPINNER
+   LOADING
 ===================================================== */
 
 .loading {
@@ -693,25 +684,6 @@ body {
 
     margin-bottom:
         15px;
-
-}
-
-
-.btn-spinner {
-
-    width: 18px;
-
-    height: 18px;
-
-    border-radius: 50%;
-
-    border: 2px solid rgba(255, 255, 255, 0.3);
-
-    border-top-color: #ffffff;
-
-    animation: spin 0.8s linear infinite;
-
-    display: inline-block;
 
 }
 
@@ -832,8 +804,7 @@ body {
         grid-template-columns:
             repeat(
                 3,
-                1fr
-            );
+                1fr;
 
         width:
             100%;
@@ -946,7 +917,7 @@ body {
             id="updateTime"
             class="update-time"
         >
-            อัพเดทข้อมูลแล้วเมื่อ <span class="spin-icon">⟳</span>
+            อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...
         </div>
 
     </div>
@@ -1109,6 +1080,44 @@ let DATA = {
 
 
 /* =====================================================
+   BUTTON LOADING STATE
+===================================================== */
+
+function setButtonLoading(button, isLoading) {
+
+    if (!button) return;
+
+
+    if (isLoading) {
+
+        if (!button.dataset.originalHtml) {
+
+            button.dataset.originalHtml = button.innerHTML;
+
+        }
+
+        button.disabled = true;
+
+        button.innerHTML = '<span class="inline-spinner">⟳</span>';
+
+    } else {
+
+        if (button.dataset.originalHtml !== undefined) {
+
+            button.innerHTML = button.dataset.originalHtml;
+
+            delete button.dataset.originalHtml;
+
+        }
+
+        button.disabled = false;
+
+    }
+
+}
+
+
+/* =====================================================
    INIT
 ===================================================== */
 
@@ -1130,43 +1139,6 @@ window.addEventListener(
 
     }
 );
-
-
-/* =====================================================
-   HELPER: SET BUTTON LOADING
-===================================================== */
-
-function setButtonLoading(btn, isLoading) {
-
-    if (!btn) return;
-
-    if (isLoading) {
-
-        if (!btn.getAttribute('data-original-text')) {
-
-            btn.setAttribute('data-original-text', btn.textContent);
-
-        }
-
-        btn.disabled = true;
-
-        btn.innerHTML = '<span class="btn-spinner"></span>';
-
-    } else {
-
-        const originalText = btn.getAttribute('data-original-text');
-
-        if (originalText) {
-
-            btn.textContent = originalText;
-
-        }
-
-        btn.disabled = false;
-
-    }
-
-}
 
 
 /* =====================================================
@@ -1284,15 +1256,6 @@ function jsonp(url) {
 ===================================================== */
 
 async function loadData() {
-
-    const updateTimeEl = document.getElementById("updateTime");
-
-    if (updateTimeEl) {
-
-        updateTimeEl.innerHTML = 'อัพเดทข้อมูลแล้วเมื่อ <span class="spin-icon">⟳</span>';
-
-    }
-
 
     try {
 
@@ -1485,11 +1448,15 @@ function renderQuickButtons() {
 
 
             button.onclick =
-                function() {
+                async function() {
 
-                    copyText(
+                    setButtonLoading(button, true);
+
+                    await copyText(
                         item.text
                     );
+
+                    setButtonLoading(button, false);
 
                 };
 
@@ -1700,18 +1667,21 @@ function createInputRow(
 
 
     /*
-      เปลี่ยนเป็น textarea เพื่อรักษารูปแบบ
-      เว้นบรรทัด ระยะห่างประโยค
+      ช่อง Input ว่างเสมอ
     */
 
     const input =
         document.createElement(
-            "textarea"
+            "input"
         );
 
 
     input.className =
         "input-box";
+
+
+    input.type =
+        "text";
 
 
     input.value =
@@ -1753,13 +1723,16 @@ function createInputRow(
 
 
     send.onclick =
-        function() {
+        async function() {
 
-            sendToSheet(
+            setButtonLoading(send, true);
+
+            await sendToSheet(
                 options.row,
-                input,
-                send
+                input
             );
+
+            setButtonLoading(send, false);
 
         };
 
@@ -1783,17 +1756,20 @@ function createInputRow(
 
 
     copy.onclick =
-        function() {
+        async function() {
+
+            setButtonLoading(copy, true);
 
             /*
               Copy จากข้อมูลล่าสุด
               ใน Google Sheet
             */
 
-            copySheetValue(
-                options.row,
-                copy
+            await copySheetValue(
+                options.row
             );
+
+            setButtonLoading(copy, false);
 
         };
 
@@ -1832,16 +1808,19 @@ function createInputRow(
 
 
         download.onclick =
-            function() {
+            async function() {
+
+                setButtonLoading(download, true);
 
                 /*
                   Download จาก Google Sheet
                 */
 
-                downloadLogo(
-                    options.row,
-                    download
+                await downloadLogo(
+                    options.row
                 );
+
+                setButtonLoading(download, false);
 
             };
 
@@ -1877,10 +1856,9 @@ function createInputRow(
    SEND TO GOOGLE SHEET
 ===================================================== */
 
-function sendToSheet(
+async function sendToSheet(
     row,
-    input,
-    btn
+    input
 ) {
 
     const value =
@@ -1902,9 +1880,6 @@ function sendToSheet(
         return;
 
     }
-
-
-    setButtonLoading(btn, true);
 
 
     const form =
@@ -2001,16 +1976,9 @@ function sendToSheet(
       หลังจากส่งเล็กน้อย
     */
 
-    setTimeout(
-        function() {
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-            loadData();
-
-            setButtonLoading(btn, false);
-
-        },
-        1000
-    );
+    await loadData();
 
 }
 
@@ -2020,12 +1988,8 @@ function sendToSheet(
 ===================================================== */
 
 async function copySheetValue(
-    row,
-    btn
+    row
 ) {
-
-    setButtonLoading(btn, true);
-
 
     /*
       โหลดข้อมูลล่าสุดก่อน
@@ -2118,23 +2082,12 @@ async function copySheetValue(
                 "ไม่มีข้อมูลใน Google Sheet"
             );
 
-            setButtonLoading(btn, false);
-
             return;
 
         }
 
 
-        await navigator
-            .clipboard
-            .writeText(
-                value
-            );
-
-
-        showToast(
-            "คัดลอกข้อมูลแล้ว ✓"
-        );
+        await copyText(value);
 
 
     } catch(error) {
@@ -2148,10 +2101,6 @@ async function copySheetValue(
             "คัดลอกไม่สำเร็จ"
         );
 
-    } finally {
-
-        setButtonLoading(btn, false);
-
     }
 
 }
@@ -2162,8 +2111,7 @@ async function copySheetValue(
 ===================================================== */
 
 async function downloadLogo(
-    row,
-    btn
+    row
 ) {
 
     /*
@@ -2178,9 +2126,6 @@ async function downloadLogo(
         return;
 
     }
-
-
-    setButtonLoading(btn, true);
 
 
     /*
@@ -2224,8 +2169,6 @@ async function downloadLogo(
             "ไม่สามารถอ่าน URL จาก Google Sheet"
         );
 
-        setButtonLoading(btn, false);
-
         return;
 
     }
@@ -2236,8 +2179,6 @@ async function downloadLogo(
         showToast(
             "ไม่มี URL รูปภาพใน Google Sheet"
         );
-
-        setButtonLoading(btn, false);
 
         return;
 
@@ -2279,187 +2220,191 @@ async function downloadLogo(
         }
 
 
-        const image =
-            new Image();
+        await new Promise((resolve, reject) => {
+
+            const image =
+                new Image();
 
 
-        image.onload =
-            function() {
+            image.onload =
+                function() {
 
-                const canvas =
-                    document.createElement(
-                        "canvas"
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+
+                    canvas.width =
+                        3000;
+
+
+                    canvas.height =
+                        3000;
+
+
+                    const ctx =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+
+                    /*
+                      พื้นหลังโปร่งใส
+                    */
+
+                    ctx.clearRect(
+                        0,
+                        0,
+                        3000,
+                        3000
                     );
 
 
-                canvas.width =
-                    3000;
+                    /*
+                      รักษาสัดส่วนภาพ
+                    */
+
+                    const scale =
+                        Math.min(
+                            3000 /
+                            image.width,
+
+                            3000 /
+                            image.height
+                        );
 
 
-                canvas.height =
-                    3000;
+                    const width =
+                        image.width *
+                        scale;
 
 
-                const ctx =
-                    canvas.getContext(
-                        "2d"
-                    );
+                    const height =
+                        image.height *
+                        scale;
 
 
-                /*
-                  พื้นหลังโปร่งใส
-                */
-
-                ctx.clearRect(
-                    0,
-                    0,
-                    3000,
-                    3000
-                );
+                    const x =
+                        (
+                            3000 -
+                            width
+                        ) / 2;
 
 
-                /*
-                  รักษาสัดส่วนภาพ
-                */
-
-                const scale =
-                    Math.min(
-                        3000 /
-                        image.width,
-
-                        3000 /
-                        image.height
-                    );
+                    const y =
+                        (
+                            3000 -
+                            height
+                        ) / 2;
 
 
-                const width =
-                    image.width *
-                    scale;
+                    ctx.drawImage(
 
+                        image,
 
-                const height =
-                    image.height *
-                    scale;
+                        x,
+                        y,
 
-
-                const x =
-                    (
-                        3000 -
-                        width
-                    ) / 2;
-
-
-                const y =
-                    (
-                        3000 -
+                        width,
                         height
-                    ) / 2;
+
+                    );
 
 
-                ctx.drawImage(
+                    canvas.toBlob(
 
-                    image,
+                        function(blob) {
 
-                    x,
-                    y,
-
-                    width,
-                    height
-
-                );
+                            const downloadUrl =
+                                URL.createObjectURL(
+                                    blob
+                                );
 
 
-                canvas.toBlob(
+                            const a =
+                                document.createElement(
+                                    "a"
+                                );
 
-                    function(blob) {
 
-                        const downloadUrl =
-                            URL.createObjectURL(
-                                blob
+                            /*
+                              B18 = 1.png
+                              B19 = 2.png
+                              B20 = 3.png
+                              B21 = 4.png
+                              B22 = 5.png
+                              B23 = 6.png
+                            */
+
+                            const fileNumber =
+                                row -
+                                17;
+
+
+                            a.href =
+                                downloadUrl;
+
+
+                            a.download =
+                                fileNumber +
+                                ".png";
+
+
+                            document.body.appendChild(
+                                a
                             );
 
 
-                        const a =
-                            document.createElement(
-                                "a"
+                            a.click();
+
+
+                            a.remove();
+
+
+                            URL.revokeObjectURL(
+                                downloadUrl
                             );
 
 
-                        /*
-                          B18 = 1.png
-                          B19 = 2.png
-                          B20 = 3.png
-                          B21 = 4.png
-                          B22 = 5.png
-                          B23 = 6.png
-                        */
+                            showToast(
 
-                        const fileNumber =
-                            row -
-                            17;
+                                "ดาวน์โหลด " +
+                                fileNumber +
+                                ".png แล้ว ✓"
 
+                            );
 
-                        a.href =
-                            downloadUrl;
+                            resolve();
 
+                        },
 
-                        a.download =
-                            fileNumber +
-                            ".png";
+                        "image/png"
+
+                    );
+
+                };
 
 
-                        document.body.appendChild(
-                            a
-                        );
+            image.onerror =
+                function() {
+
+                    showToast(
+                        "ไม่สามารถอ่านรูปภาพได้"
+                    );
+
+                    reject(new Error("Image load error"));
+
+                };
 
 
-                        a.click();
+            image.src =
+                "data:" +
+                result.mime +
+                ";base64," +
+                result.base64;
 
-
-                        a.remove();
-
-
-                        URL.revokeObjectURL(
-                            downloadUrl
-                        );
-
-
-                        showToast(
-
-                            "ดาวน์โหลด " +
-                            fileNumber +
-                            ".png แล้ว ✓"
-
-                        );
-
-                        setButtonLoading(btn, false);
-
-                    },
-
-                    "image/png"
-
-                );
-
-            };
-
-
-        image.onerror =
-            function() {
-
-                showToast(
-                    "ไม่สามารถอ่านรูปภาพได้"
-                );
-
-                setButtonLoading(btn, false);
-
-            };
-
-
-        image.src =
-            "data:" +
-            result.mime +
-            ";base64," +
-            result.base64;
+        });
 
 
     } catch(error) {
@@ -2472,8 +2417,6 @@ async function downloadLogo(
         showToast(
             "ดาวน์โหลดไม่สำเร็จ"
         );
-
-        setButtonLoading(btn, false);
 
     }
 
@@ -2524,6 +2467,10 @@ async function copyText(
         textarea.value =
             text;
 
+
+        textarea.style.position = "fixed";
+
+        textarea.style.opacity = "0";
 
         document.body.appendChild(
             textarea
