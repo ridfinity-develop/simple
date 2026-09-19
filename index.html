@@ -318,6 +318,15 @@ body {
             .25
         );
 
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
 }
 
 
@@ -517,25 +526,32 @@ body {
 
 
 /* =====================================================
-   INLINE SPINNER ANIMATION
+   BUTTON SPINNER (แบบหน้าโหลดข้อมูล)
 ===================================================== */
 
-.inline-spinner {
+.btn-spinner {
 
-    display:
-        inline-block;
+    width:
+        22px;
+
+    height:
+        22px;
+
+    border-radius:
+        50%;
+
+    border:
+        3px solid
+        rgba(255, 255, 255, 0.3);
+
+    border-top-color:
+        #ffffff;
 
     animation:
         spin
         1s
         linear
         infinite;
-
-    font-size:
-        1.2em;
-
-    line-height:
-        1;
 
 }
 
@@ -804,7 +820,8 @@ body {
         grid-template-columns:
             repeat(
                 3,
-                1fr;
+                1fr
+            );
 
         width:
             100%;
@@ -1098,7 +1115,7 @@ function setButtonLoading(button, isLoading) {
 
         button.disabled = true;
 
-        button.innerHTML = '<span class="inline-spinner">⟳</span>';
+        button.innerHTML = '<div class="btn-spinner"></div>';
 
     } else {
 
@@ -1452,9 +1469,24 @@ function renderQuickButtons() {
 
                     setButtonLoading(button, true);
 
+                    const startTime = Date.now();
+
                     await copyText(
                         item.text
                     );
+
+                    /*
+                      หน่วงเวลาให้ตัวหมุนแสดงอย่างน้อย 600ms
+                      เพื่อให้ผู้ใช้รู้สึกว่าระบบทำงานเรียบร้อย
+                    */
+
+                    const elapsed = Date.now() - startTime;
+
+                    if (elapsed < 600) {
+
+                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
+
+                    }
 
                     setButtonLoading(button, false);
 
