@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>RiD Finity Dashboard</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family:
+        "Segoe UI",
+        "Noto Sans Thai",
+        Arial,
+        sans-serif;
+
+    background:
+        radial-gradient(
+            circle at top right,
+            #25304a 0%,
+            #111827 35%,
+            #080b12 100%
+        );
+
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   MAIN
+===================================================== */
+
+.container {
+    width: min(1200px, 94%);
+    margin: auto;
+    padding: 25px 0 50px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.logo-title {
+    font-size: 26px;
+    font-weight: 800;
+}
+
+.status {
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+
+/* =====================================================
+   CARD
+===================================================== */
+
+.card {
+    background: rgba(17, 24, 39, 0.88);
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 20px;
+
+    padding: 22px;
+
+    margin-bottom: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.25);
+
+    backdrop-filter: blur(15px);
+}
+
+.card-title {
+    font-size: 20px;
+    font-weight: 800;
+
+    margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   8 BUTTONS
+===================================================== */
+
+.quick-buttons {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap: 12px;
+}
+
+.quick-button {
+
+    border: none;
+
+    min-height: 65px;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: .2s;
+
+    box-shadow:
+        0 8px 20px rgba(37,99,235,.25);
+}
+
+.quick-button:hover {
+    transform: translateY(-2px);
+
+    filter: brightness(1.12);
+}
+
+.quick-button:active {
+    transform: scale(.97);
+}
+
+
+/* =====================================================
+   INPUT ROW
+===================================================== */
+
+.input-row {
+
+    display: grid;
+
+    grid-template-columns:
+        170px 1fr auto;
+
+    gap: 10px;
+
+    align-items: center;
+
+    margin-bottom: 12px;
+}
+
+.input-label {
+    font-weight: 700;
+
+    color: #e5e7eb;
+}
+
+.input-box {
+
+    width: 100%;
+
+    min-height: 48px;
+
+    padding: 10px 14px;
+
+    border-radius: 11px;
+
+    border: 1px solid #374151;
+
+    background: #0b1120;
+
+    color: white;
+
+    outline: none;
+
+    font-size: 15px;
+}
+
+.input-box:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 3px rgba(99,102,241,.15);
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+===================================================== */
+
+.actions {
+
+    display: flex;
+
+    gap: 7px;
+}
+
+.btn {
+
+    border: none;
+
+    border-radius: 10px;
+
+    min-width: 78px;
+
+    min-height: 43px;
+
+    padding: 0 13px;
+
+    color: white;
+
+    font-weight: 800;
+
+    cursor: pointer;
+
+    transition: .2s;
+}
+
+.btn:hover {
+    filter: brightness(1.15);
+}
+
+.btn-send {
+    background: #16a34a;
+}
+
+.btn-copy {
+    background: #2563eb;
+}
+
+.btn-download {
+    background: #9333ea;
+}
+
+.btn:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+.toast {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 25px;
+
+    transform:
+        translate(-50%, 120px);
+
+    background: #111827;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    color: white;
+
+    padding: 13px 22px;
+
+    border-radius: 50px;
+
+    font-weight: 700;
+
+    opacity: 0;
+
+    transition: .3s;
+
+    z-index: 9999;
+}
+
+.toast.show {
+
+    opacity: 1;
+
+    transform:
+        translate(-50%, 0);
+}
+
+
+/* =====================================================
+   LOADING
+===================================================== */
+
+.loading {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: #080b12;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-direction: column;
+
+    z-index: 10000;
+
+    transition: .3s;
+}
+
+.loading.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.spinner {
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    border:
+        4px solid #374151;
+
+    border-top-color: #6366f1;
+
+    animation:
+        spin 1s linear infinite;
+
+    margin-bottom: 15px;
+}
+
+@keyframes spin {
+
+    to {
+        transform: rotate(360deg);
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media(max-width: 800px) {
+
+    .container {
+        width: 94%;
+        padding-top: 15px;
+    }
+
+    .header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+    .quick-buttons {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+    .input-row {
+
+        grid-template-columns:
+            1fr;
+
+        gap: 7px;
+    }
+
+    .actions {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(3, 1fr);
+
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   SMALL PHONE
+===================================================== */
+
+@media(max-width: 420px) {
+
+    .card {
+        padding: 15px;
+        border-radius: 16px;
+    }
+
+    .quick-button {
+        min-height: 60px;
+        font-size: 14px;
+    }
+
+    .input-label {
+        font-size: 14px;
+    }
+
+    .btn {
+        font-size: 12px;
+        min-width: 0;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div id="loading" class="loading">
+
+    <div class="spinner"></div>
+
+    <div>
+        กำลังโหลดข้อมูลจาก Google Sheet...
+    </div>
+
+</div>
+
+
+<div class="container">
+
+
+    <div class="header">
+
+        <div class="logo-title">
+            ⚡ RiD Finity Dashboard
+        </div>
+
+        <div id="status"
+             class="status">
+            กำลังเชื่อมต่อ...
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         QUICK BUTTONS
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-title">
+            ⚡ เมนูด่วน
+        </div>
+
+        <div id="quickButtons"
+             class="quick-buttons">
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         LOGOS
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-title">
+            ⚽ LOGO ทีม
+        </div>
+
+        <div id="logoContainer">
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         AI BALL
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-title">
+            🤖 บอล AI
+        </div>
+
+        <div id="aiContainer">
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         CRAZY BALL
+    ================================================== -->
+
+    <div class="card">
+
+        <div class="card-title">
+            🔥 บอลบ้า
+        </div>
+
+        <div id="crazyContainer">
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div id="toast"
+     class="toast">
+</div>
+
+
+<!-- Hidden iframe สำหรับ POST -->
+
+<iframe
+    name="postFrame"
+    id="postFrame"
+    style="display:none;">
+</iframe>
+
+
+<script>
+
+
+/* =====================================================
+   CONFIG
+===================================================== */
+
+const API_URL =
+    "ใส่_URL_GOOGLE_APPS_SCRIPT_ตรงนี้";
+
+
+/* =====================================================
+   DATA
+===================================================== */
+
+let DATA = {
+
+    buttons: [],
+    logos: [],
+    aiBall: [],
+    crazyBall: []
+
+};
+
+
+/* =====================================================
+   INIT
+===================================================== */
+
+window.addEventListener(
+    "DOMContentLoaded",
+    loadData
+);
+
+
+/* =====================================================
+   JSONP
+===================================================== */
+
+function jsonp(url) {
+
+    return new Promise(
+        function(resolve, reject) {
+
+            const callbackName =
+                "callback_" +
+                Date.now() +
+                "_" +
+                Math.floor(Math.random() * 99999);
+
+            const script =
+                document.createElement("script");
+
+            const timeout =
+                setTimeout(function() {
+
+                    cleanup();
+
+                    reject(
+                        new Error(
+                            "หมดเวลาการเชื่อมต่อ"
+                        )
+                    );
+
+                }, 15000);
+
+
+            function cleanup() {
+
+                clearTimeout(timeout);
+
+                delete window[callbackName];
+
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }
+
+
+            window[callbackName] =
+                function(data) {
+
+                    cleanup();
+
+                    resolve(data);
+
+                };
+
+
+            script.onerror =
+                function() {
+
+                    cleanup();
+
+                    reject(
+                        new Error(
+                            "ไม่สามารถเชื่อมต่อ Google Apps Script"
+                        )
+                    );
+
+                };
+
+
+            script.src =
+                url +
+                "&callback=" +
+                callbackName;
+
+            document.body.appendChild(script);
+
+        }
+    );
+}
+
+
+/* =====================================================
+   LOAD DATA
+===================================================== */
+
+async function loadData() {
+
+    try {
+
+        const result =
+            await jsonp(
+                API_URL +
+                "?action=getData"
+            );
+
+
+        if (!result.success) {
+            throw new Error(
+                result.error ||
+                "โหลดข้อมูลไม่สำเร็จ"
+            );
+        }
+
+
+        DATA = result;
+
+
+        renderQuickButtons();
+
+        renderLogos();
+
+        renderAI();
+
+        renderCrazy();
+
+
+        document.getElementById("status")
+            .textContent =
+            "● เชื่อมต่อ Google Sheet แล้ว";
+
+
+        document
+            .getElementById("loading")
+            .classList.add("hide");
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        document.getElementById("status")
+            .textContent =
+            "● เชื่อมต่อไม่สำเร็จ";
+
+
+        document
+            .getElementById("loading")
+            .querySelector("div:last-child")
+            .textContent =
+            "เกิดข้อผิดพลาด: " +
+            error.message;
+
+    }
+
+}
+
+
+/* =====================================================
+   QUICK BUTTONS
+===================================================== */
+
+function renderQuickButtons() {
+
+    const container =
+        document.getElementById(
+            "quickButtons"
+        );
+
+    container.innerHTML = "";
+
+
+    DATA.buttons.forEach(
+        function(item, index) {
+
+            const button =
+                document.createElement("button");
+
+            button.className =
+                "quick-button";
+
+            button.textContent =
+                item.name ||
+                "ปุ่ม " + (index + 1);
+
+
+            button.onclick =
+                function() {
+
+                    copyText(
+                        item.text
+                    );
+
+                };
+
+
+            container.appendChild(button);
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   LOGOS
+===================================================== */
+
+function renderLogos() {
+
+    const container =
+        document.getElementById(
+            "logoContainer"
+        );
+
+    container.innerHTML = "";
+
+
+    for(let i = 0; i < 6; i++) {
+
+        const row =
+            createInputRow({
+
+                label:
+                    "LOGO ทีมที่ " +
+                    (i + 1),
+
+                value:
+                    DATA.logos[i] || "",
+
+                row:
+                    10 + i,
+
+                download:
+                    true
+
+            });
+
+
+        container.appendChild(row);
+
+    }
+
+}
+
+
+/* =====================================================
+   AI
+===================================================== */
+
+function renderAI() {
+
+    const container =
+        document.getElementById(
+            "aiContainer"
+        );
+
+    container.innerHTML = "";
+
+
+    for(let i = 0; i < 3; i++) {
+
+        const row =
+            createInputRow({
+
+                label:
+                    "บอล AI คู่ที่ " +
+                    (i + 1),
+
+                value:
+                    DATA.aiBall[i] || "",
+
+                row:
+                    16 + i,
+
+                download:
+                    false
+
+            });
+
+
+        container.appendChild(row);
+
+    }
+
+}
+
+
+/* =====================================================
+   CRAZY BALL
+===================================================== */
+
+function renderCrazy() {
+
+    const container =
+        document.getElementById(
+            "crazyContainer"
+        );
+
+    container.innerHTML = "";
+
+
+    for(let i = 0; i < 3; i++) {
+
+        const row =
+            createInputRow({
+
+                label:
+                    "บอลบ้า คู่ที่ " +
+                    (i + 1),
+
+                value:
+                    DATA.crazyBall[i] || "",
+
+                row:
+                    19 + i,
+
+                download:
+                    false
+
+            });
+
+
+        container.appendChild(row);
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE INPUT ROW
+===================================================== */
+
+function createInputRow(options) {
+
+    const row =
+        document.createElement("div");
+
+    row.className =
+        "input-row";
+
+
+    const label =
+        document.createElement("div");
+
+    label.className =
+        "input-label";
+
+    label.textContent =
+        options.label;
+
+
+    const input =
+        document.createElement("input");
+
+    input.className =
+        "input-box";
+
+    input.type =
+        "text";
+
+    input.value =
+        options.value || "";
+
+    input.placeholder =
+        "ใส่ข้อมูลที่นี่...";
+
+
+    const actions =
+        document.createElement("div");
+
+    actions.className =
+        "actions";
+
+
+    /* SEND */
+
+    const send =
+        document.createElement("button");
+
+    send.className =
+        "btn btn-send";
+
+    send.textContent =
+        "ส่ง";
+
+
+    send.onclick =
+        function() {
+
+            sendToSheet(
+                options.row,
+                input.value
+            );
+
+        };
+
+
+    /* COPY */
+
+    const copy =
+        document.createElement("button");
+
+    copy.className =
+        "btn btn-copy";
+
+    copy.textContent =
+        "คัดลอก";
+
+
+    copy.onclick =
+        function() {
+
+            copyText(
+                input.value
+            );
+
+        };
+
+
+    actions.appendChild(send);
+
+    actions.appendChild(copy);
+
+
+    /* DOWNLOAD */
+
+    if(options.download) {
+
+        const download =
+            document.createElement("button");
+
+        download.className =
+            "btn btn-download";
+
+        download.textContent =
+            "Download";
+
+
+        download.onclick =
+            function() {
+
+                downloadLogo(
+                    options.row,
+                    input.value
+                );
+
+            };
+
+
+        actions.appendChild(download);
+
+    }
+
+
+    row.appendChild(label);
+
+    row.appendChild(input);
+
+    row.appendChild(actions);
+
+
+    return row;
+
+}
+
+
+/* =====================================================
+   SEND TO GOOGLE SHEET
+===================================================== */
+
+function sendToSheet(row, value) {
+
+    const form =
+        document.createElement("form");
+
+    form.method =
+        "POST";
+
+    form.action =
+        API_URL;
+
+    form.target =
+        "postFrame";
+
+
+    const rowInput =
+        document.createElement("input");
+
+    rowInput.type =
+        "hidden";
+
+    rowInput.name =
+        "row";
+
+    rowInput.value =
+        row;
+
+
+    const valueInput =
+        document.createElement("input");
+
+    valueInput.type =
+        "hidden";
+
+    valueInput.name =
+        "value";
+
+    valueInput.value =
+        value;
+
+
+    form.appendChild(rowInput);
+
+    form.appendChild(valueInput);
+
+
+    document.body.appendChild(form);
+
+
+    form.submit();
+
+
+    form.remove();
+
+
+    showToast(
+        "กำลังบันทึกข้อมูล..."
+    );
+
+
+    setTimeout(
+        async function() {
+
+            try {
+
+                await loadData();
+
+                showToast(
+                    "บันทึกข้อมูลเรียบร้อยแล้ว ✓"
+                );
+
+            } catch(e) {
+
+                showToast(
+                    "ส่งข้อมูลแล้ว แต่ไม่สามารถรีเฟรชได้"
+                );
+
+            }
+
+        },
+        1000
+    );
+
+}
+
+
+/* =====================================================
+   COPY
+===================================================== */
+
+async function copyText(text) {
+
+    if(!text) {
+
+        showToast(
+            "ไม่มีข้อมูลให้คัดลอก"
+        );
+
+        return;
+
+    }
+
+
+    try {
+
+        await navigator.clipboard.writeText(
+            text
+        );
+
+        showToast(
+            "คัดลอกข้อมูลแล้ว ✓"
+        );
+
+    } catch(error) {
+
+        const textarea =
+            document.createElement("textarea");
+
+        textarea.value =
+            text;
+
+        document.body.appendChild(
+            textarea
+        );
+
+        textarea.select();
+
+        document.execCommand(
+            "copy"
+        );
+
+        textarea.remove();
+
+
+        showToast(
+            "คัดลอกข้อมูลแล้ว ✓"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DOWNLOAD LOGO
+===================================================== */
+
+async function downloadLogo(row, url) {
+
+    if(!url) {
+
+        showToast(
+            "ไม่มี URL รูปภาพ"
+        );
+
+        return;
+
+    }
+
+
+    showToast(
+        "กำลังเตรียมไฟล์ PNG 3000×3000..."
+    );
+
+
+    try {
+
+        const result =
+            await jsonp(
+                API_URL +
+                "?action=image&url=" +
+                encodeURIComponent(url)
+            );
+
+
+        if(!result.success) {
+
+            throw new Error(
+                result.error ||
+                "โหลดรูปไม่สำเร็จ"
+            );
+
+        }
+
+
+        const image =
+            new Image();
+
+
+        image.onload =
+            function() {
+
+                try {
+
+                    const canvas =
+                        document.createElement(
+                            "canvas"
+                        );
+
+                    canvas.width =
+                        3000;
+
+                    canvas.height =
+                        3000;
+
+
+                    const ctx =
+                        canvas.getContext(
+                            "2d"
+                        );
+
+
+                    /*
+                       โปร่งใส
+                    */
+
+                    ctx.clearRect(
+                        0,
+                        0,
+                        3000,
+                        3000
+                    );
+
+
+                    /*
+                       ขยายภาพให้เต็ม
+                       โดยรักษาสัดส่วน
+                    */
+
+                    const scale =
+                        Math.min(
+                            3000 / image.width,
+                            3000 / image.height
+                        );
+
+
+                    const width =
+                        image.width * scale;
+
+                    const height =
+                        image.height * scale;
+
+
+                    const x =
+                        (3000 - width) / 2;
+
+                    const y =
+                        (3000 - height) / 2;
+
+
+                    ctx.drawImage(
+                        image,
+                        x,
+                        y,
+                        width,
+                        height
+                    );
+
+
+                    canvas.toBlob(
+                        function(blob) {
+
+                            const downloadUrl =
+                                URL.createObjectURL(
+                                    blob
+                                );
+
+
+                            const a =
+                                document.createElement(
+                                    "a"
+                                );
+
+
+                            /*
+                               B10 = ไฟล์ 1
+                               B11 = ไฟล์ 2
+                               ...
+                               B15 = ไฟล์ 6
+                            */
+
+                            const fileNumber =
+                                row - 9;
+
+
+                            a.href =
+                                downloadUrl;
+
+                            a.download =
+                                fileNumber +
+                                ".png";
+
+
+                            document.body.appendChild(
+                                a
+                            );
+
+                            a.click();
+
+                            a.remove();
+
+
+                            URL.revokeObjectURL(
+                                downloadUrl
+                            );
+
+
+                            showToast(
+                                "ดาวน์โหลด " +
+                                fileNumber +
+                                ".png เรียบร้อยแล้ว ✓"
+                            );
+
+                        },
+                        "image/png"
+                    );
+
+
+                } catch(error) {
+
+                    console.error(error);
+
+                    showToast(
+                        "สร้างไฟล์ PNG ไม่สำเร็จ"
+                    );
+
+                }
+
+            };
+
+
+        image.onerror =
+            function() {
+
+                showToast(
+                    "ไม่สามารถอ่านรูปภาพได้"
+                );
+
+            };
+
+
+        image.src =
+            "data:" +
+            result.mime +
+            ";base64," +
+            result.base64;
+
+
+    } catch(error) {
+
+        console.error(error);
+
+        showToast(
+            "ดาวน์โหลดไม่สำเร็จ: " +
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   TOAST
+===================================================== */
+
+let toastTimer;
+
+
+function showToast(message) {
+
+    const toast =
+        document.getElementById(
+            "toast"
+        );
+
+
+    toast.textContent =
+        message;
+
+
+    toast.classList.add(
+        "show"
+    );
+
+
+    clearTimeout(
+        toastTimer
+    );
+
+
+    toastTimer =
+        setTimeout(
+            function() {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            },
+            2500
+        );
+
+}
+
+</script>
+
+
+</body>
+
+</html>
