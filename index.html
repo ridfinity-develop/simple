@@ -350,6 +350,30 @@ body {
 
 
 /* =====================================================
+   TEAM QUICK BUTTONS (6 BUTTONS / 1 ROW)
+===================================================== */
+
+.team-quick-buttons {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(
+            6,
+            1fr
+        );
+
+    gap:
+        10px;
+
+    margin-bottom:
+        15px;
+
+}
+
+
+/* =====================================================
    INPUT ROW
 ===================================================== */
 
@@ -807,6 +831,17 @@ body {
     }
 
 
+    .team-quick-buttons {
+
+        grid-template-columns:
+            repeat(
+                3,
+                1fr
+            );
+
+    }
+
+
     .input-row {
 
         grid-template-columns:
@@ -869,6 +904,17 @@ body {
 
         font-size:
             13px;
+
+    }
+
+
+    .team-quick-buttons {
+
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
 
     }
 
@@ -984,6 +1030,32 @@ body {
     <div
         id="quickButtons"
         class="quick-buttons"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
+     TEAM NAMES
+=================================================== -->
+
+<div class="card">
+
+
+    <div class="card-title">
+        🏆 รวมชื่อทีม
+    </div>
+
+
+    <div
+        id="teamQuickButtons"
+        class="team-quick-buttons"
+    ></div>
+
+
+    <div
+        id="teamNamesContainer"
     ></div>
 
 
@@ -1132,6 +1204,10 @@ const API_URL =
 let DATA = {
 
     buttons: [],
+
+    teamNames: [],
+
+    teamQuickButtons: [],
 
     logos: [],
 
@@ -1349,7 +1425,7 @@ async function loadData() {
           เก็บข้อมูลใหม่
 
           สำคัญ:
-          logos / shortsAi / AI / บอลบ้า / germanyCover
+          teamNames / logos / shortsAi / AI / บอลบ้า / germanyCover
           จะไม่ถูกนำไปใส่ Input
         */
 
@@ -1358,16 +1434,20 @@ async function loadData() {
 
 
         /*
-          อัพเดทเฉพาะปุ่มเมนูด่วน
+          อัพเดทปุ่มเมนูด่วน
         */
 
         renderQuickButtons();
+
+        renderTeamQuickButtons();
 
 
         /*
           สร้างช่อง Input ใหม่
           โดยตั้งใจให้เป็นช่องว่าง
         */
+
+        renderTeamNames();
 
         renderLogos();
 
@@ -1558,8 +1638,124 @@ function renderQuickButtons() {
 
 
 /* =====================================================
+   TEAM QUICK BUTTONS
+   A19:B24
+   6 BUTTONS
+===================================================== */
+
+function renderTeamQuickButtons() {
+
+    const container =
+        document.getElementById(
+            "teamQuickButtons"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    (DATA.teamQuickButtons || []).forEach(
+        function(
+            item,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "quick-button";
+
+
+            button.textContent =
+                item.name ||
+                "ปุ่มด่วน " +
+                (
+                    index +
+                    1
+                );
+
+
+            button.onclick =
+                async function() {
+
+                    setButtonLoading(button, true);
+
+                    const startTime = Date.now();
+
+                    await copyText(
+                        item.text
+                    );
+
+                    const elapsed = Date.now() - startTime;
+
+                    if (elapsed < 600) {
+
+                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
+
+                    }
+
+                    setButtonLoading(button, false);
+
+                };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   TEAM NAMES
+   B18
+===================================================== */
+
+function renderTeamNames() {
+
+    const container =
+        document.getElementById(
+            "teamNamesContainer"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const row =
+        createInputRow({
+
+            label:
+                "รวมชื่อทีม",
+
+            row:
+                18,
+
+            download:
+                false
+
+        });
+
+
+    container.appendChild(
+        row
+    );
+
+}
+
+
+/* =====================================================
    LOGOS
-   B18:B23
+   B25:B30
 ===================================================== */
 
 function renderLogos() {
@@ -1583,7 +1779,7 @@ function renderLogos() {
         /*
           สำคัญ:
           value = ""
-          ไม่ดึง B18:B23
+          ไม่ดึง B25:B30
           มาใส่ Input
         */
 
@@ -1598,7 +1794,7 @@ function renderLogos() {
                     ),
 
                 row:
-                    18 +
+                    25 +
                     i,
 
                 download:
@@ -1618,7 +1814,7 @@ function renderLogos() {
 
 /* =====================================================
    SHORTS AI
-   B24
+   B31
 ===================================================== */
 
 function renderShortsAi() {
@@ -1640,7 +1836,7 @@ function renderShortsAi() {
                 "Shorts AI",
 
             row:
-                24,
+                31,
 
             download:
                 false
@@ -1657,7 +1853,7 @@ function renderShortsAi() {
 
 /* =====================================================
    AI
-   B25:B27
+   B32:B34
 ===================================================== */
 
 function renderAI() {
@@ -1689,7 +1885,7 @@ function renderAI() {
                     ),
 
                 row:
-                    25 +
+                    32 +
                     i,
 
                 download:
@@ -1709,7 +1905,7 @@ function renderAI() {
 
 /* =====================================================
    CRAZY BALL
-   B28:B30
+   B35:B37
 ===================================================== */
 
 function renderCrazy() {
@@ -1741,7 +1937,7 @@ function renderCrazy() {
                     ),
 
                 row:
-                    28 +
+                    35 +
                     i,
 
                 download:
@@ -1761,7 +1957,7 @@ function renderCrazy() {
 
 /* =====================================================
    GERMANY COVER PROMPT
-   B31
+   B38
 ===================================================== */
 
 function renderGermanyCover() {
@@ -1783,7 +1979,7 @@ function renderGermanyCover() {
                 "Prompt ปก Germany",
 
             row:
-                31,
+                38,
 
             download:
                 false
@@ -2184,30 +2380,45 @@ async function copySheetValue(
 
 
         /*
-          B18:B23
+          B18 (รวมชื่อทีม)
         */
 
         if (
-            row >= 18 &&
-            row <= 23
+            row === 18
+        ) {
+
+            value =
+                result
+                    .teamNames[0] || "";
+
+        }
+
+
+        /*
+          B25:B30 (LOGO)
+        */
+
+        else if (
+            row >= 25 &&
+            row <= 30
         ) {
 
             value =
                 result
                     .logos[
                         row -
-                        18
+                        25
                     ] || "";
 
         }
 
 
         /*
-          B24
+          B31 (Shorts AI)
         */
 
         else if (
-            row === 24
+            row === 31
         ) {
 
             value =
@@ -2218,49 +2429,49 @@ async function copySheetValue(
 
 
         /*
-          B25:B27
+          B32:B34 (บอล AI)
         */
 
         else if (
-            row >= 25 &&
-            row <= 27
+            row >= 32 &&
+            row <= 34
         ) {
 
             value =
                 result
                     .aiBall[
                         row -
-                        25
+                        32
                     ] || "";
 
         }
 
 
         /*
-          B28:B30
+          B35:B37 (บอลบ้า)
         */
 
         else if (
-            row >= 28 &&
-            row <= 30
+            row >= 35 &&
+            row <= 37
         ) {
 
             value =
                 result
                     .crazyBall[
                         row -
-                        28
+                        35
                     ] || "";
 
         }
 
 
         /*
-          B31
+          B38 (Prompt ปก Germany)
         */
 
         else if (
-            row === 31
+            row === 38
         ) {
 
             value =
@@ -2309,12 +2520,12 @@ async function downloadLogo(
 ) {
 
     /*
-      Download เฉพาะ B18:B23
+      Download เฉพาะ B25:B30
     */
 
     if (
-        row < 18 ||
-        row > 23
+        row < 25 ||
+        row > 30
     ) {
 
         return;
@@ -2353,7 +2564,7 @@ async function downloadLogo(
             result
                 .logos[
                     row -
-                    18
+                    25
                 ] || "";
 
 
@@ -2523,17 +2734,17 @@ async function downloadLogo(
 
 
                             /*
-                              B18 = 1.png
-                              B19 = 2.png
-                              B20 = 3.png
-                              B21 = 4.png
-                              B22 = 5.png
-                              B23 = 6.png
+                              B25 = 1.png
+                              B26 = 2.png
+                              B27 = 3.png
+                              B28 = 4.png
+                              B29 = 5.png
+                              B30 = 6.png
                             */
 
                             const fileNumber =
                                 row -
-                                17;
+                                24;
 
 
                             a.href =
