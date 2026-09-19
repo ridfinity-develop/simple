@@ -130,6 +130,23 @@ body {
     color:
         #9ca3af;
 
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+}
+
+
+/* เอฟเฟกต์หมุนสำหรับตัวอักษร ⟳ */
+
+.spin-icon {
+
+    display: inline-block;
+
+    animation: spin 1s linear infinite;
+
 }
 
 
@@ -382,7 +399,13 @@ body {
     width:
         100%;
 
+    height:
+        48px;
+
     min-height:
+        48px;
+
+    max-height:
         48px;
 
     padding:
@@ -406,6 +429,16 @@ body {
 
     font-size:
         15px;
+
+    font-family: inherit;
+
+    resize: none;
+
+    white-space: pre;
+
+    overflow-x: auto;
+
+    overflow-y: hidden;
 
 }
 
@@ -471,6 +504,15 @@ body {
 
     transition:
         .2s;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
 
 }
 
@@ -579,7 +621,7 @@ body {
 
 
 /* =====================================================
-   LOADING
+   LOADING & BUTTON SPINNER
 ===================================================== */
 
 .loading {
@@ -651,6 +693,25 @@ body {
 
     margin-bottom:
         15px;
+
+}
+
+
+.btn-spinner {
+
+    width: 18px;
+
+    height: 18px;
+
+    border-radius: 50%;
+
+    border: 2px solid rgba(255, 255, 255, 0.3);
+
+    border-top-color: #ffffff;
+
+    animation: spin 0.8s linear infinite;
+
+    display: inline-block;
 
 }
 
@@ -885,7 +946,7 @@ body {
             id="updateTime"
             class="update-time"
         >
-            อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...
+            อัพเดทข้อมูลแล้วเมื่อ <span class="spin-icon">⟳</span>
         </div>
 
     </div>
@@ -1072,6 +1133,43 @@ window.addEventListener(
 
 
 /* =====================================================
+   HELPER: SET BUTTON LOADING
+===================================================== */
+
+function setButtonLoading(btn, isLoading) {
+
+    if (!btn) return;
+
+    if (isLoading) {
+
+        if (!btn.getAttribute('data-original-text')) {
+
+            btn.setAttribute('data-original-text', btn.textContent);
+
+        }
+
+        btn.disabled = true;
+
+        btn.innerHTML = '<span class="btn-spinner"></span>';
+
+    } else {
+
+        const originalText = btn.getAttribute('data-original-text');
+
+        if (originalText) {
+
+            btn.textContent = originalText;
+
+        }
+
+        btn.disabled = false;
+
+    }
+
+}
+
+
+/* =====================================================
    JSONP
 ===================================================== */
 
@@ -1186,6 +1284,15 @@ function jsonp(url) {
 ===================================================== */
 
 async function loadData() {
+
+    const updateTimeEl = document.getElementById("updateTime");
+
+    if (updateTimeEl) {
+
+        updateTimeEl.innerHTML = 'อัพเดทข้อมูลแล้วเมื่อ <span class="spin-icon">⟳</span>';
+
+    }
+
 
     try {
 
@@ -1593,21 +1700,18 @@ function createInputRow(
 
 
     /*
-      ช่อง Input ว่างเสมอ
+      เปลี่ยนเป็น textarea เพื่อรักษารูปแบบ
+      เว้นบรรทัด ระยะห่างประโยค
     */
 
     const input =
         document.createElement(
-            "input"
+            "textarea"
         );
 
 
     input.className =
         "input-box";
-
-
-    input.type =
-        "text";
 
 
     input.value =
@@ -1653,7 +1757,8 @@ function createInputRow(
 
             sendToSheet(
                 options.row,
-                input
+                input,
+                send
             );
 
         };
@@ -1686,7 +1791,8 @@ function createInputRow(
             */
 
             copySheetValue(
-                options.row
+                options.row,
+                copy
             );
 
         };
@@ -1733,7 +1839,8 @@ function createInputRow(
                 */
 
                 downloadLogo(
-                    options.row
+                    options.row,
+                    download
                 );
 
             };
@@ -1772,7 +1879,8 @@ function createInputRow(
 
 function sendToSheet(
     row,
-    input
+    input,
+    btn
 ) {
 
     const value =
@@ -1794,6 +1902,9 @@ function sendToSheet(
         return;
 
     }
+
+
+    setButtonLoading(btn, true);
 
 
     const form =
@@ -1895,6 +2006,8 @@ function sendToSheet(
 
             loadData();
 
+            setButtonLoading(btn, false);
+
         },
         1000
     );
@@ -1907,8 +2020,12 @@ function sendToSheet(
 ===================================================== */
 
 async function copySheetValue(
-    row
+    row,
+    btn
 ) {
+
+    setButtonLoading(btn, true);
+
 
     /*
       โหลดข้อมูลล่าสุดก่อน
@@ -2001,6 +2118,8 @@ async function copySheetValue(
                 "ไม่มีข้อมูลใน Google Sheet"
             );
 
+            setButtonLoading(btn, false);
+
             return;
 
         }
@@ -2029,6 +2148,10 @@ async function copySheetValue(
             "คัดลอกไม่สำเร็จ"
         );
 
+    } finally {
+
+        setButtonLoading(btn, false);
+
     }
 
 }
@@ -2039,7 +2162,8 @@ async function copySheetValue(
 ===================================================== */
 
 async function downloadLogo(
-    row
+    row,
+    btn
 ) {
 
     /*
@@ -2054,6 +2178,9 @@ async function downloadLogo(
         return;
 
     }
+
+
+    setButtonLoading(btn, true);
 
 
     /*
@@ -2097,6 +2224,8 @@ async function downloadLogo(
             "ไม่สามารถอ่าน URL จาก Google Sheet"
         );
 
+        setButtonLoading(btn, false);
+
         return;
 
     }
@@ -2107,6 +2236,8 @@ async function downloadLogo(
         showToast(
             "ไม่มี URL รูปภาพใน Google Sheet"
         );
+
+        setButtonLoading(btn, false);
 
         return;
 
@@ -2301,6 +2432,8 @@ async function downloadLogo(
 
                         );
 
+                        setButtonLoading(btn, false);
+
                     },
 
                     "image/png"
@@ -2316,6 +2449,8 @@ async function downloadLogo(
                 showToast(
                     "ไม่สามารถอ่านรูปภาพได้"
                 );
+
+                setButtonLoading(btn, false);
 
             };
 
@@ -2337,6 +2472,8 @@ async function downloadLogo(
         showToast(
             "ดาวน์โหลดไม่สำเร็จ"
         );
+
+        setButtonLoading(btn, false);
 
     }
 
