@@ -122,18 +122,7 @@ body {
 }
 
 
-.update-time {
-
-    font-size:
-        13px;
-
-    color:
-        #9ca3af;
-
-}
-
-
-.settings-group {
+.settings-area {
 
     display:
         flex;
@@ -145,7 +134,18 @@ body {
         flex-end;
 
     gap:
-        4px;
+        5px;
+
+}
+
+
+.update-time {
+
+    font-size:
+        13px;
+
+    color:
+        #9ca3af;
 
 }
 
@@ -255,7 +255,7 @@ body {
 }
 
 
-.card-header {
+.card-header-flex {
 
     display:
         flex;
@@ -286,7 +286,7 @@ body {
 }
 
 
-.btn-refresh {
+.btn-update {
 
     background:
         #2563eb;
@@ -324,7 +324,7 @@ body {
 }
 
 
-.btn-refresh:hover {
+.btn-update:hover {
 
     background:
         #1d4ed8;
@@ -336,10 +336,10 @@ body {
 
 
 /* =====================================================
-   NAV BAR
+   TAB NAVIGATION
 ===================================================== */
 
-.nav-bar {
+.tab-nav {
 
     display:
         flex;
@@ -350,34 +350,34 @@ body {
     gap:
         10px;
 
-    margin-top:
-        15px;
-
     margin-bottom:
         20px;
 
-    padding:
-        10px;
+    border-bottom:
+        1px solid rgba(255, 255, 255, 0.1);
 
-    background:
-        rgba(0, 0, 0, 0.2);
-
-    border-radius:
-        12px;
-
-    border:
-        1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom:
+        15px;
 
 }
 
 
-.nav-item {
+.tab-btn {
+
+    background:
+        #1f2937;
 
     color:
         #9ca3af;
 
-    text-decoration:
-        none;
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    padding:
+        10px 18px;
+
+    border-radius:
+        10px;
 
     font-weight:
         700;
@@ -385,28 +385,55 @@ body {
     font-size:
         14px;
 
-    padding:
-        8px 14px;
-
-    border-radius:
-        8px;
+    cursor:
+        pointer;
 
     transition:
         .2s;
 
-    background:
-        transparent;
-
 }
 
 
-.nav-item:hover {
+.tab-btn:hover {
+
+    background:
+        #374151;
 
     color:
         white;
 
+}
+
+
+.tab-btn.active {
+
     background:
-        rgba(255, 255, 255, 0.1);
+        #6366f1;
+
+    color:
+        white;
+
+    border-color:
+        #6366f1;
+
+    box-shadow:
+        0 4px 12px rgba(99, 102, 241, 0.3);
+
+}
+
+
+.tab-content {
+
+    display:
+        none;
+
+}
+
+
+.tab-content.active {
+
+    display:
+        block;
 
 }
 
@@ -946,10 +973,18 @@ body {
     }
 
 
+    .settings-area {
+
+        align-items:
+            flex-end;
+
+    }
+
+
     .update-time {
 
         font-size:
-            12px;
+            11px;
 
     }
 
@@ -995,7 +1030,8 @@ body {
         grid-template-columns:
             repeat(
                 3,
-                1fr;
+                1fr
+            );
 
     }
 
@@ -1142,9 +1178,9 @@ body {
     </div>
 
 
-    <!-- ตั้งค่า -->
+    <div class="settings-area">
 
-    <div class="settings-group">
+        <!-- ตั้งค่า -->
 
         <a
             class="settings-button"
@@ -1162,6 +1198,7 @@ body {
             </span>
 
         </a>
+
 
         <div
             id="updateTime"
@@ -1183,16 +1220,17 @@ body {
 <div class="card">
 
 
-    <div class="card-header">
+    <div class="card-header-flex">
 
         <div class="card-title">
             ⚡ เมนูด่วน
         </div>
 
+
         <button
-            id="btnRefresh"
-            class="btn-refresh"
-            onclick="manualRefreshData()"
+            id="btnUpdateData"
+            class="btn-update"
+            onclick="manualUpdateData()"
         >
             🔄 อัพเดทข้อมูล
         </button>
@@ -1210,22 +1248,52 @@ body {
 
 
 <!-- ===================================================
-     NAV BAR
+     TAB NAVIGATION & CONTENT
 =================================================== -->
 
-<div class="nav-bar">
+<div class="tab-nav">
 
-    <a href="#sec-team" class="nav-item">รวมชื่อทีม</a>
+    <button
+        class="tab-btn active"
+        onclick="switchTab('teamNames')"
+    >
+        🏆 รวมชื่อทีม
+    </button>
 
-    <a href="#sec-logo" class="nav-item">LOGO ทีม</a>
+    <button
+        class="tab-btn"
+        onclick="switchTab('logos')"
+    >
+        ⚽ LOGO ทีม
+    </button>
 
-    <a href="#sec-shorts" class="nav-item">Shorts AI</a>
+    <button
+        class="tab-btn"
+        onclick="switchTab('shortsAi')"
+    >
+        🎬 Shorts AI
+    </button>
 
-    <a href="#sec-aiball" class="nav-item">บอล AI</a>
+    <button
+        class="tab-btn"
+        onclick="switchTab('aiBall')"
+    >
+        🤖 บอล AI
+    </button>
 
-    <a href="#sec-crazyball" class="nav-item">บอลบ้า</a>
+    <button
+        class="tab-btn"
+        onclick="switchTab('crazyBall')"
+    >
+        🔥 บอลบ้า
+    </button>
 
-    <a href="#sec-germany" class="nav-item">Prompt ปก Germany</a>
+    <button
+        class="tab-btn"
+        onclick="switchTab('germanyCover')"
+    >
+        💥 Prompt ปก Germany
+    </button>
 
 </div>
 
@@ -1234,7 +1302,10 @@ body {
      TEAM NAMES
 =================================================== -->
 
-<div id="sec-team" class="card">
+<div
+    id="tab-teamNames"
+    class="card tab-content active"
+>
 
 
     <div class="card-title">
@@ -1260,7 +1331,10 @@ body {
      LOGOS
 =================================================== -->
 
-<div id="sec-logo" class="card">
+<div
+    id="tab-logos"
+    class="card tab-content"
+>
 
 
     <div class="card-title">
@@ -1280,7 +1354,10 @@ body {
      SHORTS AI
 =================================================== -->
 
-<div id="sec-shorts" class="card">
+<div
+    id="tab-shortsAi"
+    class="card tab-content"
+>
 
 
     <div class="card-title">
@@ -1300,7 +1377,10 @@ body {
      AI BALL
 =================================================== -->
 
-<div id="sec-aiball" class="card">
+<div
+    id="tab-aiBall"
+    class="card tab-content"
+>
 
 
     <div class="card-title">
@@ -1320,7 +1400,10 @@ body {
      CRAZY BALL
 =================================================== -->
 
-<div id="sec-crazyball" class="card">
+<div
+    id="tab-crazyBall"
+    class="card tab-content"
+>
 
 
     <div class="card-title">
@@ -1340,7 +1423,10 @@ body {
      GERMANY COVER PROMPT
 =================================================== -->
 
-<div id="sec-germany" class="card">
+<div
+    id="tab-germanyCover"
+    class="card tab-content"
+>
 
 
     <div class="card-title">
@@ -1417,6 +1503,73 @@ let DATA = {
 
 
 /* =====================================================
+   TAB SWITCHING
+===================================================== */
+
+function switchTab(tabId) {
+
+    const contents =
+        document.querySelectorAll('.tab-content');
+
+    contents.forEach(function(content) {
+
+        content.classList.remove('active');
+
+    });
+
+
+    const buttons =
+        document.querySelectorAll('.tab-btn');
+
+    buttons.forEach(function(btn) {
+
+        btn.classList.remove('active');
+
+    });
+
+
+    const targetContent =
+        document.getElementById('tab-' + tabId);
+
+    if (targetContent) {
+
+        targetContent.classList.add('active');
+
+    }
+
+
+    if (event && event.currentTarget) {
+
+        event.currentTarget.classList.add('active');
+
+    }
+
+}
+
+
+/* =====================================================
+   MANUAL UPDATE BUTTON
+===================================================== */
+
+async function manualUpdateData() {
+
+    const btn =
+        document.getElementById('btnUpdateData');
+
+
+    setButtonLoading(btn, true);
+
+    await loadData();
+
+    setButtonLoading(btn, false);
+
+
+    showToast('อัพเดทข้อมูลเรียบร้อยแล้ว ✓');
+
+}
+
+
+/* =====================================================
    BUTTON LOADING STATE
 ===================================================== */
 
@@ -1450,35 +1603,6 @@ function setButtonLoading(button, isLoading) {
         button.disabled = false;
 
     }
-
-}
-
-
-/* =====================================================
-   MANUAL REFRESH DATA
-===================================================== */
-
-async function manualRefreshData() {
-
-    const btn = document.getElementById("btnRefresh");
-
-    setButtonLoading(btn, true);
-
-    const startTime = Date.now();
-
-    await loadData();
-
-    const elapsed = Date.now() - startTime;
-
-    if (elapsed < 600) {
-
-        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
-
-    }
-
-    setButtonLoading(btn, false);
-
-    showToast("อัพเดทข้อมูลเรียบร้อยแล้ว ✓");
 
 }
 
