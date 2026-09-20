@@ -283,6 +283,41 @@ body {
     margin-bottom:
         0;
 
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+}
+
+
+.toggle-btn {
+
+    background: none;
+
+    border: none;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    padding: 2px 6px;
+
+    border-radius: 6px;
+
+    transition: background 0.2s;
+
+}
+
+
+.toggle-btn:hover {
+
+    background: rgba(255, 255, 255, 0.1);
+
 }
 
 
@@ -553,8 +588,41 @@ body {
     gap:
         10px;
 
+}
+
+
+/* Inline / Top Quick Buttons */
+
+.inline-quick-buttons {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        10px;
+
     margin-bottom:
         15px;
+
+}
+
+
+.inline-quick-buttons .quick-button {
+
+    min-height:
+        45px;
+
+    padding:
+        0 20px;
+
+    flex:
+        1;
+
+    min-width:
+        120px;
 
 }
 
@@ -569,7 +637,7 @@ body {
         grid;
 
     grid-template-columns:
-        170px
+        200px
         1fr
         auto;
 
@@ -742,7 +810,7 @@ body {
 
 
 /* =====================================================
-   BUTTON SPINNER (แบบหน้าโหลดข้อมูล)
+   BUTTON SPINNER
 ===================================================== */
 
 .btn-spinner {
@@ -1224,6 +1292,7 @@ body {
 
         <div class="card-title">
             ⚡ เมนูด่วน
+            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">👁️</button>
         </div>
 
 
@@ -1262,13 +1331,6 @@ body {
 
     <button
         class="tab-btn"
-        onclick="switchTab('logos')"
-    >
-        ⚽ LOGO ทีม
-    </button>
-
-    <button
-        class="tab-btn"
         onclick="switchTab('shortsAi')"
     >
         🎬 Shorts AI
@@ -1295,57 +1357,64 @@ body {
         💥 Prompt ปก Germany
     </button>
 
+    <button
+        class="tab-btn"
+        onclick="switchTab('ytDescription')"
+    >
+        📺 YouTube Description
+    </button>
+
 </div>
 
 
 <!-- ===================================================
-     TEAM NAMES
+     TEAM NAMES & LOGOS
 =================================================== -->
 
 <div
     id="tab-teamNames"
-    class="card tab-content active"
+    class="tab-content active"
 >
 
+    <div class="card">
 
-    <div class="card-title">
-        🏆 รวมชื่อทีม
+        <div class="card-title" style="margin-bottom: 18px;">
+            🏆 รวมชื่อทีม
+        </div>
+
+        <div
+            id="teamNamesTopBtn"
+            class="inline-quick-buttons"
+        ></div>
+
+        <div
+            id="teamNamesContainer"
+        ></div>
+
     </div>
 
 
-    <div
-        id="teamQuickButtons"
-        class="team-quick-buttons"
-    ></div>
-
-
-    <div
-        id="teamNamesContainer"
-    ></div>
-
-
-</div>
-
-
-<!-- ===================================================
-     LOGOS
-=================================================== -->
-
-<div
-    id="tab-logos"
-    class="card tab-content"
->
-
-
-    <div class="card-title">
-        ⚽ LOGO ทีม
+    <!-- กล่องปุ่มด่วน 6 ปุ่มแยกออกมา (ไม่แสดงชื่อกล่อง) -->
+    <div class="card">
+        <div
+            id="teamQuickButtons"
+            class="team-quick-buttons"
+        ></div>
     </div>
 
 
-    <div
-        id="logoContainer"
-    ></div>
+    <!-- กล่อง LOGO ทีม -->
+    <div class="card">
 
+        <div class="card-title" style="margin-bottom: 18px;">
+            ⚽ LOGO ทีม
+        </div>
+
+        <div
+            id="logoContainer"
+        ></div>
+
+    </div>
 
 </div>
 
@@ -1360,9 +1429,15 @@ body {
 >
 
 
-    <div class="card-title">
+    <div class="card-title" style="margin-bottom: 18px;">
         🎬 Shorts AI
     </div>
+
+
+    <div
+        id="shortsAiTopBtn"
+        class="inline-quick-buttons"
+    ></div>
 
 
     <div
@@ -1383,9 +1458,15 @@ body {
 >
 
 
-    <div class="card-title">
+    <div class="card-title" style="margin-bottom: 18px;">
         🤖 บอล AI
     </div>
+
+
+    <div
+        id="aiBallTopBtn"
+        class="inline-quick-buttons"
+    ></div>
 
 
     <div
@@ -1406,9 +1487,15 @@ body {
 >
 
 
-    <div class="card-title">
+    <div class="card-title" style="margin-bottom: 18px;">
         🔥 บอลบ้า
     </div>
+
+
+    <div
+        id="crazyBallTopBtn"
+        class="inline-quick-buttons"
+    ></div>
 
 
     <div
@@ -1429,13 +1516,43 @@ body {
 >
 
 
-    <div class="card-title">
+    <div class="card-title" style="margin-bottom: 18px;">
         💥 Prompt ปก Germany
     </div>
 
 
     <div
+        id="germanyTopBtn"
+        class="inline-quick-buttons"
+    ></div>
+
+
+    <div
         id="germanyContainer"
+    ></div>
+
+
+</div>
+
+
+<!-- ===================================================
+     YOUTUBE DESCRIPTION
+=================================================== -->
+
+<div
+    id="tab-ytDescription"
+    class="card tab-content"
+>
+
+
+    <div class="card-title" style="margin-bottom: 18px;">
+        📺 YouTube Description
+    </div>
+
+
+    <div
+        id="ytDescButtons"
+        class="quick-buttons"
     ></div>
 
 
@@ -1478,12 +1595,28 @@ const API_URL =
 
 
 /* =====================================================
-   DATA
+   DATA & STATE
 ===================================================== */
 
 let DATA = {
 
     buttons: [],
+
+    btnA6_B6: null,
+
+    btnA7_B7: null,
+
+    btnA8_B8: null,
+
+    germanyButtons: [],
+
+    ytDescButtons: [],
+
+    crazyButtons: [],
+
+    btnF10_G10: null,
+
+    gptShortsAi: "",
 
     teamNames: [],
 
@@ -1500,6 +1633,41 @@ let DATA = {
     germanyCover: []
 
 };
+
+// สถานะการส่งข้อมูลสำเร็จ (Key: Row/Cell ID -> Boolean)
+let sentStatus = {};
+
+// สถานะการแสดง/ซ่อนปุ่มเมนูด่วน
+let isQuickVisible = true;
+
+
+/* =====================================================
+   TOGGLE QUICK BUTTONS
+===================================================== */
+
+function toggleQuickButtons() {
+
+    isQuickVisible = !isQuickVisible;
+
+    const container = document.getElementById("quickButtons");
+
+    const btn = document.getElementById("btnToggleQuick");
+
+    if (isQuickVisible) {
+
+        container.style.display = "grid";
+
+        btn.textContent = "👁️";
+
+    } else {
+
+        container.style.display = "none";
+
+        btn.textContent = "🙈";
+
+    }
+
+}
 
 
 /* =====================================================
@@ -1559,6 +1727,9 @@ async function manualUpdateData() {
 
     setButtonLoading(btn, true);
 
+    // ล้างสถานะส่งข้อมูลสำเร็จเมื่อกดอัปเดต
+    sentStatus = {};
+
     await loadData();
 
     setButtonLoading(btn, false);
@@ -1616,16 +1787,6 @@ window.addEventListener(
     function() {
 
         loadData();
-
-        /*
-          อัพเดท Google Sheet
-          ทุก 1 นาที
-        */
-
-        setInterval(
-            loadData,
-            60000
-        );
 
     }
 );
@@ -1768,31 +1929,15 @@ async function loadData() {
         }
 
 
-        /*
-          เก็บข้อมูลใหม่
+        DATA = result;
 
-          สำคัญ:
-          teamNames / logos / shortsAi / AI / บอลบ้า / germanyCover
-          จะไม่ถูกนำไปใส่ Input
-        */
-
-        DATA =
-            result;
-
-
-        /*
-          อัพเดทปุ่มเมนูด่วน
-        */
 
         renderQuickButtons();
 
         renderTeamQuickButtons();
 
+        renderYtDescButtons();
 
-        /*
-          สร้างช่อง Input ใหม่
-          โดยตั้งใจให้เป็นช่องว่าง
-        */
 
         renderTeamNames();
 
@@ -1807,16 +1952,8 @@ async function loadData() {
         renderGermanyCover();
 
 
-        /*
-          เวลาอัพเดทจริง
-        */
-
         updateTime();
 
-
-        /*
-          ซ่อน Loading
-        */
 
         document
             .getElementById(
@@ -1843,10 +1980,6 @@ async function loadData() {
                 "อัพเดทข้อมูลแล้วเมื่อ " +
                 "เชื่อมต่อไม่สำเร็จ";
 
-
-        /*
-          ถ้าเป็นการอัพเดทครั้งแรก
-        */
 
         document
             .getElementById(
@@ -1904,8 +2037,6 @@ function updateTime() {
 
 /* =====================================================
    QUICK BUTTONS
-   A2:B17
-   16 BUTTONS
 ===================================================== */
 
 function renderQuickButtons() {
@@ -1956,11 +2087,6 @@ function renderQuickButtons() {
                         item.text
                     );
 
-                    /*
-                      หน่วงเวลาให้ตัวหมุนแสดงอย่างน้อย 600ms
-                      เพื่อให้ผู้ใช้รู้สึกว่าระบบทำงานเรียบร้อย
-                    */
-
                     const elapsed = Date.now() - startTime;
 
                     if (elapsed < 600) {
@@ -1986,8 +2112,6 @@ function renderQuickButtons() {
 
 /* =====================================================
    TEAM QUICK BUTTONS
-   A19:B24
-   6 BUTTONS
 ===================================================== */
 
 function renderTeamQuickButtons() {
@@ -2062,11 +2186,138 @@ function renderTeamQuickButtons() {
 
 
 /* =====================================================
+   YOUTUBE DESCRIPTION BUTTONS
+===================================================== */
+
+function renderYtDescButtons() {
+
+    const container =
+        document.getElementById(
+            "ytDescButtons"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    (DATA.ytDescButtons || []).forEach(
+        function(
+            item,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "quick-button";
+
+
+            button.textContent =
+                item.name ||
+                "ปุ่ม " +
+                (
+                    index +
+                    1
+                );
+
+
+            button.onclick =
+                async function() {
+
+                    setButtonLoading(button, true);
+
+                    const startTime = Date.now();
+
+                    await copyText(
+                        item.text
+                    );
+
+                    const elapsed = Date.now() - startTime;
+
+                    if (elapsed < 600) {
+
+                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
+
+                    }
+
+                    setButtonLoading(button, false);
+
+                };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   HELPER: CREATE INLINE QUICK BUTTON
+===================================================== */
+
+function createInlineQuickButton(item) {
+
+    if (!item || !item.name) return null;
+
+    const button = document.createElement("button");
+
+    button.className = "quick-button";
+
+    button.textContent = item.name;
+
+    button.onclick = async function() {
+
+        setButtonLoading(button, true);
+
+        const startTime = Date.now();
+
+        await copyText(item.text);
+
+        const elapsed = Date.now() - startTime;
+
+        if (elapsed < 600) {
+
+            await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
+
+        }
+
+        setButtonLoading(button, false);
+
+    };
+
+    return button;
+
+}
+
+
+/* =====================================================
    TEAM NAMES
-   B18
 ===================================================== */
 
 function renderTeamNames() {
+
+    // ปุ่มด่วนบนช่อง A6-B6
+    const topBtnContainer = document.getElementById("teamNamesTopBtn");
+
+    topBtnContainer.innerHTML = "";
+
+    if (DATA.btnA6_B6) {
+
+        const btn = createInlineQuickButton(DATA.btnA6_B6);
+
+        if (btn) topBtnContainer.appendChild(btn);
+
+    }
+
 
     const container =
         document.getElementById(
@@ -2105,7 +2356,6 @@ function renderTeamNames() {
 
 /* =====================================================
    LOGOS
-   B25:B30
 ===================================================== */
 
 function renderLogos() {
@@ -2125,13 +2375,6 @@ function renderLogos() {
         i < 6;
         i++
     ) {
-
-        /*
-          สำคัญ:
-          value = ""
-          ไม่ดึง B25:B30
-          มาใส่ Input
-        */
 
         const row =
             createInputRow({
@@ -2164,10 +2407,31 @@ function renderLogos() {
 
 /* =====================================================
    SHORTS AI
-   B31
 ===================================================== */
 
 function renderShortsAi() {
+
+    // ปุ่มด่วนบนช่อง A7-B7 & F10-G10
+    const topBtnContainer = document.getElementById("shortsAiTopBtn");
+
+    topBtnContainer.innerHTML = "";
+
+    if (DATA.btnA7_B7) {
+
+        const btn1 = createInlineQuickButton(DATA.btnA7_B7);
+
+        if (btn1) topBtnContainer.appendChild(btn1);
+
+    }
+
+    if (DATA.btnF10_G10) {
+
+        const btn2 = createInlineQuickButton(DATA.btnF10_G10);
+
+        if (btn2) topBtnContainer.appendChild(btn2);
+
+    }
+
 
     const container =
         document.getElementById(
@@ -2179,11 +2443,12 @@ function renderShortsAi() {
         "";
 
 
-    const row =
+    // 1. LM Shorts AI (Row 31)
+    const row1 =
         createInputRow({
 
             label:
-                "Shorts AI",
+                "LM Shorts AI",
 
             row:
                 31,
@@ -2193,20 +2458,48 @@ function renderShortsAi() {
 
         });
 
+    container.appendChild(row1);
 
-    container.appendChild(
-        row
-    );
+
+    // 2. GPT Shorts AI (G11)
+    const row2 =
+        createInputRow({
+
+            label:
+                "GPT Shorts AI",
+
+            cell:
+                "G11",
+
+            download:
+                false
+
+        });
+
+    container.appendChild(row2);
 
 }
 
 
 /* =====================================================
    AI
-   B32:B34
 ===================================================== */
 
 function renderAI() {
+
+    // ปุ่มด่วนบนช่อง A8-B8
+    const topBtnContainer = document.getElementById("aiBallTopBtn");
+
+    topBtnContainer.innerHTML = "";
+
+    if (DATA.btnA8_B8) {
+
+        const btn = createInlineQuickButton(DATA.btnA8_B8);
+
+        if (btn) topBtnContainer.appendChild(btn);
+
+    }
+
 
     const container =
         document.getElementById(
@@ -2255,10 +2548,23 @@ function renderAI() {
 
 /* =====================================================
    CRAZY BALL
-   B35:B37
 ===================================================== */
 
 function renderCrazy() {
+
+    // ปุ่มด่วนบนช่อง 3 ปุ่ม F7-G9
+    const topBtnContainer = document.getElementById("crazyBallTopBtn");
+
+    topBtnContainer.innerHTML = "";
+
+    (DATA.crazyButtons || []).forEach(item => {
+
+        const btn = createInlineQuickButton(item);
+
+        if (btn) topBtnContainer.appendChild(btn);
+
+    });
+
 
     const container =
         document.getElementById(
@@ -2307,10 +2613,23 @@ function renderCrazy() {
 
 /* =====================================================
    GERMANY COVER PROMPT
-   B38
 ===================================================== */
 
 function renderGermanyCover() {
+
+    // ปุ่มด่วนบนช่อง 2 ปุ่ม A10-B11
+    const topBtnContainer = document.getElementById("germanyTopBtn");
+
+    topBtnContainer.innerHTML = "";
+
+    (DATA.germanyButtons || []).forEach(item => {
+
+        const btn = createInlineQuickButton(item);
+
+        if (btn) topBtnContainer.appendChild(btn);
+
+    });
+
 
     const container =
         document.getElementById(
@@ -2352,6 +2671,8 @@ function createInputRow(
     options
 ) {
 
+    const rowKey = options.cell || options.row;
+
     const row =
         document.createElement(
             "div"
@@ -2372,13 +2693,11 @@ function createInputRow(
         "input-label";
 
 
-    label.textContent =
-        options.label;
+    // ตรวจสอบว่าเคยส่งข้อมูลสำเร็จไปแล้วหรือยัง
+    const isSent = sentStatus[rowKey];
 
+    label.textContent = (isSent ? "💯 " : "") + options.label;
 
-    /*
-      เปลี่ยนเป็น textarea เพื่อรองรับการขึ้นบรรทัดใหม่
-    */
 
     const input =
         document.createElement(
@@ -2396,12 +2715,6 @@ function createInputRow(
 
     input.value =
         "";
-
-
-    /*
-      ไม่ใส่คำอธิบายในช่อง
-      ไม่มี placeholder
-    */
 
 
     const actions =
@@ -2437,10 +2750,18 @@ function createInputRow(
 
             setButtonLoading(send, true);
 
-            await sendToSheet(
-                options.row,
+            const success = await sendToSheet(
+                options,
                 input
             );
+
+            if (success) {
+
+                sentStatus[rowKey] = true;
+
+                label.textContent = "💯 " + options.label;
+
+            }
 
             setButtonLoading(send, false);
 
@@ -2477,13 +2798,8 @@ function createInputRow(
 
                 setButtonLoading(copy, true);
 
-                /*
-                  Copy จากข้อมูลล่าสุด
-                  ใน Google Sheet
-                */
-
                 await copySheetValue(
-                    options.row
+                    options
                 );
 
                 setButtonLoading(copy, false);
@@ -2500,7 +2816,6 @@ function createInputRow(
 
     /* =================================================
        DOWNLOAD
-       เฉพาะ LOGO
     ================================================= */
 
     if (
@@ -2525,10 +2840,6 @@ function createInputRow(
             async function() {
 
                 setButtonLoading(download, true);
-
-                /*
-                  Download จาก Google Sheet
-                */
 
                 await downloadLogo(
                     options.row
@@ -2571,17 +2882,13 @@ function createInputRow(
 ===================================================== */
 
 async function sendToSheet(
-    row,
+    options,
     input
 ) {
 
     const value =
         input.value;
 
-
-    /*
-      ไม่ส่งช่องว่าง
-    */
 
     if (
         !value.trim()
@@ -2591,7 +2898,7 @@ async function sendToSheet(
             "กรุณาใส่ข้อมูลก่อนส่ง"
         );
 
-        return;
+        return false;
 
     }
 
@@ -2614,22 +2921,31 @@ async function sendToSheet(
         "postFrame";
 
 
-    const rowInput =
-        document.createElement(
-            "input"
-        );
+    if (options.cell) {
 
+        const cellInput = document.createElement("input");
 
-    rowInput.type =
-        "hidden";
+        cellInput.type = "hidden";
 
+        cellInput.name = "cell";
 
-    rowInput.name =
-        "row";
+        cellInput.value = options.cell;
 
+        form.appendChild(cellInput);
 
-    rowInput.value =
-        row;
+    } else {
+
+        const rowInput = document.createElement("input");
+
+        rowInput.type = "hidden";
+
+        rowInput.name = "row";
+
+        rowInput.value = options.row;
+
+        form.appendChild(rowInput);
+
+    }
 
 
     const valueInput =
@@ -2651,11 +2967,6 @@ async function sendToSheet(
 
 
     form.appendChild(
-        rowInput
-    );
-
-
-    form.appendChild(
         valueInput
     );
 
@@ -2671,11 +2982,6 @@ async function sendToSheet(
     form.remove();
 
 
-    /*
-      เมื่อส่งสำเร็จ
-      ล้างเฉพาะช่องที่กด
-    */
-
     input.value =
         "";
 
@@ -2685,14 +2991,11 @@ async function sendToSheet(
     );
 
 
-    /*
-      อัพเดทข้อมูลจาก Sheet
-      หลังจากส่งเล็กน้อย
-    */
-
     await new Promise(resolve => setTimeout(resolve, 1000));
 
     await loadData();
+
+    return true;
 
 }
 
@@ -2702,13 +3005,8 @@ async function sendToSheet(
 ===================================================== */
 
 async function copySheetValue(
-    row
+    options
 ) {
-
-    /*
-      โหลดข้อมูลล่าสุดก่อน
-      เพื่อให้ Copy เป็นค่าปัจจุบัน
-    */
 
     try {
 
@@ -2733,104 +3031,39 @@ async function copySheetValue(
         let value = "";
 
 
-        /*
-          B18 (รวมชื่อทีม)
-        */
+        if (options.cell === "G11") {
 
-        if (
-            row === 18
-        ) {
+            value = result.gptShortsAi || "";
 
-            value =
-                result
-                    .teamNames[0] || "";
+        } else {
 
-        }
+            const row = options.row;
 
+            if (row === 18) {
 
-        /*
-          B25:B30 (LOGO)
-        */
+                value = result.teamNames[0] || "";
 
-        else if (
-            row >= 25 &&
-            row <= 30
-        ) {
+            } else if (row >= 25 && row <= 30) {
 
-            value =
-                result
-                    .logos[
-                        row -
-                        25
-                    ] || "";
+                value = result.logos[row - 25] || "";
 
-        }
+            } else if (row === 31) {
 
+                value = result.shortsAi[0] || "";
 
-        /*
-          B31 (Shorts AI)
-        */
+            } else if (row >= 32 && row <= 34) {
 
-        else if (
-            row === 31
-        ) {
+                value = result.aiBall[row - 32] || "";
 
-            value =
-                result
-                    .shortsAi[0] || "";
+            } else if (row >= 35 && row <= 37) {
 
-        }
+                value = result.crazyBall[row - 35] || "";
 
+            } else if (row === 38) {
 
-        /*
-          B32:B34 (บอล AI)
-        */
+                value = result.germanyCover[0] || "";
 
-        else if (
-            row >= 32 &&
-            row <= 34
-        ) {
-
-            value =
-                result
-                    .aiBall[
-                        row -
-                        32
-                    ] || "";
-
-        }
-
-
-        /*
-          B35:B37 (บอลบ้า)
-        */
-
-        else if (
-            row >= 35 &&
-            row <= 37
-        ) {
-
-            value =
-                result
-                    .crazyBall[
-                        row -
-                        35
-                    ] || "";
-
-        }
-
-
-        /*
-          B38 (Prompt ปก Germany)
-        */
-
-        else if (
-            row === 38
-        ) {
-
-            value =
-                result
-                    .germanyCover[0] || "";
+            }
 
         }
 
@@ -2873,10 +3106,6 @@ async function downloadLogo(
     row
 ) {
 
-    /*
-      Download เฉพาะ B25:B30
-    */
-
     if (
         row < 25 ||
         row > 30
@@ -2886,10 +3115,6 @@ async function downloadLogo(
 
     }
 
-
-    /*
-      ดึงข้อมูลล่าสุดจาก Sheet
-    */
 
     let url = "";
 
@@ -2951,10 +3176,6 @@ async function downloadLogo(
 
     try {
 
-        /*
-          ขอรูปผ่าน Apps Script
-        */
-
         const result =
             await jsonp(
 
@@ -3008,10 +3229,6 @@ async function downloadLogo(
                         );
 
 
-                    /*
-                      พื้นหลังโปร่งใส
-                    */
-
                     ctx.clearRect(
                         0,
                         0,
@@ -3019,10 +3236,6 @@ async function downloadLogo(
                         3000
                     );
 
-
-                    /*
-                      รักษาสัดส่วนภาพ
-                    */
 
                     const scale =
                         Math.min(
@@ -3086,15 +3299,6 @@ async function downloadLogo(
                                     "a"
                                 );
 
-
-                            /*
-                              B25 = 1.png
-                              B26 = 2.png
-                              B27 = 3.png
-                              B28 = 4.png
-                              B29 = 5.png
-                              B30 = 6.png
-                            */
 
                             const fileNumber =
                                 row -
