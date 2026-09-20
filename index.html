@@ -133,6 +133,23 @@ body {
 }
 
 
+.settings-group {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    align-items:
+        flex-end;
+
+    gap:
+        4px;
+
+}
+
+
 .settings-button {
 
     display:
@@ -238,6 +255,23 @@ body {
 }
 
 
+.card-header {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        18px;
+
+}
+
+
 .card-title {
 
     font-size:
@@ -247,7 +281,132 @@ body {
         800;
 
     margin-bottom:
-        18px;
+        0;
+
+}
+
+
+.btn-refresh {
+
+    background:
+        #2563eb;
+
+    color:
+        white;
+
+    border:
+        none;
+
+    border-radius:
+        10px;
+
+    padding:
+        8px 16px;
+
+    font-weight:
+        800;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s;
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+}
+
+
+.btn-refresh:hover {
+
+    background:
+        #1d4ed8;
+
+    transform:
+        translateY(-1px);
+
+}
+
+
+/* =====================================================
+   NAV BAR
+===================================================== */
+
+.nav-bar {
+
+    display:
+        flex;
+
+    flex-wrap:
+        wrap;
+
+    gap:
+        10px;
+
+    margin-top:
+        15px;
+
+    margin-bottom:
+        20px;
+
+    padding:
+        10px;
+
+    background:
+        rgba(0, 0, 0, 0.2);
+
+    border-radius:
+        12px;
+
+    border:
+        1px solid rgba(255, 255, 255, 0.05);
+
+}
+
+
+.nav-item {
+
+    color:
+        #9ca3af;
+
+    text-decoration:
+        none;
+
+    font-weight:
+        700;
+
+    font-size:
+        14px;
+
+    padding:
+        8px 14px;
+
+    border-radius:
+        8px;
+
+    transition:
+        .2s;
+
+    background:
+        transparent;
+
+}
+
+
+.nav-item:hover {
+
+    color:
+        white;
+
+    background:
+        rgba(255, 255, 255, 0.1);
 
 }
 
@@ -836,8 +995,7 @@ body {
         grid-template-columns:
             repeat(
                 3,
-                1fr
-            );
+                1fr;
 
     }
 
@@ -981,6 +1139,29 @@ body {
             ⚡ RiD Finity Dashboard
         </div>
 
+    </div>
+
+
+    <!-- ตั้งค่า -->
+
+    <div class="settings-group">
+
+        <a
+            class="settings-button"
+            href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+
+            <span class="gear">
+                ⚙️
+            </span>
+
+            <span class="settings-text">
+                ตั้งค่า
+            </span>
+
+        </a>
 
         <div
             id="updateTime"
@@ -990,26 +1171,6 @@ body {
         </div>
 
     </div>
-
-
-    <!-- ตั้งค่า -->
-
-    <a
-        class="settings-button"
-        href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing"
-        target="_blank"
-        rel="noopener noreferrer"
-    >
-
-        <span class="gear">
-            ⚙️
-        </span>
-
-        <span class="settings-text">
-            ตั้งค่า
-        </span>
-
-    </a>
 
 
 </div>
@@ -1022,8 +1183,20 @@ body {
 <div class="card">
 
 
-    <div class="card-title">
-        ⚡ เมนูด่วน
+    <div class="card-header">
+
+        <div class="card-title">
+            ⚡ เมนูด่วน
+        </div>
+
+        <button
+            id="btnRefresh"
+            class="btn-refresh"
+            onclick="manualRefreshData()"
+        >
+            🔄 อัพเดทข้อมูล
+        </button>
+
     </div>
 
 
@@ -1037,10 +1210,31 @@ body {
 
 
 <!-- ===================================================
+     NAV BAR
+=================================================== -->
+
+<div class="nav-bar">
+
+    <a href="#sec-team" class="nav-item">รวมชื่อทีม</a>
+
+    <a href="#sec-logo" class="nav-item">LOGO ทีม</a>
+
+    <a href="#sec-shorts" class="nav-item">Shorts AI</a>
+
+    <a href="#sec-aiball" class="nav-item">บอล AI</a>
+
+    <a href="#sec-crazyball" class="nav-item">บอลบ้า</a>
+
+    <a href="#sec-germany" class="nav-item">Prompt ปก Germany</a>
+
+</div>
+
+
+<!-- ===================================================
      TEAM NAMES
 =================================================== -->
 
-<div class="card">
+<div id="sec-team" class="card">
 
 
     <div class="card-title">
@@ -1066,7 +1260,7 @@ body {
      LOGOS
 =================================================== -->
 
-<div class="card">
+<div id="sec-logo" class="card">
 
 
     <div class="card-title">
@@ -1086,7 +1280,7 @@ body {
      SHORTS AI
 =================================================== -->
 
-<div class="card">
+<div id="sec-shorts" class="card">
 
 
     <div class="card-title">
@@ -1106,7 +1300,7 @@ body {
      AI BALL
 =================================================== -->
 
-<div class="card">
+<div id="sec-aiball" class="card">
 
 
     <div class="card-title">
@@ -1126,7 +1320,7 @@ body {
      CRAZY BALL
 =================================================== -->
 
-<div class="card">
+<div id="sec-crazyball" class="card">
 
 
     <div class="card-title">
@@ -1146,7 +1340,7 @@ body {
      GERMANY COVER PROMPT
 =================================================== -->
 
-<div class="card">
+<div id="sec-germany" class="card">
 
 
     <div class="card-title">
@@ -1256,6 +1450,35 @@ function setButtonLoading(button, isLoading) {
         button.disabled = false;
 
     }
+
+}
+
+
+/* =====================================================
+   MANUAL REFRESH DATA
+===================================================== */
+
+async function manualRefreshData() {
+
+    const btn = document.getElementById("btnRefresh");
+
+    setButtonLoading(btn, true);
+
+    const startTime = Date.now();
+
+    await loadData();
+
+    const elapsed = Date.now() - startTime;
+
+    if (elapsed < 600) {
+
+        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
+
+    }
+
+    setButtonLoading(btn, false);
+
+    showToast("อัพเดทข้อมูลเรียบร้อยแล้ว ✓");
 
 }
 
@@ -1741,7 +1964,7 @@ function renderTeamNames() {
                 18,
 
             hasCopy:
-                false,
+                true,
 
             download:
                 false
