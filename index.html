@@ -1643,6 +1643,8 @@ let DATA = {
 
     btnA8_B8: null,
 
+    btnA39_B39: null,
+
     germanyButtons: [],
 
     ytDescButtons: [],
@@ -2508,7 +2510,7 @@ function renderLogos() {
 
 function renderShortsAi() {
 
-    // ปุ่มด่วนบนช่อง A7-B7 & F10-G10
+    // ปุ่มด่วนบนช่อง A7-B7, F10-G10 & A39-B39
     const topBtnContainer = document.getElementById("shortsAiTopBtn");
 
     topBtnContainer.innerHTML = "";
@@ -2529,6 +2531,14 @@ function renderShortsAi() {
 
     }
 
+    if (DATA.btnA39_B39) {
+
+        const btn3 = createInlineQuickButton(DATA.btnA39_B39);
+
+        if (btn3) topBtnContainer.appendChild(btn3);
+
+    }
+
 
     const container =
         document.getElementById(
@@ -2540,12 +2550,12 @@ function renderShortsAi() {
         "";
 
 
-    // 1. GPT Shorts AI (Row 31)
+    // 1. LM Shorts AI (Row 31)
     const row1 =
         createInputRow({
 
             label:
-                "GPT Shorts AI",
+                "LM Shorts AI",
 
             row:
                 31,
@@ -2556,6 +2566,24 @@ function renderShortsAi() {
         });
 
     container.appendChild(row1);
+
+
+    // 2. GPT Shorts AI (Row 39 -> B39)
+    const row2 =
+        createInputRow({
+
+            label:
+                "GPT Shorts AI",
+
+            row:
+                39,
+
+            download:
+                false
+
+        });
+
+    container.appendChild(row2);
 
 }
 
@@ -3151,6 +3179,10 @@ async function copySheetValue(
             } else if (row === 38) {
 
                 url += "&cell=B38";
+
+            } else if (row === 39) {
+
+                url += "&cell=B39";
 
             }
 
