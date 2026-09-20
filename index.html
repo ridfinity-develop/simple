@@ -1402,7 +1402,12 @@ body {
     <!-- กล่องปุ่มด่วน 6 ปุ่มแยกออกมา (ไม่ถูกซ่อน) -->
     <div class="card">
         <div
-            id="teamQuickButtons"
+            id="teamQuickButtons1"
+            class="team-quick-buttons"
+            style="margin-bottom: 10px;"
+        ></div>
+        <div
+            id="teamQuickButtons2"
             class="team-quick-buttons"
         ></div>
     </div>
@@ -1648,23 +1653,9 @@ let DATA = {
 
     btnF10_G10: null,
 
-    gptShortsAi: "",
+    teamQuickButtons1: [],
 
-    teamNames: [],
-
-    teamQuickButtons: [],
-
-    logos: [],
-
-    shortsAi: [],
-
-    aiBall: [],
-
-    crazyBall: [],
-
-    crazyCover: "",
-
-    germanyCover: []
+    teamQuickButtons2: []
 
 };
 
@@ -2099,6 +2090,63 @@ function updateTime() {
 
 
 /* =====================================================
+   FETCH AND COPY REAL-TIME
+===================================================== */
+
+async function fetchAndCopy(button, item) {
+
+    setButtonLoading(button, true);
+
+    const startTime = Date.now();
+
+    try {
+
+        let url = API_URL + "?action=getButtonText";
+
+        if (item.cell) {
+
+            url += "&cell=" + encodeURIComponent(item.cell);
+
+        } else if (item.type) {
+
+            url += "&type=" + encodeURIComponent(item.type) + "&index=" + item.index;
+
+        }
+
+        const res = await jsonp(url);
+
+        if (res.success) {
+
+            await copyText(res.text);
+
+        } else {
+
+            showToast("ดึงข้อมูลไม่สำเร็จ");
+
+        }
+
+    } catch (e) {
+
+        console.error(e);
+
+        showToast("เกิดข้อผิดพลาดในการดึงข้อมูล");
+
+    }
+
+    const elapsed = Date.now() - startTime;
+
+    if (elapsed < 300) {
+
+        await new Promise(resolve => setTimeout(resolve, 300 - elapsed));
+
+    }
+
+    setButtonLoading(button, false);
+
+}
+
+
+/* =====================================================
    QUICK BUTTONS
 ===================================================== */
 
@@ -2140,25 +2188,9 @@ function renderQuickButtons() {
 
 
             button.onclick =
-                async function() {
+                function() {
 
-                    setButtonLoading(button, true);
-
-                    const startTime = Date.now();
-
-                    await copyText(
-                        item.text
-                    );
-
-                    const elapsed = Date.now() - startTime;
-
-                    if (elapsed < 600) {
-
-                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
-
-                    }
-
-                    setButtonLoading(button, false);
+                    fetchAndCopy(button, item);
 
                 };
 
@@ -2179,17 +2211,24 @@ function renderQuickButtons() {
 
 function renderTeamQuickButtons() {
 
-    const container =
+    const container1 =
         document.getElementById(
-            "teamQuickButtons"
+            "teamQuickButtons1"
+        );
+
+    const container2 =
+        document.getElementById(
+            "teamQuickButtons2"
         );
 
 
-    container.innerHTML =
-        "";
+    container1.innerHTML = "";
+
+    container2.innerHTML = "";
 
 
-    (DATA.teamQuickButtons || []).forEach(
+    // แถวที่ 1 (A19:B24)
+    (DATA.teamQuickButtons1 || []).forEach(
         function(
             item,
             index
@@ -2215,30 +2254,55 @@ function renderTeamQuickButtons() {
 
 
             button.onclick =
-                async function() {
+                function() {
 
-                    setButtonLoading(button, true);
-
-                    const startTime = Date.now();
-
-                    await copyText(
-                        item.text
-                    );
-
-                    const elapsed = Date.now() - startTime;
-
-                    if (elapsed < 600) {
-
-                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
-
-                    }
-
-                    setButtonLoading(button, false);
+                    fetchAndCopy(button, item);
 
                 };
 
 
-            container.appendChild(
+            container1.appendChild(
+                button
+            );
+
+        }
+    );
+
+    // แถวที่ 2 (F14:G19)
+    (DATA.teamQuickButtons2 || []).forEach(
+        function(
+            item,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "quick-button";
+
+
+            button.textContent =
+                item.name ||
+                "ปุ่มด่วน " +
+                (
+                    index +
+                    7
+                );
+
+
+            button.onclick =
+                function() {
+
+                    fetchAndCopy(button, item);
+
+                };
+
+
+            container2.appendChild(
                 button
             );
 
@@ -2290,25 +2354,9 @@ function renderYtDescButtons() {
 
 
             button.onclick =
-                async function() {
+                function() {
 
-                    setButtonLoading(button, true);
-
-                    const startTime = Date.now();
-
-                    await copyText(
-                        item.text
-                    );
-
-                    const elapsed = Date.now() - startTime;
-
-                    if (elapsed < 600) {
-
-                        await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
-
-                    }
-
-                    setButtonLoading(button, false);
+                    fetchAndCopy(button, item);
 
                 };
 
@@ -2337,23 +2385,9 @@ function createInlineQuickButton(item) {
 
     button.textContent = item.name;
 
-    button.onclick = async function() {
+    button.onclick = function() {
 
-        setButtonLoading(button, true);
-
-        const startTime = Date.now();
-
-        await copyText(item.text);
-
-        const elapsed = Date.now() - startTime;
-
-        if (elapsed < 600) {
-
-            await new Promise(resolve => setTimeout(resolve, 600 - elapsed));
-
-        }
-
-        setButtonLoading(button, false);
+        fetchAndCopy(button, item);
 
     };
 
@@ -3102,34 +3136,11 @@ async function copySheetValue(
 
     try {
 
-        const result =
-            await jsonp(
-                API_URL +
-                "?action=getData"
-            );
+        let url = API_URL + "?action=getButtonText";
 
+        if (options.cell) {
 
-        if (
-            !result.success
-        ) {
-
-            throw new Error(
-                "โหลดข้อมูลไม่สำเร็จ"
-            );
-
-        }
-
-
-        let value = "";
-
-
-        if (options.cell === "G11") {
-
-            value = result.gptShortsAi || "";
-
-        } else if (options.cell === "G13") {
-
-            value = result.crazyCover || "";
+            url += "&cell=" + encodeURIComponent(options.cell);
 
         } else {
 
@@ -3137,34 +3148,35 @@ async function copySheetValue(
 
             if (row === 18) {
 
-                value = result.teamNames[0] || "";
+                url += "&cell=B18";
 
             } else if (row >= 25 && row <= 30) {
 
-                value = result.logos[row - 25] || "";
+                url += "&cell=B" + row;
 
             } else if (row === 31) {
 
-                value = result.shortsAi[0] || "";
+                url += "&cell=B31";
 
             } else if (row >= 32 && row <= 34) {
 
-                value = result.aiBall[row - 32] || "";
+                url += "&cell=B" + row;
 
             } else if (row >= 35 && row <= 37) {
 
-                value = result.crazyBall[row - 35] || "";
+                url += "&cell=B" + row;
 
             } else if (row === 38) {
 
-                value = result.germanyCover[0] || "";
+                url += "&cell=B38";
 
             }
 
         }
 
+        const result = await jsonp(url);
 
-        if (!value) {
+        if (!result.success || !result.text) {
 
             showToast(
                 "ไม่มีข้อมูลใน Google Sheet"
@@ -3175,7 +3187,7 @@ async function copySheetValue(
         }
 
 
-        await copyText(value);
+        await copyText(result.text);
 
 
     } catch(error) {
@@ -3220,7 +3232,7 @@ async function downloadLogo(
         const result =
             await jsonp(
                 API_URL +
-                "?action=getData"
+                "?action=getButtonText&cell=B" + row
             );
 
 
@@ -3235,12 +3247,7 @@ async function downloadLogo(
         }
 
 
-        url =
-            result
-                .logos[
-                    row -
-                    25
-                ] || "";
+        url = result.text || "";
 
 
     } catch(error) {
