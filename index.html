@@ -1464,24 +1464,49 @@ body {
 
 <div
     id="tab-aiBall"
-    class="card tab-content"
+    class="tab-content"
 >
 
+    <!-- กล่อง 🤖 บอล AI -->
+    <div class="card">
 
-    <div class="card-title" style="margin-bottom: 18px;">
-        🤖 บอล AI
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                🤖 บอล AI
+                <button id="btnToggleAiBall" class="toggle-btn" onclick="toggleSection('aiBallBody', 'btnToggleAiBall')" title="ซ่อน/แสดง">👁️</button>
+            </div>
+        </div>
+
+        <div id="aiBallBody">
+            <div
+                id="aiBallTopBtn"
+                class="inline-quick-buttons"
+            ></div>
+
+            <div
+                id="aiContainer"
+            ></div>
+        </div>
+
     </div>
 
+    <!-- กล่อง ตั้งชื่อ AI (เพิ่มเติม) -->
+    <div class="card">
 
-    <div
-        id="aiBallTopBtn"
-        class="inline-quick-buttons"
-    ></div>
+        <div class="card-title" style="margin-bottom: 18px;">
+            ตั้งชื่อ AI
+        </div>
 
+        <div
+            id="aiNameTopBtn"
+            class="inline-quick-buttons"
+        ></div>
 
-    <div
-        id="aiContainer"
-    ></div>
+        <div
+            id="aiNameContainer"
+        ></div>
+
+    </div>
 
 
 </div>
@@ -1637,11 +1662,17 @@ let DATA = {
 
     buttons: [],
 
+    extraButtons: [],
+
     btnA6_B6: null,
 
     btnA7_B7: null,
 
     btnA8_B8: null,
+
+    btnA17_B17: null,
+
+    btnA40_B40: null,
 
     btnA39_B39: null,
 
@@ -2164,7 +2195,8 @@ function renderQuickButtons() {
         "";
 
 
-    DATA.buttons.forEach(
+    // 16 ปุ่มเดิม (A2:B17)
+    (DATA.buttons || []).forEach(
         function(
             item,
             index
@@ -2186,6 +2218,47 @@ function renderQuickButtons() {
                 (
                     index +
                     1
+                );
+
+
+            button.onclick =
+                function() {
+
+                    fetchAndCopy(button, item);
+
+                };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+    // 16 ปุ่มเพิ่มเติม (A40:B55)
+    (DATA.extraButtons || []).forEach(
+        function(
+            item,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "quick-button";
+
+
+            button.textContent =
+                item.name ||
+                "ปุ่ม " +
+                (
+                    index +
+                    17
                 );
 
 
@@ -2649,6 +2722,43 @@ function renderAI() {
         );
 
     }
+
+    // --- ส่วน ตั้งชื่อ AI (B17) ---
+    const nameTopBtnContainer = document.getElementById("aiNameTopBtn");
+
+    nameTopBtnContainer.innerHTML = "";
+
+    if (DATA.btnA40_B40) {
+
+        const btnLeft = createInlineQuickButton(DATA.btnA40_B40);
+
+        if (btnLeft) nameTopBtnContainer.appendChild(btnLeft);
+
+    }
+
+    if (DATA.btnA17_B17) {
+
+        const btnRight = createInlineQuickButton(DATA.btnA17_B17);
+
+        if (btnRight) nameTopBtnContainer.appendChild(btnRight);
+
+    }
+
+    const nameContainer = document.getElementById("aiNameContainer");
+
+    nameContainer.innerHTML = "";
+
+    const nameRow = createInputRow({
+
+        label: "ตั้งชื่อ AI",
+
+        cell: "B17",
+
+        download: false
+
+    });
+
+    nameContainer.appendChild(nameRow);
 
 }
 
@@ -3170,7 +3280,7 @@ async function copySheetValue(
 
             } else if (row >= 32 && row <= 34) {
 
-                url += "&cell=B" + row;
+                url += "&cell=B34";
 
             } else if (row >= 35 && row <= 37) {
 
