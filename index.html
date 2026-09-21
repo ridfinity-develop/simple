@@ -1291,7 +1291,7 @@ body {
 
         <div class="card-title">
             ⚡ เมนูด่วน
-            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">👁️</button>
+            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">🙈</button>
         </div>
 
 
@@ -1309,6 +1309,7 @@ body {
     <div
         id="quickButtons"
         class="quick-buttons"
+        style="display: none;"
     ></div>
 
 
@@ -1696,7 +1697,7 @@ let DATA = {
 let sentStatus = {};
 
 // สถานะการแสดง/ซ่อนปุ่มเมนูด่วน
-let isQuickVisible = true;
+let isQuickVisible = false;
 
 
 /* =====================================================
