@@ -1291,7 +1291,7 @@ body {
 
         <div class="card-title">
             ⚡ เมนูด่วน
-            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">👁️</button>
+            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">🙈</button>
         </div>
 
 
@@ -1309,6 +1309,7 @@ body {
     <div
         id="quickButtons"
         class="quick-buttons"
+        style="display: none;"
     ></div>
 
 
@@ -1464,24 +1465,49 @@ body {
 
 <div
     id="tab-aiBall"
-    class="card tab-content"
+    class="tab-content"
 >
 
+    <!-- กล่อง 🤖 บอล AI -->
+    <div class="card">
 
-    <div class="card-title" style="margin-bottom: 18px;">
-        🤖 บอล AI
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                🤖 บอล AI
+                <button id="btnToggleAiBall" class="toggle-btn" onclick="toggleSection('aiBallBody', 'btnToggleAiBall')" title="ซ่อน/แสดง">👁️</button>
+            </div>
+        </div>
+
+        <div id="aiBallBody">
+            <div
+                id="aiBallTopBtn"
+                class="inline-quick-buttons"
+            ></div>
+
+            <div
+                id="aiContainer"
+            ></div>
+        </div>
+
     </div>
 
+    <!-- กล่อง ตั้งชื่อ AI -->
+    <div class="card">
 
-    <div
-        id="aiBallTopBtn"
-        class="inline-quick-buttons"
-    ></div>
+        <div class="card-title" style="margin-bottom: 18px;">
+            ตั้งชื่อ AI
+        </div>
 
+        <div
+            id="aiNameTopBtn"
+            class="inline-quick-buttons"
+        ></div>
 
-    <div
-        id="aiContainer"
-    ></div>
+        <div
+            id="aiNameContainer"
+        ></div>
+
+    </div>
 
 
 </div>
@@ -1637,11 +1663,17 @@ let DATA = {
 
     buttons: [],
 
+    extraButtons: [],
+
     btnA6_B6: null,
 
     btnA7_B7: null,
 
     btnA8_B8: null,
+
+    btnA17_B17: null,
+
+    btnA40_B40: null,
 
     btnA39_B39: null,
 
@@ -1664,8 +1696,8 @@ let DATA = {
 // สถานะการส่งข้อมูลสำเร็จ (Key: Row/Cell ID -> Boolean)
 let sentStatus = {};
 
-// สถานะการแสดง/ซ่อนปุ่มเมนูด่วน
-let isQuickVisible = true;
+// สถานะการแสดง/ซ่อนปุ่มเมนูด่วน (เริ่มต้นตั้งค่าให้ซ่อน)
+let isQuickVisible = false;
 
 
 /* =====================================================
@@ -2204,6 +2236,46 @@ function renderQuickButtons() {
         }
     );
 
+    (DATA.extraButtons || []).forEach(
+        function(
+            item,
+            index
+        ) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "quick-button";
+
+
+            button.textContent =
+                item.name ||
+                "ปุ่ม " +
+                (
+                    index +
+                    17
+                );
+
+
+            button.onclick =
+                function() {
+
+                    fetchAndCopy(button, item);
+
+                };
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
 }
 
 
@@ -2649,6 +2721,45 @@ function renderAI() {
         );
 
     }
+
+    // --- ส่วน ตั้งชื่อ AI ---
+    const aiNameTopBtnContainer = document.getElementById("aiNameTopBtn");
+
+    aiNameTopBtnContainer.innerHTML = "";
+
+    if (DATA.btnA40_B40) {
+
+        const btnLeft = createInlineQuickButton(DATA.btnA40_B40);
+
+        if (btnLeft) aiNameTopBtnContainer.appendChild(btnLeft);
+
+    }
+
+    if (DATA.btnA17_B17) {
+
+        const btnRight = createInlineQuickButton(DATA.btnA17_B17);
+
+        if (btnRight) aiNameTopBtnContainer.appendChild(btnRight);
+
+    }
+
+    const aiNameContainer = document.getElementById("aiNameContainer");
+
+    aiNameContainer.innerHTML = "";
+
+    const aiNameRow = createInputRow({
+
+        label: "ตั้งชื่อ AI",
+
+        cell: "G20",
+
+        copyCell: "B17",
+
+        download: false
+
+    });
+
+    aiNameContainer.appendChild(aiNameRow);
 
 }
 
@@ -3148,7 +3259,11 @@ async function copySheetValue(
 
         let url = API_URL + "?action=getButtonText";
 
-        if (options.cell) {
+        if (options.copyCell) {
+
+            url += "&cell=" + encodeURIComponent(options.copyCell);
+
+        } else if (options.cell) {
 
             url += "&cell=" + encodeURIComponent(options.cell);
 
