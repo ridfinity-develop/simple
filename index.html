@@ -1354,7 +1354,7 @@ body {
         class="tab-btn"
         onclick="switchTab('germanyCover')"
     >
-        💥 Prompt ปก Germany
+        Go To Germany
     </button>
 
     <button
@@ -1414,16 +1414,21 @@ body {
     </div>
 
 
-    <!-- กล่อง LOGO ทีม (ไม่ถูกซ่อน) -->
+    <!-- กล่อง LOGO ทีม (สามารถซ่อน/แสดงได้) -->
     <div class="card">
 
-        <div class="card-title" style="margin-bottom: 18px;">
-            ⚽ LOGO ทีม
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                ⚽ LOGO ทีม
+                <button id="btnToggleLogos" class="toggle-btn" onclick="toggleSection('logoBody', 'btnToggleLogos')" title="ซ่อน/แสดง">👁️</button>
+            </div>
         </div>
 
-        <div
-            id="logoContainer"
-        ></div>
+        <div id="logoBody">
+            <div
+                id="logoContainer"
+            ></div>
+        </div>
 
     </div>
 
@@ -1568,7 +1573,7 @@ body {
 
 
 <!-- ===================================================
-     GERMANY COVER PROMPT
+     GERMANY COVER PROMPT (GO TO GERMANY)
 =================================================== -->
 
 <div
@@ -1578,7 +1583,7 @@ body {
 
 
     <div class="card-title" style="margin-bottom: 18px;">
-        💥 Prompt ปก Germany
+        Go To Germany
     </div>
 
 
@@ -1678,6 +1683,8 @@ let DATA = {
     btnA39_B39: null,
 
     germanyButtons: [],
+
+    germanyBottomButtons: [],
 
     ytDescButtons: [],
 
@@ -2859,7 +2866,7 @@ function renderCrazy() {
 
 
 /* =====================================================
-   GERMANY COVER PROMPT
+   GERMANY COVER PROMPT (GO TO GERMANY)
 ===================================================== */
 
 function renderGermanyCover() {
@@ -2888,7 +2895,7 @@ function renderGermanyCover() {
         "";
 
 
-    const row =
+    const row1 =
         createInputRow({
 
             label:
@@ -2904,8 +2911,61 @@ function renderGermanyCover() {
 
 
     container.appendChild(
-        row
+        row1
     );
+
+
+    const row2 =
+        createInputRow({
+
+            label:
+                "Prompt Germany Script",
+
+            cell:
+                "G22",
+
+            download:
+                false
+
+        });
+
+
+    container.appendChild(
+        row2
+    );
+
+
+    if (DATA.germanyBottomButtons && DATA.germanyBottomButtons.length > 0) {
+
+        const bottomBtnGrid = document.createElement("div");
+
+        bottomBtnGrid.className = "quick-buttons";
+
+        bottomBtnGrid.style.marginTop = "15px";
+
+
+        DATA.germanyBottomButtons.forEach(function(item) {
+
+            const button = document.createElement("button");
+
+            button.className = "quick-button";
+
+            button.textContent = item.name || "ปุ่ม";
+
+            button.onclick = function() {
+
+                fetchAndCopy(button, item);
+
+            };
+
+            bottomBtnGrid.appendChild(button);
+
+        });
+
+
+        container.appendChild(bottomBtnGrid);
+
+    }
 
 }
 
