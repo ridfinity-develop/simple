@@ -1415,8 +1415,10 @@ body {
     </div>
 
 
-    <!-- กล่อง LOGO ทีม แยกเป็น 6 กล่องพร้อมปุ่มซ่อน/แสดง -->
-    <div id="logoContainer"></div>
+    <!-- กล่อง LOGO ทีม แยกเป็น 6 กล่อง และแต่ละกล่องซ่อนได้ -->
+    <div
+        id="logoContainer"
+    ></div>
 
 </div>
 
@@ -1559,7 +1561,7 @@ body {
 
 
 <!-- ===================================================
-     GERMANY COVER PROMPT (Go To Germany)
+     GERMANY COVER PROMPT
 =================================================== -->
 
 <div
@@ -1583,10 +1585,9 @@ body {
         id="germanyContainer"
     ></div>
 
-    <!-- ปุ่มคัดลอก A42-A45 -->
     <div
-        id="germanyExtraButtons"
-        class="quick-buttons"
+        id="germanyBottomBtnContainer"
+        class="inline-quick-buttons"
         style="margin-top: 15px;"
     ></div>
 
@@ -1677,7 +1678,7 @@ let DATA = {
 
     germanyButtons: [],
 
-    germanyExtraButtons: [],
+    germanyBottomButtons: [],
 
     ytDescButtons: [],
 
@@ -1745,7 +1746,7 @@ function toggleQuickButtons() {
 
         container.style.display = "grid";
 
-        btn.textContent = "👁️️";
+        btn.textContent = "👁️";
 
     } else {
 
@@ -2526,7 +2527,7 @@ function renderTeamNames() {
 
 
 /* =====================================================
-   LOGOS (แยกกล่อง + ซ่อนได้)
+   LOGOS
 ===================================================== */
 
 function renderLogos() {
@@ -2563,7 +2564,7 @@ function renderLogos() {
 
         title.className = "card-title";
 
-        title.innerHTML = `⚽ LOGO ทีมที่ ${i + 1} <button id="btnToggleLogo${i + 1}" class="toggle-btn" onclick="toggleSection('logoBody${i + 1}', 'btnToggleLogo${i + 1}')" title="ซ่อน/แสดง">👁️</button>`;
+        title.innerHTML = '⚽ LOGO ทีมที่ ' + (i + 1) + ' <button id="btnToggleLogo' + i + '" class="toggle-btn" onclick="toggleSection(\'logoBody' + i + '\', \'btnToggleLogo' + i + '\')" title="ซ่อน/แสดง">👁️</button>';
 
 
         header.appendChild(title);
@@ -2573,7 +2574,7 @@ function renderLogos() {
 
         const body = document.createElement("div");
 
-        body.id = `logoBody${i + 1}`;
+        body.id = "logoBody" + i;
 
 
         const row =
@@ -2600,7 +2601,10 @@ function renderLogos() {
 
         card.appendChild(body);
 
-        container.appendChild(card);
+
+        container.appendChild(
+            card
+        );
 
     }
 
@@ -2919,8 +2923,7 @@ function renderGermanyCover() {
         "";
 
 
-    // 1. Prompt ปก Germany (Row 38)
-    const row1 =
+    const row =
         createInputRow({
 
             label:
@@ -2936,12 +2939,11 @@ function renderGermanyCover() {
 
 
     container.appendChild(
-        row1
+        row
     );
 
 
-    // 2. Prompt Germany Script (ส่ง/คัดลอก G22)
-    const row2 =
+    const rowScript =
         createInputRow({
 
             label:
@@ -2957,35 +2959,22 @@ function renderGermanyCover() {
 
 
     container.appendChild(
-        row2
+        rowScript
     );
 
 
-    // 3. ปุ่มคัดลอก A42-A45
-    const extraContainer = document.getElementById("germanyExtraButtons");
+    // ปุ่ม 4 ปุ่มด้านล่าง (A42-A45 / B42-B45)
+    const bottomBtnContainer = document.getElementById("germanyBottomBtnContainer");
 
-    extraContainer.innerHTML = "";
+    bottomBtnContainer.innerHTML = "";
 
-    (DATA.germanyExtraButtons || []).forEach(
-        function(item, index) {
+    (DATA.germanyBottomButtons || []).forEach(item => {
 
-            const button = document.createElement("button");
+        const btn = createInlineQuickButton(item);
 
-            button.className = "quick-button";
+        if (btn) bottomBtnContainer.appendChild(btn);
 
-            button.textContent = item.name || ("ปุ่ม " + (index + 1));
-
-            button.onclick = function() {
-
-                fetchAndCopy(button, item);
-
-            };
-
-            extraContainer.appendChild(button);
-
-        }
-
-    );
+    });
 
 }
 
