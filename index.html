@@ -1123,7 +1123,8 @@ body {
         grid-template-columns:
             repeat(
                 3,
-                1fr;
+                1fr
+            );
 
         width:
             100%;
@@ -1354,7 +1355,7 @@ body {
         class="tab-btn"
         onclick="switchTab('germanyCover')"
     >
-        Go To Germany
+        💥 Go To Germany
     </button>
 
     <button
@@ -1414,23 +1415,8 @@ body {
     </div>
 
 
-    <!-- กล่อง LOGO ทีม (สามารถซ่อน/แสดงได้) -->
-    <div class="card">
-
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                ⚽ LOGO ทีม
-                <button id="btnToggleLogos" class="toggle-btn" onclick="toggleSection('logoBody', 'btnToggleLogos')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-
-        <div id="logoBody">
-            <div
-                id="logoContainer"
-            ></div>
-        </div>
-
-    </div>
+    <!-- กล่อง LOGO ทีม แยกเป็น 6 กล่องพร้อมปุ่มซ่อน/แสดง -->
+    <div id="logoContainer"></div>
 
 </div>
 
@@ -1573,7 +1559,7 @@ body {
 
 
 <!-- ===================================================
-     GERMANY COVER PROMPT (GO TO GERMANY)
+     GERMANY COVER PROMPT (Go To Germany)
 =================================================== -->
 
 <div
@@ -1583,7 +1569,7 @@ body {
 
 
     <div class="card-title" style="margin-bottom: 18px;">
-        Go To Germany
+        💥 Go To Germany
     </div>
 
 
@@ -1595,6 +1581,13 @@ body {
 
     <div
         id="germanyContainer"
+    ></div>
+
+    <!-- ปุ่มคัดลอก A42-A45 -->
+    <div
+        id="germanyExtraButtons"
+        class="quick-buttons"
+        style="margin-top: 15px;"
     ></div>
 
 
@@ -1684,7 +1677,7 @@ let DATA = {
 
     germanyButtons: [],
 
-    germanyBottomButtons: [],
+    germanyExtraButtons: [],
 
     ytDescButtons: [],
 
@@ -1752,7 +1745,7 @@ function toggleQuickButtons() {
 
         container.style.display = "grid";
 
-        btn.textContent = "👁️";
+        btn.textContent = "👁️️";
 
     } else {
 
@@ -2533,7 +2526,7 @@ function renderTeamNames() {
 
 
 /* =====================================================
-   LOGOS
+   LOGOS (แยกกล่อง + ซ่อนได้)
 ===================================================== */
 
 function renderLogos() {
@@ -2553,6 +2546,35 @@ function renderLogos() {
         i < 6;
         i++
     ) {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+
+
+        const header = document.createElement("div");
+
+        header.className = "card-header-flex";
+
+        header.style.marginBottom = "18px";
+
+
+        const title = document.createElement("div");
+
+        title.className = "card-title";
+
+        title.innerHTML = `⚽ LOGO ทีมที่ ${i + 1} <button id="btnToggleLogo${i + 1}" class="toggle-btn" onclick="toggleSection('logoBody${i + 1}', 'btnToggleLogo${i + 1}')" title="ซ่อน/แสดง">👁️</button>`;
+
+
+        header.appendChild(title);
+
+        card.appendChild(header);
+
+
+        const body = document.createElement("div");
+
+        body.id = `logoBody${i + 1}`;
+
 
         const row =
             createInputRow({
@@ -2574,9 +2596,11 @@ function renderLogos() {
             });
 
 
-        container.appendChild(
-            row
-        );
+        body.appendChild(row);
+
+        card.appendChild(body);
+
+        container.appendChild(card);
 
     }
 
@@ -2866,7 +2890,7 @@ function renderCrazy() {
 
 
 /* =====================================================
-   GERMANY COVER PROMPT (GO TO GERMANY)
+   GERMANY COVER PROMPT
 ===================================================== */
 
 function renderGermanyCover() {
@@ -2895,6 +2919,7 @@ function renderGermanyCover() {
         "";
 
 
+    // 1. Prompt ปก Germany (Row 38)
     const row1 =
         createInputRow({
 
@@ -2915,6 +2940,7 @@ function renderGermanyCover() {
     );
 
 
+    // 2. Prompt Germany Script (ส่ง/คัดลอก G22)
     const row2 =
         createInputRow({
 
@@ -2935,22 +2961,19 @@ function renderGermanyCover() {
     );
 
 
-    if (DATA.germanyBottomButtons && DATA.germanyBottomButtons.length > 0) {
+    // 3. ปุ่มคัดลอก A42-A45
+    const extraContainer = document.getElementById("germanyExtraButtons");
 
-        const bottomBtnGrid = document.createElement("div");
+    extraContainer.innerHTML = "";
 
-        bottomBtnGrid.className = "quick-buttons";
-
-        bottomBtnGrid.style.marginTop = "15px";
-
-
-        DATA.germanyBottomButtons.forEach(function(item) {
+    (DATA.germanyExtraButtons || []).forEach(
+        function(item, index) {
 
             const button = document.createElement("button");
 
             button.className = "quick-button";
 
-            button.textContent = item.name || "ปุ่ม";
+            button.textContent = item.name || ("ปุ่ม " + (index + 1));
 
             button.onclick = function() {
 
@@ -2958,14 +2981,11 @@ function renderGermanyCover() {
 
             };
 
-            bottomBtnGrid.appendChild(button);
+            extraContainer.appendChild(button);
 
-        });
+        }
 
-
-        container.appendChild(bottomBtnGrid);
-
-    }
+    );
 
 }
 
