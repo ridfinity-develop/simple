@@ -517,7 +517,7 @@ body {
     </div>
     <div class="settings-area">
         <a class="settings-button" href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
-            <span class="gear">⚙️</span>
+            <span class="gear">⚙️️</span>
             <span class="settings-text">ตั้งค่า</span>
         </a>
         <div id="updateTime" class="update-time">อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...</div>
@@ -569,7 +569,7 @@ body {
         <div id="teamQuickButtons2" class="team-quick-buttons"></div>
     </div>
 
-    <!-- กล่อง LOGO ทีม แยก 6 กล่อง (ข้อ 1) -->
+    <!-- กล่อง LOGO ทีม แยก 6 กล่อง -->
     <div id="logoContainer"></div>
 </div>
 
@@ -624,7 +624,7 @@ body {
     </div>
 </div>
 
-<!-- GO TO GERMANY (ข้อ 3, 4, 5) -->
+<!-- GO TO GERMANY -->
 <div id="tab-germanyCover" class="card tab-content">
     <div class="card-title" style="margin-bottom: 18px;">💥 Go To Germany</div>
     <div id="germanyTopBtn" class="inline-quick-buttons"></div>
@@ -632,9 +632,8 @@ body {
     <div id="germanyBottomBtn" class="inline-quick-buttons" style="margin-top: 15px;"></div>
 </div>
 
-<!-- SOUND TEST (ข้อ 6) -->
+<!-- SOUND TEST -->
 <div id="tab-soundTest" class="tab-content">
-    <!-- 6.1 สำหรับสร้าง SOUND (ซ่อนได้ คืนค่าซ่อน) -->
     <div class="card">
         <div class="card-header-flex" style="margin-bottom: 18px;">
             <div class="card-title">
@@ -648,16 +647,13 @@ body {
         </div>
     </div>
 
-    <!-- 6.2 Prompt สำเร็จรูป (ซ่อนไม่ได้) -->
     <div class="card">
         <div class="card-title" style="margin-bottom: 18px;">Prompt สำเร็จรูป</div>
         <div id="soundPromptButtons" class="inline-quick-buttons"></div>
     </div>
 
-    <!-- 6.3 กล่องใส่ข้อมูล 5 กล่อง (ซ่อนได้) -->
     <div id="soundInputContainers"></div>
 
-    <!-- 6.4 กล่องใส่ข้อมูล 1 กล่อง 2ชุด (ปก SOUND / ชื่อ SOUND) -->
     <div class="card">
         <div class="card-header-flex" style="margin-bottom: 18px;">
             <div class="card-title">
@@ -671,7 +667,7 @@ body {
     </div>
 </div>
 
-<!-- YOUTUBE DESCRIPTION (ข้อ 7) -->
+<!-- YOUTUBE DESCRIPTION -->
 <div id="tab-ytDescription" class="card tab-content">
     <div class="card-title" style="margin-bottom: 18px;">📺 YouTube Description</div>
     <div id="ytDescButtons" class="quick-buttons"></div>
@@ -979,7 +975,7 @@ function renderTeamQuickButtons() {
 }
 
 /* =====================================================
-   YOUTUBE DESCRIPTION BUTTONS (ข้อ 7)
+   YOUTUBE DESCRIPTION BUTTONS
 ===================================================== */
 function renderYtDescButtons() {
     const container = document.getElementById("ytDescButtons");
@@ -1030,7 +1026,7 @@ function renderTeamNames() {
 }
 
 /* =====================================================
-   LOGOS (ข้อ 1 - แยก 6 กล่อง แต่ละกล่องซ่อนได้)
+   LOGOS
 ===================================================== */
 function renderLogos() {
     const container = document.getElementById("logoContainer");
@@ -1097,16 +1093,19 @@ function renderShortsAi() {
 }
 
 /* =====================================================
-   AI (ข้อ 2 - เพิ่มปุ่มจาก F22 คัดลอก G22)
+   AI (แก้ไขแสดงผล 2 ปุ่ม: ปุ่มเก่า + ปุ่มใหม่)
 ===================================================== */
 function renderAI() {
     const topBtnContainer = document.getElementById("aiBallTopBtn");
     topBtnContainer.innerHTML = "";
 
+    // ปุ่มเก่า (ดึงจาก A8/B8)
     if (DATA.btnA8_B8) {
-        const btn = createInlineQuickButton(DATA.btnA8_B8);
-        if (btn) topBtnContainer.appendChild(btn);
+        const btn1 = createInlineQuickButton(DATA.btnA8_B8);
+        if (btn1) topBtnContainer.appendChild(btn1);
     }
+    
+    // ปุ่มใหม่ (ดึงจาก F22/G22)
     if (DATA.btnF22_G22) {
         const btn2 = createInlineQuickButton(DATA.btnF22_G22);
         if (btn2) topBtnContainer.appendChild(btn2);
@@ -1175,7 +1174,7 @@ function renderCrazy() {
 }
 
 /* =====================================================
-   GERMANY COVER PROMPT (ข้อ 3, 4, 5 - เพิ่มช่อง Prompt Germany Script และ 4 ปุ่มล่าง)
+   GERMANY COVER PROMPT
 ===================================================== */
 function renderGermanyCover() {
     const topBtnContainer = document.getElementById("germanyTopBtn");
@@ -1189,15 +1188,12 @@ function renderGermanyCover() {
     const container = document.getElementById("germanyContainer");
     container.innerHTML = "";
 
-    // เดิม
     const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false });
     container.appendChild(rowOld);
 
-    // ข้อ 3: เพิ่ม Prompt Germany Script ส่งและคัดลอก G22
     const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false });
     container.appendChild(rowNew);
 
-    // ข้อ 4: ปุ่ม 4 ปุ่มด้านล่าง A42-A45 คัดลอก B42-B45
     const bottomBtnContainer = document.getElementById("germanyBottomBtn");
     bottomBtnContainer.innerHTML = "";
 
@@ -1208,10 +1204,9 @@ function renderGermanyCover() {
 }
 
 /* =====================================================
-   SOUND TEST (ข้อ 6)
+   SOUND TEST
 ===================================================== */
 function renderSoundTest() {
-    // 6.1 แถวละ 5 ปุ่ม 2 แถว
     const c1 = document.getElementById("soundCreateButtons1");
     const c2 = document.getElementById("soundCreateButtons2");
     c1.innerHTML = "";
@@ -1227,7 +1222,6 @@ function renderSoundTest() {
         if (btn) c2.appendChild(btn);
     });
 
-    // 6.2 ปุ่มสำเร็จรูป 3 ปุ่ม
     const cPrompt = document.getElementById("soundPromptButtons");
     cPrompt.innerHTML = "";
 
@@ -1236,7 +1230,6 @@ function renderSoundTest() {
         if (btn) cPrompt.appendChild(btn);
     });
 
-    // 6.3 กล่องใส่ข้อมูล 5 กล่อง G58-G62 (ซ่อนได้)
     const inputsContainer = document.getElementById("soundInputContainers");
     inputsContainer.innerHTML = "";
 
@@ -1271,7 +1264,6 @@ function renderSoundTest() {
         inputsContainer.appendChild(card);
     }
 
-    // 6.4 ชุดที่1 ปก SOUND (G63) ชุดที่2 ชื่อ SOUND (G64)
     const doubleContainer = document.getElementById("soundDoubleContainer");
     doubleContainer.innerHTML = "";
 
