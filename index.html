@@ -517,34 +517,22 @@ body {
     </div>
     <div class="settings-area">
         <a class="settings-button" href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
-            <span class="gear">⚙️️</span>
+            <span class="gear">⚙</span>
             <span class="settings-text">ตั้งค่า</span>
         </a>
         <div id="updateTime" class="update-time">อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...</div>
     </div>
 </div>
 
-<!-- QUICK BUTTONS -->
-<div class="card">
-    <div class="card-header-flex">
-        <div class="card-title">
-            ⚡ เมนูด่วน
-            <button id="btnToggleQuick" class="toggle-btn" onclick="toggleQuickButtons()" title="ซ่อน/แสดงปุ่ม">🙈</button>
-        </div>
-        <button id="btnUpdateData" class="btn-update" onclick="manualUpdateData()">🔄 อัพเดทข้อมูล</button>
-    </div>
-    <div id="quickButtons" class="quick-buttons" style="display: none;"></div>
-</div>
-
 <!-- TAB NAVIGATION & CONTENT -->
 <div class="tab-nav">
     <button class="tab-btn active" onclick="switchTab('teamNames')">🏆 รวมชื่อทีม</button>
-    <button class="tab-btn" onclick="switchTab('shortsAi')">🎬 Shorts AI</button>
     <button class="tab-btn" onclick="switchTab('aiBall')">🤖 บอล AI</button>
-    <button class="tab-btn" onclick="switchTab('crazyBall')">🔥 บอลบ้า</button>
+    <button class="tab-btn" onclick="switchTab('voice')">🗣️ เสียงพากย์</button>
     <button class="tab-btn" onclick="switchTab('germanyCover')">💥 Go To Germany</button>
     <button class="tab-btn" onclick="switchTab('soundTest')">🎶 SOUND TEST</button>
     <button class="tab-btn" onclick="switchTab('ytDescription')">📺 YouTube Description</button>
+    <button id="btnUpdateData" class="btn-update" style="margin-left: auto;" onclick="manualUpdateData()">🔄 อัพเดทข้อมูล</button>
 </div>
 
 <!-- TEAM NAMES & LOGOS -->
@@ -573,15 +561,22 @@ body {
     <div id="logoContainer"></div>
 </div>
 
-<!-- SHORTS AI -->
-<div id="tab-shortsAi" class="card tab-content">
-    <div class="card-title" style="margin-bottom: 18px;">🎬 Shorts AI</div>
-    <div id="shortsAiTopBtn" class="inline-quick-buttons"></div>
-    <div id="shortsAiContainer"></div>
-</div>
-
 <!-- AI BALL -->
 <div id="tab-aiBall" class="tab-content">
+    <!-- Shorts AI ซ่อนได้ สถิติให้อยู่บน -->
+    <div class="card">
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                🎬 Shorts AI
+                <button id="btnToggleShortsAi" class="toggle-btn" onclick="toggleSection('shortsAiBody', 'btnToggleShortsAi')" title="ซ่อน/แสดง">👁️</button>
+            </div>
+        </div>
+        <div id="shortsAiBody">
+            <div id="shortsAiTopBtn" class="inline-quick-buttons"></div>
+            <div id="shortsAiContainer"></div>
+        </div>
+    </div>
+
     <div class="card">
         <div class="card-header-flex" style="margin-bottom: 18px;">
             <div class="card-title">
@@ -594,34 +589,12 @@ body {
             <div id="aiContainer"></div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="card-title" style="margin-bottom: 18px;">ตั้งชื่อ AI</div>
-        <div id="aiNameTopBtn" class="inline-quick-buttons"></div>
-        <div id="aiNameContainer"></div>
-    </div>
 </div>
 
-<!-- CRAZY BALL -->
-<div id="tab-crazyBall" class="tab-content">
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                🔥 บอลบ้า
-                <button id="btnToggleCrazyBall" class="toggle-btn" onclick="toggleSection('crazyBallBody', 'btnToggleCrazyBall')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-        <div id="crazyBallBody">
-            <div id="crazyBallTopBtn" class="inline-quick-buttons"></div>
-            <div id="crazyContainer"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-title" style="margin-bottom: 18px;">💥 Prompt ปกบอลบ้า</div>
-        <div id="crazyCoverTopBtn" class="inline-quick-buttons"></div>
-        <div id="crazyCoverContainer"></div>
-    </div>
+<!-- VOICE (เสียงพากย์) -->
+<div id="tab-voice" class="card tab-content">
+    <div class="card-title" style="margin-bottom: 18px;">🗣️ เสียงพากย์</div>
+    <div id="voiceButtons" class="quick-buttons"></div>
 </div>
 
 <!-- GO TO GERMANY -->
@@ -691,8 +664,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbx-rKYscSSSPgw1dTlzf5Br
    DATA & STATE
 ===================================================== */
 let DATA = {
-    buttons: [],
-    extraButtons: [],
+    voiceButtons: [],
     btnA6_B6: null,
     btnA7_B7: null,
     btnA8_B8: null,
@@ -706,15 +678,13 @@ let DATA = {
     soundCreateButtons2: [],
     soundPromptButtons: [],
     ytDescButtons: [],
-    crazyButtons: [],
-    crazyCoverButtons: [],
     btnF10_G10: null,
     teamQuickButtons1: [],
-    teamQuickButtons2: []
+    teamQuickButtons2: [],
+    currentValues: {}
 };
 
 let sentStatus = {};
-let isQuickVisible = false;
 
 /* =====================================================
    TOGGLE SECTION HELPER
@@ -723,6 +693,9 @@ function toggleSection(elementId, btnId) {
     const target = document.getElementById(elementId);
     const btn = document.getElementById(btnId);
     if (!target || !btn) return;
+
+    const isLogo = elementId.startsWith('logoBody');
+
     if (target.style.display === "none") {
         target.style.display = "block";
         btn.textContent = "👁️";
@@ -730,21 +703,12 @@ function toggleSection(elementId, btnId) {
         target.style.display = "none";
         btn.textContent = "🙈";
     }
-}
 
-/* =====================================================
-   TOGGLE QUICK BUTTONS
-===================================================== */
-function toggleQuickButtons() {
-    isQuickVisible = !isQuickVisible;
-    const container = document.getElementById("quickButtons");
-    const btn = document.getElementById("btnToggleQuick");
-    if (isQuickVisible) {
-        container.style.display = "grid";
-        btn.textContent = "👁️";
-    } else {
-        container.style.display = "none";
-        btn.textContent = "🙈";
+    if (isLogo) {
+        const logoIdx = elementId.replace('logoBody', '');
+        if (sentStatus['logo' + logoIdx]) {
+            btn.textContent = btn.textContent + " 💯";
+        }
     }
 }
 
@@ -778,7 +742,6 @@ function switchTab(tabId) {
 async function manualUpdateData() {
     const btn = document.getElementById('btnUpdateData');
     setButtonLoading(btn, true);
-    sentStatus = {};
     await loadData();
     setButtonLoading(btn, false);
     showToast('อัพเดทข้อมูลเรียบร้อยแล้ว ✓');
@@ -858,14 +821,13 @@ async function loadData() {
 
         DATA = result;
 
-        renderQuickButtons();
         renderTeamQuickButtons();
+        renderVoiceButtons();
         renderYtDescButtons();
         renderTeamNames();
         renderLogos();
         renderShortsAi();
         renderAI();
-        renderCrazy();
         renderGermanyCover();
         renderSoundTest();
 
@@ -894,11 +856,10 @@ function updateTime() {
 }
 
 /* =====================================================
-   FETCH AND COPY REAL-TIME
+   FETCH AND COPY REAL-TIME (แก้ไขให้เร็วกว่าเดิมและเสถียร)
 ===================================================== */
 async function fetchAndCopy(button, item) {
     setButtonLoading(button, true);
-    const startTime = Date.now();
     try {
         let url = API_URL + "?action=getButtonText";
         if (item.cell) {
@@ -909,43 +870,20 @@ async function fetchAndCopy(button, item) {
 
         const res = await jsonp(url);
         if (res.success) {
-            await copyText(res.text);
+            if (res.text !== undefined && res.text !== null && String(res.text).trim() !== "") {
+                await copyText(String(res.text));
+            } else {
+                showToast("ไม่มีข้อมูลใน Google Sheet");
+            }
         } else {
             showToast("ดึงข้อมูลไม่สำเร็จ");
         }
     } catch (e) {
         console.error(e);
         showToast("เกิดข้อผิดพลาดในการดึงข้อมูล");
+    } finally {
+        setButtonLoading(button, false);
     }
-    const elapsed = Date.now() - startTime;
-    if (elapsed < 300) {
-        await new Promise(resolve => setTimeout(resolve, 300 - elapsed));
-    }
-    setButtonLoading(button, false);
-}
-
-/* =====================================================
-   QUICK BUTTONS
-===================================================== */
-function renderQuickButtons() {
-    const container = document.getElementById("quickButtons");
-    container.innerHTML = "";
-
-    DATA.buttons.forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่ม " + (index + 1);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container.appendChild(button);
-    });
-
-    (DATA.extraButtons || []).forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่ม " + (index + 17);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container.appendChild(button);
-    });
 }
 
 /* =====================================================
@@ -971,6 +909,23 @@ function renderTeamQuickButtons() {
         button.textContent = item.name || "ปุ่มด่วน " + (index + 7);
         button.onclick = function() { fetchAndCopy(button, item); };
         container2.appendChild(button);
+    });
+}
+
+/* =====================================================
+   VOICE BUTTONS (เสียงพากย์)
+===================================================== */
+function renderVoiceButtons() {
+    const container = document.getElementById("voiceButtons");
+    if(!container) return;
+    container.innerHTML = "";
+
+    (DATA.voiceButtons || []).forEach(function(item, index) {
+        const button = document.createElement("button");
+        button.className = "quick-button";
+        button.textContent = item.name || "ปุ่ม " + (index + 1);
+        button.onclick = function() { fetchAndCopy(button, item); };
+        container.appendChild(button);
     });
 }
 
@@ -1020,13 +975,14 @@ function renderTeamNames() {
         label: "รวมชื่อทีม",
         row: 18,
         hasCopy: true,
-        download: false
+        download: false,
+        initialValue: DATA.currentValues ? DATA.currentValues.row18 : ""
     });
     container.appendChild(row);
 }
 
 /* =====================================================
-   LOGOS
+   LOGOS (ซ่อนตาม Default + ย้าย 💯 ไว้หลัง 👁️/🙈)
 ===================================================== */
 function renderLogos() {
     const container = document.getElementById("logoContainer");
@@ -1040,20 +996,26 @@ function renderLogos() {
         cardHeader.className = "card-header-flex";
         cardHeader.style.marginBottom = "18px";
 
+        const isSent = sentStatus['logo' + (i + 1)];
         const title = document.createElement("div");
         title.className = "card-title";
-        title.innerHTML = `⚽ LOGO ทีมที่ ${i + 1} <button id="btnToggleLogo${i+1}" class="toggle-btn" onclick="toggleSection('logoBody${i+1}', 'btnToggleLogo${i+1}')" title="ซ่อน/แสดง">👁️</button>`;
+        
+        title.innerHTML = `⚽ LOGO ทีมที่ ${i + 1} <button id="btnToggleLogo${i+1}" class="toggle-btn" onclick="toggleSection('logoBody${i+1}', 'btnToggleLogo${i+1}')" title="ซ่อน/แสดง">🙈${isSent ? ' 💯' : ''}</button>`;
 
         cardHeader.appendChild(title);
         card.appendChild(cardHeader);
 
         const body = document.createElement("div");
         body.id = `logoBody${i+1}`;
+        body.style.display = "none"; // โหมดซ่อนเริ่มต้นตามข้อ 5
 
         const row = createInputRow({
             label: "LOGO ทีมที่ " + (i + 1),
             row: 25 + i,
-            download: true
+            download: true,
+            isLogoRow: true,
+            logoIndex: i + 1,
+            initialValue: DATA.currentValues ? DATA.currentValues['row' + (25 + i)] : ""
         });
 
         body.appendChild(row);
@@ -1085,15 +1047,15 @@ function renderShortsAi() {
     const container = document.getElementById("shortsAiContainer");
     container.innerHTML = "";
 
-    const row1 = createInputRow({ label: "LM Shorts AI", row: 31, download: false });
+    const row1 = createInputRow({ label: "LM Shorts AI", row: 31, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row31 : "" });
     container.appendChild(row1);
 
-    const row2 = createInputRow({ label: "GPT Shorts AI", row: 39, download: false });
+    const row2 = createInputRow({ label: "GPT Shorts AI", row: 39, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row39 : "" });
     container.appendChild(row2);
 }
 
 /* =====================================================
-   AI (แก้ไขแสดงผล 2 ปุ่ม: ปุ่มเก่า + ปุ่มใหม่)
+   AI (ถอด "ตั้งชื่อ AI" ออกตามข้อ 4)
 ===================================================== */
 function renderAI() {
     const topBtnContainer = document.getElementById("aiBallTopBtn");
@@ -1115,62 +1077,10 @@ function renderAI() {
     container.innerHTML = "";
 
     for (let i = 0; i < 3; i++) {
-        const row = createInputRow({ label: "บอล AI คู่ที่ " + (i + 1), row: 32 + i, download: false });
+        const rowNum = 32 + i;
+        const row = createInputRow({ label: "บอล AI คู่ที่ " + (i + 1), row: rowNum, download: false, initialValue: DATA.currentValues ? DATA.currentValues['row' + rowNum] : "" });
         container.appendChild(row);
     }
-
-    const aiNameTopBtnContainer = document.getElementById("aiNameTopBtn");
-    aiNameTopBtnContainer.innerHTML = "";
-
-    if (DATA.btnA40_B40) {
-        const btnLeft = createInlineQuickButton(DATA.btnA40_B40);
-        if (btnLeft) aiNameTopBtnContainer.appendChild(btnLeft);
-    }
-    if (DATA.btnA17_B17) {
-        const btnRight = createInlineQuickButton(DATA.btnA17_B17);
-        if (btnRight) aiNameTopBtnContainer.appendChild(btnRight);
-    }
-
-    const aiNameContainer = document.getElementById("aiNameContainer");
-    aiNameContainer.innerHTML = "";
-
-    const aiNameRow = createInputRow({ label: "ตั้งชื่อ AI", cell: "G20", copyCell: "B17", download: false });
-    aiNameContainer.appendChild(aiNameRow);
-}
-
-/* =====================================================
-   CRAZY BALL
-===================================================== */
-function renderCrazy() {
-    const topBtnContainer = document.getElementById("crazyBallTopBtn");
-    topBtnContainer.innerHTML = "";
-
-    (DATA.crazyButtons || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) topBtnContainer.appendChild(btn);
-    });
-
-    const container = document.getElementById("crazyContainer");
-    container.innerHTML = "";
-
-    for (let i = 0; i < 3; i++) {
-        const row = createInputRow({ label: "บอลบ้า คู่ที่ " + (i + 1), row: 35 + i, download: false });
-        container.appendChild(row);
-    }
-
-    const coverTopBtnContainer = document.getElementById("crazyCoverTopBtn");
-    coverTopBtnContainer.innerHTML = "";
-
-    (DATA.crazyCoverButtons || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) coverTopBtnContainer.appendChild(btn);
-    });
-
-    const coverContainer = document.getElementById("crazyCoverContainer");
-    coverContainer.innerHTML = "";
-
-    const coverRow = createInputRow({ label: "Prompt ปกบอลบ้า", cell: "G13", download: false });
-    coverContainer.appendChild(coverRow);
 }
 
 /* =====================================================
@@ -1188,10 +1098,10 @@ function renderGermanyCover() {
     const container = document.getElementById("germanyContainer");
     container.innerHTML = "";
 
-    const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false });
+    const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row38 : "" });
     container.appendChild(rowOld);
 
-    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false });
+    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG22 : "" });
     container.appendChild(rowNew);
 
     const bottomBtnContainer = document.getElementById("germanyBottomBtn");
@@ -1256,7 +1166,8 @@ function renderSoundTest() {
             label: "SOUND ที่ " + (i + 1),
             cell: cell,
             copyCell: cell,
-            download: false
+            download: false,
+            initialValue: DATA.currentValues ? DATA.currentValues['cell' + cell] : ""
         });
 
         body.appendChild(row);
@@ -1267,8 +1178,8 @@ function renderSoundTest() {
     const doubleContainer = document.getElementById("soundDoubleContainer");
     doubleContainer.innerHTML = "";
 
-    const row1 = createInputRow({ label: "ปก SOUND", cell: "G63", copyCell: "G63", download: false });
-    const row2 = createInputRow({ label: "ชื่อ SOUND", cell: "G64", copyCell: "G64", download: false });
+    const row1 = createInputRow({ label: "ปก SOUND", cell: "G63", copyCell: "G63", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG63 : "" });
+    const row2 = createInputRow({ label: "ชื่อ SOUND", cell: "G64", copyCell: "G64", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG64 : "" });
 
     doubleContainer.appendChild(row1);
     doubleContainer.appendChild(row2);
@@ -1286,12 +1197,18 @@ function createInputRow(options) {
     label.className = "input-label";
 
     const isSent = sentStatus[rowKey];
-    label.textContent = (isSent ? "💯 " : "") + options.label;
+    
+    // สำหรับ LOGO ทีม ให้ข้ามการใส่ 💯 ด้านหน้าข้อความเพื่อไปใส่หลังสัญลักษณ์ซ่อนแทนตามข้อ 5
+    if (options.isLogoRow) {
+        label.textContent = options.label;
+    } else {
+        label.textContent = (isSent ? "💯 " : "") + options.label;
+    }
 
     const input = document.createElement("textarea");
     input.className = "input-box";
     input.rows = 2;
-    input.value = "";
+    input.value = options.initialValue || "";
 
     const actions = document.createElement("div");
     actions.className = "actions";
@@ -1305,7 +1222,16 @@ function createInputRow(options) {
         const success = await sendToSheet(options, input);
         if (success) {
             sentStatus[rowKey] = true;
-            label.textContent = "💯 " + options.label;
+            if (options.isLogoRow) {
+                sentStatus['logo' + options.logoIndex] = true;
+                const toggleBtn = document.getElementById("btnToggleLogo" + options.logoIndex);
+                if (toggleBtn) {
+                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
+                    toggleBtn.textContent = currentIcon + " 💯";
+                }
+            } else {
+                label.textContent = "💯 " + options.label;
+            }
         }
         setButtonLoading(send, false);
     };
@@ -1383,16 +1309,15 @@ async function sendToSheet(options, input) {
     form.submit();
     form.remove();
 
-    input.value = "";
     showToast("ส่งข้อมูลเรียบร้อยแล้ว ✓");
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    await loadData();
+    await new Promise(resolve => setTimeout(resolve, 800));
+    await loadData(); // ดึงข้อมูลอัพเดททั้งหมดตามข้อ 6
     return true;
 }
 
 /* =====================================================
-   COPY FROM GOOGLE SHEET
+   COPY FROM GOOGLE SHEET (แก้ไขข้อ 7 ให้เสถียรและเร็ว)
 ===================================================== */
 async function copySheetValue(options) {
     try {
@@ -1421,12 +1346,17 @@ async function copySheetValue(options) {
         }
 
         const result = await jsonp(url);
-        if (!result.success || !result.text) {
+        if (!result.success) {
+            showToast("ไม่สามารถเชื่อมต่อได้");
+            return;
+        }
+
+        if (result.text === undefined || result.text === null || String(result.text).trim() === "") {
             showToast("ไม่มีข้อมูลใน Google Sheet");
             return;
         }
 
-        await copyText(result.text);
+        await copyText(String(result.text));
     } catch(error) {
         console.error(error);
         showToast("คัดลอกไม่สำเร็จ");
@@ -1506,7 +1436,7 @@ async function downloadLogo(row) {
 }
 
 /* =====================================================
-   COPY TEXT
+   COPY TEXT (แก้ไขการทำงานให้เร็ว และลดการ Error)
 ===================================================== */
 async function copyText(text) {
     if (!text) {
@@ -1514,19 +1444,37 @@ async function copyText(text) {
         return;
     }
 
-    try {
-        await navigator.clipboard.writeText(text);
+    let isSuccess = false;
+    if (navigator.clipboard && window.isSecureContext) {
+        try {
+            await navigator.clipboard.writeText(text);
+            isSuccess = true;
+        } catch (err) {
+            isSuccess = false;
+        }
+    }
+
+    if (!isSuccess) {
+        try {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.left = "-9999px";
+            textarea.style.top = "0";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            isSuccess = document.execCommand("copy");
+            textarea.remove();
+        } catch (e) {
+            isSuccess = false;
+        }
+    }
+
+    if (isSuccess) {
         showToast("คัดลอกข้อมูลแล้ว ✓");
-    } catch(error) {
-        const textarea = document.createElement("textarea");
-        textarea.value = text;
-        textarea.style.position = "fixed";
-        textarea.style.opacity = "0";
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        textarea.remove();
-        showToast("คัดลอกข้อมูลแล้ว ✓");
+    } else {
+        showToast("คัดลอกไม่สำเร็จ");
     }
 }
 
