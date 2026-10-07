@@ -680,8 +680,7 @@ let DATA = {
     ytDescButtons: [],
     btnF10_G10: null,
     teamQuickButtons1: [],
-    teamQuickButtons2: [],
-    currentValues: {}
+    teamQuickButtons2: []
 };
 
 let sentStatus = {};
@@ -695,6 +694,7 @@ function toggleSection(elementId, btnId) {
     if (!target || !btn) return;
 
     const isLogo = elementId.startsWith('logoBody');
+    const isSoundInput = elementId.startsWith('soundInputBody');
 
     if (target.style.display === "none") {
         target.style.display = "block";
@@ -707,6 +707,11 @@ function toggleSection(elementId, btnId) {
     if (isLogo) {
         const logoIdx = elementId.replace('logoBody', '');
         if (sentStatus['logo' + logoIdx]) {
+            btn.textContent = btn.textContent + " 💯";
+        }
+    } else if (isSoundInput) {
+        const soundIdx = elementId.replace('soundInputBody', '');
+        if (sentStatus['sound' + soundIdx]) {
             btn.textContent = btn.textContent + " 💯";
         }
     }
@@ -856,7 +861,7 @@ function updateTime() {
 }
 
 /* =====================================================
-   FETCH AND COPY REAL-TIME (แก้ไขให้เร็วกว่าเดิมและเสถียร)
+   FETCH AND COPY REAL-TIME
 ===================================================== */
 async function fetchAndCopy(button, item) {
     setButtonLoading(button, true);
@@ -975,8 +980,7 @@ function renderTeamNames() {
         label: "รวมชื่อทีม",
         row: 18,
         hasCopy: true,
-        download: false,
-        initialValue: DATA.currentValues ? DATA.currentValues.row18 : ""
+        download: false
     });
     container.appendChild(row);
 }
@@ -1007,15 +1011,14 @@ function renderLogos() {
 
         const body = document.createElement("div");
         body.id = `logoBody${i+1}`;
-        body.style.display = "none"; // โหมดซ่อนเริ่มต้นตามข้อ 5
+        body.style.display = "none"; // โหมดซ่อนเริ่มต้น
 
         const row = createInputRow({
             label: "LOGO ทีมที่ " + (i + 1),
             row: 25 + i,
             download: true,
             isLogoRow: true,
-            logoIndex: i + 1,
-            initialValue: DATA.currentValues ? DATA.currentValues['row' + (25 + i)] : ""
+            logoIndex: i + 1
         });
 
         body.appendChild(row);
@@ -1047,15 +1050,15 @@ function renderShortsAi() {
     const container = document.getElementById("shortsAiContainer");
     container.innerHTML = "";
 
-    const row1 = createInputRow({ label: "LM Shorts AI", row: 31, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row31 : "" });
+    const row1 = createInputRow({ label: "LM Shorts AI", row: 31, download: false });
     container.appendChild(row1);
 
-    const row2 = createInputRow({ label: "GPT Shorts AI", row: 39, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row39 : "" });
+    const row2 = createInputRow({ label: "GPT Shorts AI", row: 39, download: false });
     container.appendChild(row2);
 }
 
 /* =====================================================
-   AI (ถอด "ตั้งชื่อ AI" ออกตามข้อ 4)
+   AI
 ===================================================== */
 function renderAI() {
     const topBtnContainer = document.getElementById("aiBallTopBtn");
@@ -1078,7 +1081,7 @@ function renderAI() {
 
     for (let i = 0; i < 3; i++) {
         const rowNum = 32 + i;
-        const row = createInputRow({ label: "บอล AI คู่ที่ " + (i + 1), row: rowNum, download: false, initialValue: DATA.currentValues ? DATA.currentValues['row' + rowNum] : "" });
+        const row = createInputRow({ label: "บอล AI คู่ที่ " + (i + 1), row: rowNum, download: false });
         container.appendChild(row);
     }
 }
@@ -1098,10 +1101,10 @@ function renderGermanyCover() {
     const container = document.getElementById("germanyContainer");
     container.innerHTML = "";
 
-    const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false, initialValue: DATA.currentValues ? DATA.currentValues.row38 : "" });
+    const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false });
     container.appendChild(rowOld);
 
-    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG22 : "" });
+    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false });
     container.appendChild(rowNew);
 
     const bottomBtnContainer = document.getElementById("germanyBottomBtn");
@@ -1114,7 +1117,7 @@ function renderGermanyCover() {
 }
 
 /* =====================================================
-   SOUND TEST
+   SOUND TEST (ปรับให้ SOUND 1-5 ซ่อนเริ่มต้น และย้าย 💯 ไปหลังสัญลักษณ์ซ่อน)
 ===================================================== */
 function renderSoundTest() {
     const c1 = document.getElementById("soundCreateButtons1");
@@ -1152,22 +1155,26 @@ function renderSoundTest() {
         cardHeader.className = "card-header-flex";
         cardHeader.style.marginBottom = "18px";
 
+        const isSent = sentStatus['sound' + (i + 1)];
         const title = document.createElement("div");
         title.className = "card-title";
-        title.innerHTML = `🎶 SOUND ที่ ${i + 1} <button id="btnToggleSoundInput${i+1}" class="toggle-btn" onclick="toggleSection('soundInputBody${i+1}', 'btnToggleSoundInput${i+1}')" title="ซ่อน/แสดง">👁️</button>`;
+        
+        title.innerHTML = `🎶 SOUND ที่ ${i + 1} <button id="btnToggleSoundInput${i+1}" class="toggle-btn" onclick="toggleSection('soundInputBody${i+1}', 'btnToggleSoundInput${i+1}')" title="ซ่อน/แสดง">🙈${isSent ? ' 💯' : ''}</button>`;
 
         cardHeader.appendChild(title);
         card.appendChild(cardHeader);
 
         const body = document.createElement("div");
         body.id = `soundInputBody${i+1}`;
+        body.style.display = "none"; // ค่าเริ่มต้นคือโหมดซ่อนตามข้อ 2
 
         const row = createInputRow({
             label: "SOUND ที่ " + (i + 1),
             cell: cell,
             copyCell: cell,
             download: false,
-            initialValue: DATA.currentValues ? DATA.currentValues['cell' + cell] : ""
+            isSoundRow: true,
+            soundIndex: i + 1
         });
 
         body.appendChild(row);
@@ -1178,8 +1185,8 @@ function renderSoundTest() {
     const doubleContainer = document.getElementById("soundDoubleContainer");
     doubleContainer.innerHTML = "";
 
-    const row1 = createInputRow({ label: "ปก SOUND", cell: "G63", copyCell: "G63", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG63 : "" });
-    const row2 = createInputRow({ label: "ชื่อ SOUND", cell: "G64", copyCell: "G64", download: false, initialValue: DATA.currentValues ? DATA.currentValues.cellG64 : "" });
+    const row1 = createInputRow({ label: "ปก SOUND", cell: "G63", copyCell: "G63", download: false });
+    const row2 = createInputRow({ label: "ชื่อ SOUND", cell: "G64", copyCell: "G64", download: false });
 
     doubleContainer.appendChild(row1);
     doubleContainer.appendChild(row2);
@@ -1198,8 +1205,8 @@ function createInputRow(options) {
 
     const isSent = sentStatus[rowKey];
     
-    // สำหรับ LOGO ทีม ให้ข้ามการใส่ 💯 ด้านหน้าข้อความเพื่อไปใส่หลังสัญลักษณ์ซ่อนแทนตามข้อ 5
-    if (options.isLogoRow) {
+    // หากเป็น LOGO หรือ SOUND ไม่ต้องใส่ 💯 ด้านหน้าข้อความ ให้ไปใส่ที่ปุ่มซ่อน/แสดงแทน
+    if (options.isLogoRow || options.isSoundRow) {
         label.textContent = options.label;
     } else {
         label.textContent = (isSent ? "💯 " : "") + options.label;
@@ -1208,7 +1215,7 @@ function createInputRow(options) {
     const input = document.createElement("textarea");
     input.className = "input-box";
     input.rows = 2;
-    input.value = options.initialValue || "";
+    input.value = ""; // ไม่ดึงข้อมูลเก่ามาแสดง ให้ปล่อยว่างไว้พร้อมรับข้อมูลใหม่เสมอตามข้อ 1
 
     const actions = document.createElement("div");
     actions.className = "actions";
@@ -1225,6 +1232,13 @@ function createInputRow(options) {
             if (options.isLogoRow) {
                 sentStatus['logo' + options.logoIndex] = true;
                 const toggleBtn = document.getElementById("btnToggleLogo" + options.logoIndex);
+                if (toggleBtn) {
+                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
+                    toggleBtn.textContent = currentIcon + " 💯";
+                }
+            } else if (options.isSoundRow) {
+                sentStatus['sound' + options.soundIndex] = true;
+                const toggleBtn = document.getElementById("btnToggleSoundInput" + options.soundIndex);
                 if (toggleBtn) {
                     const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
                     toggleBtn.textContent = currentIcon + " 💯";
@@ -1309,15 +1323,17 @@ async function sendToSheet(options, input) {
     form.submit();
     form.remove();
 
+    // เคลียร์ค่าในช่องข้อมูลให้กลับมาว่างทันทีตามข้อ 1
+    input.value = "";
     showToast("ส่งข้อมูลเรียบร้อยแล้ว ✓");
 
     await new Promise(resolve => setTimeout(resolve, 800));
-    await loadData(); // ดึงข้อมูลอัพเดททั้งหมดตามข้อ 6
+    await loadData();
     return true;
 }
 
 /* =====================================================
-   COPY FROM GOOGLE SHEET (แก้ไขข้อ 7 ให้เสถียรและเร็ว)
+   COPY FROM GOOGLE SHEET
 ===================================================== */
 async function copySheetValue(options) {
     try {
@@ -1436,7 +1452,7 @@ async function downloadLogo(row) {
 }
 
 /* =====================================================
-   COPY TEXT (แก้ไขการทำงานให้เร็ว และลดการ Error)
+   COPY TEXT
 ===================================================== */
 async function copyText(text) {
     if (!text) {
