@@ -532,6 +532,8 @@ body {
     <button class="tab-btn" onclick="switchTab('germanyCover')">💥 Go To Germany</button>
     <button class="tab-btn" onclick="switchTab('soundTest')">🎶 SOUND TEST</button>
     <button class="tab-btn" onclick="switchTab('ytDescription')">📺 YouTube Description</button>
+    <!-- 4. เพิ่มเมนูใหม่ BLOGGER AI ต่อทางท้าย -->
+    <button class="tab-btn" onclick="switchTab('bloggerAi')">🧭 BLOGGER AI</button>
     <button id="btnUpdateData" class="btn-update" style="margin-left: auto;" onclick="manualUpdateData()">🔄 อัพเดทข้อมูล</button>
 </div>
 
@@ -646,6 +648,52 @@ body {
     <div id="ytDescButtons" class="quick-buttons"></div>
 </div>
 
+<!-- 4. BLOGGER AI -->
+<div id="tab-bloggerAi" class="tab-content">
+    <!-- 4.1 Link Youtube -->
+    <div class="card">
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                🔗 Link Youtube
+                <button id="btnToggleYtLink" class="toggle-btn" onclick="toggleSection('ytLinkBody', 'btnToggleYtLink')" title="ซ่อน/แสดง">🙈</button>
+            </div>
+        </div>
+        <div id="ytLinkBody" style="display: none;">
+            <div id="bloggerYtLinkContainer"></div>
+        </div>
+    </div>
+
+    <!-- 4.2 บทวิเคราห์บอล -->
+    <div class="card">
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                ⚽ บทวิเคราห์บอล
+                <button id="btnToggleBallAnalysis" class="toggle-btn" onclick="toggleSection('ballAnalysisBody', 'btnToggleBallAnalysis')" title="ซ่อน/แสดง">🙈</button>
+            </div>
+        </div>
+        <div id="ballAnalysisBody" style="display: none;">
+            <div id="ballAnalysisTopBtn" class="inline-quick-buttons"></div>
+            <div id="ballAnalysisContainer"></div>
+            <div id="ballAnalysisBottomBtn" class="inline-quick-buttons" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <!-- 4.3 ข่าวบอล -->
+    <div class="card">
+        <div class="card-header-flex" style="margin-bottom: 18px;">
+            <div class="card-title">
+                📰 ข่าวบอล
+                <button id="btnToggleBallNews" class="toggle-btn" onclick="toggleSection('ballNewsBody', 'btnToggleBallNews')" title="ซ่อน/แสดง">🙈</button>
+            </div>
+        </div>
+        <div id="ballNewsBody" style="display: none;">
+            <div id="ballNewsTopBtn" class="inline-quick-buttons"></div>
+            <div id="ballNewsContainer"></div>
+            <div id="ballNewsBottomBtn" class="inline-quick-buttons" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+</div>
+
 </div>
 
 <!-- TOAST -->
@@ -680,7 +728,11 @@ let DATA = {
     ytDescButtons: [],
     btnF10_G10: null,
     teamQuickButtons1: [],
-    teamQuickButtons2: []
+    teamQuickButtons2: [],
+    bloggerAnalysisTop: [],
+    bloggerAnalysisBottom: [],
+    bloggerNewsTop: [],
+    bloggerNewsBottom: []
 };
 
 let sentStatus = {};
@@ -835,6 +887,7 @@ async function loadData() {
         renderAI();
         renderGermanyCover();
         renderSoundTest();
+        renderBloggerAi();
 
         updateTime();
 
@@ -986,7 +1039,7 @@ function renderTeamNames() {
 }
 
 /* =====================================================
-   LOGOS (ซ่อนตาม Default + ย้าย 💯 ไว้หลัง 👁️/🙈)
+   LOGOS
 ===================================================== */
 function renderLogos() {
     const container = document.getElementById("logoContainer");
@@ -1011,7 +1064,7 @@ function renderLogos() {
 
         const body = document.createElement("div");
         body.id = `logoBody${i+1}`;
-        body.style.display = "none"; // โหมดซ่อนเริ่มต้น
+        body.style.display = "none";
 
         const row = createInputRow({
             label: "LOGO ทีมที่ " + (i + 1),
@@ -1064,13 +1117,11 @@ function renderAI() {
     const topBtnContainer = document.getElementById("aiBallTopBtn");
     topBtnContainer.innerHTML = "";
 
-    // ปุ่มเก่า (ดึงจาก A8/B8)
     if (DATA.btnA8_B8) {
         const btn1 = createInlineQuickButton(DATA.btnA8_B8);
         if (btn1) topBtnContainer.appendChild(btn1);
     }
     
-    // ปุ่มใหม่ (ดึงจาก F22/G22)
     if (DATA.btnF22_G22) {
         const btn2 = createInlineQuickButton(DATA.btnF22_G22);
         if (btn2) topBtnContainer.appendChild(btn2);
@@ -1101,11 +1152,14 @@ function renderGermanyCover() {
     const container = document.getElementById("germanyContainer");
     container.innerHTML = "";
 
+    // 2. สลับ Prompt Germany Script ขึ้นบน (ส่งไป G23, คัดลอกจาก B90)
+    // 3. ข้อมูลในช่อง Prompt Germany Script เมื่อกดส่ง ให้ส่งไปใส่ที่ G23
+    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G23", copyCell: "B90", download: false });
+    container.appendChild(rowNew);
+
+    // 2. สลับ Prompt ปก Germany ลงล่าง
     const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false });
     container.appendChild(rowOld);
-
-    const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false });
-    container.appendChild(rowNew);
 
     const bottomBtnContainer = document.getElementById("germanyBottomBtn");
     bottomBtnContainer.innerHTML = "";
@@ -1117,7 +1171,7 @@ function renderGermanyCover() {
 }
 
 /* =====================================================
-   SOUND TEST (ปรับให้ SOUND 1-5 ซ่อนเริ่มต้น และย้าย 💯 ไปหลังสัญลักษณ์ซ่อน)
+   SOUND TEST
 ===================================================== */
 function renderSoundTest() {
     const c1 = document.getElementById("soundCreateButtons1");
@@ -1166,7 +1220,7 @@ function renderSoundTest() {
 
         const body = document.createElement("div");
         body.id = `soundInputBody${i+1}`;
-        body.style.display = "none"; // ค่าเริ่มต้นคือโหมดซ่อนตามข้อ 2
+        body.style.display = "none";
 
         const row = createInputRow({
             label: "SOUND ที่ " + (i + 1),
@@ -1193,6 +1247,57 @@ function renderSoundTest() {
 }
 
 /* =====================================================
+   4. BLOGGER AI
+===================================================== */
+function renderBloggerAi() {
+    // 4.1 Link Youtube (ส่งและคัดลอกจาก B90)
+    const ytContainer = document.getElementById("bloggerYtLinkContainer");
+    ytContainer.innerHTML = "";
+    const ytRow = createInputRow({ label: "Link Youtube", cell: "B90", copyCell: "B90", download: false });
+    ytContainer.appendChild(ytRow);
+
+    // 4.2 บทวิเคราห์บอล
+    const analysisTopBtn = document.getElementById("ballAnalysisTopBtn");
+    analysisTopBtn.innerHTML = "";
+    (DATA.bloggerAnalysisTop || []).forEach(item => {
+        const btn = createInlineQuickButton(item);
+        if (btn) analysisTopBtn.appendChild(btn);
+    });
+
+    const analysisContainer = document.getElementById("ballAnalysisContainer");
+    analysisContainer.innerHTML = "";
+    const analysisRow = createInputRow({ label: "บทความ", cell: "B91", copyCell: "B91", download: false });
+    analysisContainer.appendChild(analysisRow);
+
+    const analysisBottomBtn = document.getElementById("ballAnalysisBottomBtn");
+    analysisBottomBtn.innerHTML = "";
+    (DATA.bloggerAnalysisBottom || []).forEach(item => {
+        const btn = createInlineQuickButton(item);
+        if (btn) analysisBottomBtn.appendChild(btn);
+    });
+
+    // 4.3 ข่าวบอล
+    const newsTopBtn = document.getElementById("ballNewsTopBtn");
+    newsTopBtn.innerHTML = "";
+    (DATA.bloggerNewsTop || []).forEach(item => {
+        const btn = createInlineQuickButton(item);
+        if (btn) newsTopBtn.appendChild(btn);
+    });
+
+    const newsContainer = document.getElementById("ballNewsContainer");
+    newsContainer.innerHTML = "";
+    const newsRow = createInputRow({ label: "ข่าวบอล", cell: "B92", copyCell: "B92", download: false });
+    newsContainer.appendChild(newsRow);
+
+    const newsBottomBtn = document.getElementById("ballNewsBottomBtn");
+    newsBottomBtn.innerHTML = "";
+    (DATA.bloggerNewsBottom || []).forEach(item => {
+        const btn = createInlineQuickButton(item);
+        if (btn) newsBottomBtn.appendChild(btn);
+    });
+}
+
+/* =====================================================
    CREATE INPUT ROW
 ===================================================== */
 function createInputRow(options) {
@@ -1205,7 +1310,6 @@ function createInputRow(options) {
 
     const isSent = sentStatus[rowKey];
     
-    // หากเป็น LOGO หรือ SOUND ไม่ต้องใส่ 💯 ด้านหน้าข้อความ ให้ไปใส่ที่ปุ่มซ่อน/แสดงแทน
     if (options.isLogoRow || options.isSoundRow) {
         label.textContent = options.label;
     } else {
@@ -1215,7 +1319,7 @@ function createInputRow(options) {
     const input = document.createElement("textarea");
     input.className = "input-box";
     input.rows = 2;
-    input.value = ""; // ไม่ดึงข้อมูลเก่ามาแสดง ให้ปล่อยว่างไว้พร้อมรับข้อมูลใหม่เสมอตามข้อ 1
+    input.value = "";
 
     const actions = document.createElement("div");
     actions.className = "actions";
@@ -1323,7 +1427,6 @@ async function sendToSheet(options, input) {
     form.submit();
     form.remove();
 
-    // เคลียร์ค่าในช่องข้อมูลให้กลับมาว่างทันทีตามข้อ 1
     input.value = "";
     showToast("ส่งข้อมูลเรียบร้อยแล้ว ✓");
 
