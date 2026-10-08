@@ -1,1526 +1,279 @@
-<!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RiD Finity Dashboard</title>
+const SHEET_NAME = "Sheet1";
 
-<style>
-/* =====================================================
-   RESET
-===================================================== */
-* {
-    box-sizing: border-box;
-}
+// =====================================================
+// GET
+// =====================================================
 
-/* =====================================================
-   BODY
-===================================================== */
-body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: "Segoe UI", "Noto Sans Thai", Arial, sans-serif;
-    background: radial-gradient(circle at top right, #25304a 0%, #111827 35%, #080b12 100%);
-    color: white;
-}
+function doGet(e) {
 
-/* =====================================================
-   CONTAINER
-===================================================== */
-.container {
-    width: min(1200px, 94%);
-    margin: auto;
-    padding: 25px 0 50px;
-}
+  const action = e.parameter.action || "getData";
+  const callback = e.parameter.callback || "callback";
 
-/* =====================================================
-   HEADER
-===================================================== */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
+  try {
 
-.title-area {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
+    const sheet = getSheet();
 
-.logo-title {
-    font-size: 26px;
-    font-weight: 800;
-}
+    // =================================================
+    // GET BUTTON TEXT REALTIME
+    // =================================================
+    if (action === "getButtonText") {
+      const type = e.parameter.type || "";
+      const index = Number(e.parameter.index) || 0;
+      const cell = e.parameter.cell || "";
 
-.settings-area {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 5px;
-}
+      let text = "";
 
-.update-time {
-    font-size: 13px;
-    color: #9ca3af;
-}
+      if (cell) {
+        text = sheet.getRange(cell).getValue() || "";
+      } else if (type === "voice") {
+        // แก้ไข: ใช้ช่วง A71:B86 (index 0 คือ row 71)
+        text = sheet.getRange(index + 71, 2).getValue() || "";
+      } else if (type === "teamQuick1") {
+        text = sheet.getRange(index + 19, 2).getValue() || "";
+      } else if (type === "teamQuick2") {
+        text = sheet.getRange(index + 14, 7).getValue() || "";
+      } else if (type === "ytDesc") {
+        text = sheet.getRange(index + 12, 2).getValue() || "";
+      } else if (type === "germany") {
+        text = sheet.getRange(index + 10, 2).getValue() || "";
+      } else if (type === "ballAnalysisTop") {
+        // บอล AI วิเคราะห์บอล ปุ่มบน A87:B89
+        text = sheet.getRange(index + 87, 2).getValue() || "";
+      } else if (type === "ballAnalysisBottom") {
+        // บอล AI วิเคราะห์บอล ปุ่มล่าง A93:B96
+        text = sheet.getRange(index + 93, 2).getValue() || "";
+      } else if (type === "ballNewsTop") {
+        // บอล AI ข่าวบอล ปุ่มบน A97:B99
+        text = sheet.getRange(index + 97, 2).getValue() || "";
+      } else if (type === "ballNewsBottom") {
+        // บอล AI ข่าวบอล ปุ่มล่าง A100:B103
+        text = sheet.getRange(index + 100, 2).getValue() || "";
+      }
 
-.settings-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 7px;
-    min-height: 44px;
-    padding: 0 17px;
-    border: none;
-    border-radius: 11px;
-    background: #374151;
-    color: white;
-    font-weight: 800;
-    cursor: pointer;
-    text-decoration: none;
-    transition: .2s;
-}
-
-.settings-button:hover {
-    background: #4b5563;
-    transform: translateY(-1px);
-}
-
-/* =====================================================
-   CARD
-===================================================== */
-.card {
-    background: rgba(17, 24, 39, .88);
-    border: 1px solid rgba(255, 255, 255, .08);
-    border-radius: 20px;
-    padding: 22px;
-    margin-bottom: 20px;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, .25);
-    backdrop-filter: blur(15px);
-}
-
-.card-header-flex {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-.card-title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.toggle-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 18px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    transition: background 0.2s;
-}
-
-.toggle-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.btn-update {
-    background: #2563eb;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 8px 16px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: .2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn-update:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-/* =====================================================
-   TAB NAVIGATION
-===================================================== */
-.tab-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    padding-bottom: 15px;
-}
-
-.tab-btn {
-    background: #1f2937;
-    color: #9ca3af;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 10px 18px;
-    border-radius: 10px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: .2s;
-}
-
-.tab-btn:hover {
-    background: #374151;
-    color: white;
-}
-
-.tab-btn.active {
-    background: #6366f1;
-    color: white;
-    border-color: #6366f1;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-/* =====================================================
-   QUICK BUTTONS
-===================================================== */
-.quick-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-
-.grid-5 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-}
-
-.quick-button {
-    border: none;
-    min-height: 65px;
-    border-radius: 14px;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
-    color: white;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: .2s;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.quick-button:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.12);
-}
-
-.quick-button:active {
-    transform: scale(.97);
-}
-
-/* =====================================================
-   TEAM QUICK BUTTONS
-===================================================== */
-.team-quick-buttons {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
-}
-
-/* Inline / Top Quick Buttons */
-.inline-quick-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.inline-quick-buttons .quick-button {
-    min-height: 45px;
-    padding: 0 20px;
-    flex: 1;
-    min-width: 120px;
-}
-
-/* =====================================================
-   INPUT ROW
-===================================================== */
-.input-row {
-    display: grid;
-    grid-template-columns: 200px 1fr auto;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 12px;
-}
-
-.input-label {
-    font-weight: 700;
-    color: #e5e7eb;
-}
-
-.input-box {
-    width: 100%;
-    min-height: 48px;
-    padding: 10px 14px;
-    border-radius: 11px;
-    border: 1px solid #374151;
-    background: #0b1120;
-    color: white;
-    outline: none;
-    font-size: 15px;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.input-box:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, .15);
-}
-
-/* =====================================================
-   ACTIONS
-===================================================== */
-.actions {
-    display: flex;
-    gap: 7px;
-}
-
-.btn {
-    border: none;
-    border-radius: 10px;
-    min-width: 78px;
-    min-height: 43px;
-    padding: 0 13px;
-    color: white;
-    font-weight: 800;
-    cursor: pointer;
-    transition: .2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.btn:hover {
-    filter: brightness(1.15);
-}
-
-.btn-send {
-    background: #16a34a;
-}
-
-.btn-copy {
-    background: #2563eb;
-}
-
-.btn-download {
-    background: #9333ea;
-}
-
-/* =====================================================
-   BUTTON SPINNER
-===================================================== */
-.btn-spinner {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 3px solid rgba(255, 255, 255, 0.3);
-    border-top-color: #ffffff;
-    animation: spin 1s linear infinite;
-}
-
-/* =====================================================
-   TOAST
-===================================================== */
-.toast {
-    position: fixed;
-    left: 50%;
-    bottom: 25px;
-    transform: translate(-50%, 120px);
-    background: #111827;
-    border: 1px solid rgba(255, 255, 255, .12);
-    color: white;
-    padding: 13px 22px;
-    border-radius: 50px;
-    font-weight: 700;
-    opacity: 0;
-    transition: .3s;
-    z-index: 9999;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translate(-50%, 0);
-}
-
-/* =====================================================
-   LOADING
-===================================================== */
-.loading {
-    position: fixed;
-    inset: 0;
-    background: #080b12;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    z-index: 10000;
-    transition: .3s;
-}
-
-.loading.hide {
-    opacity: 0;
-    pointer-events: none;
-}
-
-.spinner {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    border: 4px solid #374151;
-    border-top-color: #6366f1;
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-/* =====================================================
-   MOBILE
-===================================================== */
-@media(max-width: 800px) {
-    .container {
-        width: 94%;
-        padding-top: 15px;
+      return jsonp({
+        success: true,
+        text: text
+      }, callback);
     }
 
-    .header {
-        align-items: flex-start;
-        flex-direction: row;
-        gap: 10px;
-    }
+    // =================================================
+    // GET DATA
+    // =================================================
 
-    .logo-title {
-        font-size: 21px;
-    }
+    if (action === "getData") {
 
-    .settings-area {
-        align-items: flex-end;
-    }
+      const valuesA_B = sheet.getRange("A2:B103").getValues();
 
-    .update-time {
-        font-size: 11px;
-    }
+      // ดึง F22:G22 สำหรับปุ่ม บอล AI ใหม่
+      const valuesF22_G22 = sheet.getRange("F22:G22").getValues();
 
-    .settings-button {
-        min-width: 45px;
-        width: 45px;
-        padding: 0;
-        font-size: 0;
-    }
+      // ดึง A42:B45 สำหรับ 4 ปุ่มล่างใน Go To Germany
+      const valuesA42_B45 = sheet.getRange("A42:B45").getValues();
 
-    .settings-button .gear {
-        font-size: 21px;
-    }
+      // ดึง F45:G57 สำหรับ SOUND TEST
+      const valuesF45_G57 = sheet.getRange("F45:G57").getValues();
 
-    .quick-buttons {
-        grid-template-columns: repeat(2, 1fr);
-    }
+      // ดึง F25:G36 สำหรับ YouTube Description 12 ปุ่มใหม่
+      const valuesF25_G36 = sheet.getRange("F25:G36").getValues();
 
-    .grid-5 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .team-quick-buttons {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .input-row {
-        grid-template-columns: 1fr;
-        gap: 7px;
-    }
-
-    .actions {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        width: 100%;
-    }
-
-    .btn {
-        width: 100%;
-    }
-}
-
-/* =====================================================
-   SMALL PHONE
-===================================================== */
-@media(max-width: 420px) {
-    .card {
-        padding: 15px;
-        border-radius: 16px;
-    }
-
-    .quick-button {
-        min-height: 60px;
-        font-size: 13px;
-    }
-
-    .team-quick-buttons {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .input-label {
-        font-size: 14px;
-    }
-
-    .btn {
-        font-size: 12px;
-        min-width: 0;
-    }
-}
-</style>
-</head>
-
-<body>
-
-<!-- LOADING -->
-<div id="loading" class="loading">
-    <div class="spinner"></div>
-    <div>กำลังโหลดข้อมูล</div>
-</div>
-
-<div class="container">
-
-<!-- HEADER -->
-<div class="header">
-    <div class="title-area">
-        <div class="logo-title">⚡ RiD Finity Dashboard</div>
-    </div>
-    <div class="settings-area">
-        <a class="settings-button" href="https://docs.google.com/spreadsheets/d/1dqbNGPB0gKAAUmTLTmVdMqdpkw_PVCR6HTDyuoQ9asc/edit?usp=sharing" target="_blank" rel="noopener noreferrer">
-            <span class="gear">⚙</span>
-            <span class="settings-text">ตั้งค่า</span>
-        </a>
-        <div id="updateTime" class="update-time">อัพเดทข้อมูลแล้วเมื่อ กำลังเชื่อมต่อ...</div>
-    </div>
-</div>
-
-<!-- TAB NAVIGATION & CONTENT -->
-<div class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('teamNames')">🏆 รวมชื่อทีม</button>
-    <button class="tab-btn" onclick="switchTab('aiBall')">🤖 บอล AI</button>
-    <button class="tab-btn" onclick="switchTab('voice')">🗣️ เสียงพากย์</button>
-    <button class="tab-btn" onclick="switchTab('germanyCover')">💥 Go To Germany</button>
-    <button class="tab-btn" onclick="switchTab('soundTest')">🎶 SOUND TEST</button>
-    <button class="tab-btn" onclick="switchTab('ytDescription')">📺 YouTube Description</button>
-</div>
-
-<!-- TEAM NAMES & LOGOS -->
-<div id="tab-teamNames" class="tab-content active">
-    <!-- รวมชื่อทีม -->
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                🏆 รวมชื่อทีม
-                <button id="btnToggleTeamNames" class="toggle-btn" onclick="toggleSection('teamNamesBody', 'btnToggleTeamNames')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-        <div id="teamNamesBody">
-            <div id="teamNamesTopBtn" class="inline-quick-buttons"></div>
-            <div id="teamNamesContainer"></div>
-        </div>
-    </div>
-
-    <!-- กล่องปุ่มด่วน 6 ปุ่มแยกออกมา -->
-    <div class="card">
-        <div id="teamQuickButtons1" class="team-quick-buttons" style="margin-bottom: 10px;"></div>
-        <div id="teamQuickButtons2" class="team-quick-buttons"></div>
-    </div>
-
-    <!-- กล่อง LOGO ทีม แยก 6 กล่อง -->
-    <div id="logoContainer"></div>
-</div>
-
-<!-- AI BALL -->
-<div id="tab-aiBall" class="tab-content">
-    <!-- Shorts AI ซ่อนได้ สถิติให้อยู่บน -->
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                🎬 Shorts AI
-                <button id="btnToggleShortsAi" class="toggle-btn" onclick="toggleSection('shortsAiBody', 'btnToggleShortsAi')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-        <div id="shortsAiBody">
-            <div id="shortsAiTopBtn" class="inline-quick-buttons"></div>
-            <div id="shortsAiContainer"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                🤖 บอล AI
-                <button id="btnToggleAiBall" class="toggle-btn" onclick="toggleSection('aiBallBody', 'btnToggleAiBall')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-        <div id="aiBallBody">
-            <div id="aiBallTopBtn" class="inline-quick-buttons"></div>
-            <div id="aiContainer"></div>
-        </div>
-    </div>
-</div>
-
-<!-- VOICE (เสียงพากย์) -->
-<div id="tab-voice" class="card tab-content">
-    <div class="card-title" style="margin-bottom: 18px;">🗣️ เสียงพากย์</div>
-    <div id="voiceButtons" class="quick-buttons"></div>
-</div>
-
-<!-- GO TO GERMANY -->
-<div id="tab-germanyCover" class="card tab-content">
-    <div class="card-title" style="margin-bottom: 18px;">💥 Go To Germany</div>
-    <div id="germanyTopBtn" class="inline-quick-buttons"></div>
-    <div id="germanyContainer"></div>
-    <div id="germanyBottomBtn" class="inline-quick-buttons" style="margin-top: 15px;"></div>
-</div>
-
-<!-- SOUND TEST -->
-<div id="tab-soundTest" class="tab-content">
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                สำหรับสร้าง SOUND
-                <button id="btnToggleSoundCreate" class="toggle-btn" onclick="toggleSection('soundCreateBody', 'btnToggleSoundCreate')" title="ซ่อน/แสดง">🙈</button>
-            </div>
-        </div>
-        <div id="soundCreateBody" style="display: none;">
-            <div id="soundCreateButtons1" class="grid-5" style="margin-bottom: 10px;"></div>
-            <div id="soundCreateButtons2" class="grid-5"></div>
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="card-title" style="margin-bottom: 18px;">Prompt สำเร็จรูป</div>
-        <div id="soundPromptButtons" class="inline-quick-buttons"></div>
-    </div>
-
-    <div id="soundInputContainers"></div>
-
-    <div class="card">
-        <div class="card-header-flex" style="margin-bottom: 18px;">
-            <div class="card-title">
-                ข้อมูล SOUND
-                <button id="btnToggleSoundDouble" class="toggle-btn" onclick="toggleSection('soundDoubleBody', 'btnToggleSoundDouble')" title="ซ่อน/แสดง">👁️</button>
-            </div>
-        </div>
-        <div id="soundDoubleBody">
-            <div id="soundDoubleContainer"></div>
-        </div>
-    </div>
-</div>
-
-<!-- YOUTUBE DESCRIPTION -->
-<div id="tab-ytDescription" class="card tab-content">
-    <div class="card-title" style="margin-bottom: 18px;">📺 YouTube Description</div>
-    <div id="ytDescButtons" class="quick-buttons"></div>
-</div>
-
-</div>
-
-<!-- TOAST -->
-<div id="toast" class="toast"></div>
-
-<!-- HIDDEN POST FRAME -->
-<iframe name="postFrame" id="postFrame" style="display:none;"></iframe>
-
-<script>
-/* =====================================================
-   CONFIG
-===================================================== */
-const API_URL = "https://script.google.com/macros/s/AKfycbx-rKYscSSSPgw1dTlzf5BriEn9MPrQfFIEWDza6fYd2nxlPTnCsBT2sWNOLr6csF4k/exec";
-
-/* =====================================================
-   DATA & STATE
-===================================================== */
-let DATA = {
-    voiceButtons: [],
-    btnA6_B6: null,
-    btnA7_B7: null,
-    btnA8_B8: null,
-    btnA17_B17: null,
-    btnA40_B40: null,
-    btnA39_B39: null,
-    btnF22_G22: null,
-    germanyButtons: [],
-    germanyBottomButtons: [],
-    soundCreateButtons1: [],
-    soundCreateButtons2: [],
-    soundPromptButtons: [],
-    ytDescButtons: [],
-    btnF10_G10: null,
-    teamQuickButtons1: [],
-    teamQuickButtons2: []
-};
-
-let sentStatus = {};
-
-/* =====================================================
-   TOGGLE SECTION HELPER
-===================================================== */
-function toggleSection(elementId, btnId) {
-    const target = document.getElementById(elementId);
-    const btn = document.getElementById(btnId);
-    if (!target || !btn) return;
-
-    const isLogo = elementId.startsWith('logoBody');
-    const isSoundInput = elementId.startsWith('soundInputBody');
-    const isShortsAi = elementId === 'shortsAiBody';
-    const isAiBall = elementId === 'aiBallBody';
-
-    if (target.style.display === "none") {
-        target.style.display = "block";
-        btn.textContent = "👁️";
-    } else {
-        target.style.display = "none";
-        btn.textContent = "🙈";
-    }
-
-    if (isLogo) {
-        const logoIdx = elementId.replace('logoBody', '');
-        if (sentStatus['logo' + logoIdx]) {
-            btn.textContent = btn.textContent + " 💯";
-        }
-    } else if (isSoundInput) {
-        const soundIdx = elementId.replace('soundInputBody', '');
-        if (sentStatus['sound' + soundIdx]) {
-            btn.textContent = btn.textContent + " 💯";
-        }
-    } else if (isShortsAi) {
-        if (sentStatus['shortsAi']) {
-            btn.textContent = btn.textContent + " 💯";
-        }
-    } else if (isAiBall) {
-        if (sentStatus['aiBall']) {
-            btn.textContent = btn.textContent + " 💯";
-        }
-    }
-}
-
-/* =====================================================
-   TAB SWITCHING
-===================================================== */
-function switchTab(tabId) {
-    const contents = document.querySelectorAll('.tab-content');
-    contents.forEach(function(content) {
-        content.classList.remove('active');
-    });
-
-    const buttons = document.querySelectorAll('.tab-btn');
-    buttons.forEach(function(btn) {
-        btn.classList.remove('active');
-    });
-
-    const targetContent = document.getElementById('tab-' + tabId);
-    if (targetContent) {
-        targetContent.classList.add('active');
-    }
-
-    if (event && event.currentTarget) {
-        event.currentTarget.classList.add('active');
-    }
-}
-
-/* =====================================================
-   BUTTON LOADING STATE
-===================================================== */
-function setButtonLoading(button, isLoading) {
-    if (!button) return;
-    if (isLoading) {
-        if (!button.dataset.originalHtml) {
-            button.dataset.originalHtml = button.innerHTML;
-        }
-        button.disabled = true;
-        button.innerHTML = '<div class="btn-spinner"></div>';
-    } else {
-        if (button.dataset.originalHtml !== undefined) {
-            button.innerHTML = button.dataset.originalHtml;
-            delete button.dataset.originalHtml;
-        }
-        button.disabled = false;
-    }
-}
-
-/* =====================================================
-   INIT
-===================================================== */
-window.addEventListener("DOMContentLoaded", function() {
-    loadData();
-});
-
-/* =====================================================
-   JSONP
-===================================================== */
-function jsonp(url) {
-    return new Promise(function(resolve, reject) {
-        const callbackName = "callback_" + Date.now() + "_" + Math.floor(Math.random() * 99999);
-        const script = document.createElement("script");
-        const timeout = setTimeout(function() {
-            cleanup();
-            reject(new Error("หมดเวลาการเชื่อมต่อ"));
-        }, 15000);
-
-        function cleanup() {
-            clearTimeout(timeout);
-            delete window[callbackName];
-            if (script.parentNode) {
-                script.parentNode.removeChild(script);
-            }
-        }
-
-        window[callbackName] = function(data) {
-            cleanup();
-            resolve(data);
+      // 1. เมนู เสียงพากย์ (แก้ไขให้ดึงข้อมูลจาก A71:B86)
+      const voiceButtons = valuesA_B.slice(69, 85).map(function(row, idx) {
+        return {
+          name: row[0] || "",
+          type: "voice",
+          index: idx
         };
+      });
 
-        script.onerror = function() {
-            cleanup();
-            reject(new Error("ไม่สามารถเชื่อมต่อ Google Apps Script"));
-        };
+      const btnA6_B6 = { name: valuesA_B[4][0] || "", cell: "B6" };
+      const btnA7_B7 = { name: valuesA_B[5][0] || "", cell: "B7" };
+      
+      // ปุ่มเก่า บอล AI (ดึงจาก A8/B8)
+      const btnA8_B8 = { name: valuesA_B[6][0] || "", cell: "B8" };
+      
+      const btnA17_B17 = { name: valuesA_B[15][0] || "", cell: "B17" };
+      const btnA40_B40 = { name: valuesA_B[38][0] || "", cell: "B40" };
+      const btnA39_B39 = { name: valuesA_B[37][0] || "", cell: "B39" };
 
-        script.src = url + "&callback=" + callbackName;
-        document.body.appendChild(script);
-    });
-}
+      // ปุ่มใหม่ บอล AI
+      const btnF22_G22 = { name: valuesF22_G22[0][0] || "", cell: "G22" };
 
-/* =====================================================
-   LOAD DATA
-===================================================== */
-async function loadData() {
-    try {
-        const result = await jsonp(API_URL + "?action=getData");
-        if (!result.success) {
-            throw new Error(result.error || "โหลดข้อมูลไม่สำเร็จ");
-        }
+      const germanyButtons = valuesA_B.slice(8, 10).map(function(row, idx) {
+        return { name: row[0] || "", type: "germany", index: idx };
+      });
 
-        DATA = result;
+      const germanyBottomButtons = valuesA42_B45.map(function(row, idx) {
+        return { name: row[0] || "", cell: "B" + (42 + idx) };
+      });
 
-        renderTeamQuickButtons();
-        renderVoiceButtons();
-        renderYtDescButtons();
-        renderTeamNames();
-        renderLogos();
-        renderShortsAi();
-        renderAI();
-        renderGermanyCover();
-        renderSoundTest();
+      const soundCreateButtons1 = valuesF45_G57.slice(0, 5).map(function(row, idx) {
+        return { name: row[0] || "", cell: "G" + (45 + idx) };
+      });
+      const soundCreateButtons2 = valuesF45_G57.slice(5, 10).map(function(row, idx) {
+        return { name: row[0] || "", cell: "G" + (50 + idx) };
+      });
 
-        updateTime();
+      const soundPromptButtons = valuesF45_G57.slice(10, 13).map(function(row, idx) {
+        return { name: row[1] || "", cell: "G" + (55 + idx) };
+      });
 
-        document.getElementById("loading").classList.add("hide");
-    } catch(error) {
-        console.error(error);
-        document.getElementById("updateTime").textContent = "อัพเดทข้อมูลแล้วเมื่อ เชื่อมต่อไม่สำเร็จ";
-        document.getElementById("loading").classList.add("hide");
-    }
-}
+      const ytDescButtons = valuesA_B.slice(10, 14).map(function(row, idx) {
+        return { name: row[0] || "", type: "ytDesc", index: idx };
+      });
 
-/* =====================================================
-   UPDATE TIME
-===================================================== */
-function updateTime() {
-    const now = new Date();
-    const time = now.toLocaleTimeString("th-TH", {
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false
-    });
-    document.getElementById("updateTime").textContent = "อัพเดทข้อมูลแล้วเมื่อ " + time;
-}
-
-/* =====================================================
-   FETCH AND COPY REAL-TIME
-===================================================== */
-async function fetchAndCopy(button, item) {
-    setButtonLoading(button, true);
-    try {
-        let url = API_URL + "?action=getButtonText";
-        if (item.cell) {
-            url += "&cell=" + encodeURIComponent(item.cell);
-        } else if (item.type) {
-            url += "&type=" + encodeURIComponent(item.type) + "&index=" + item.index;
-        }
-
-        const res = await jsonp(url);
-        if (res.success) {
-            if (res.text !== undefined && res.text !== null && String(res.text).trim() !== "") {
-                await copyText(String(res.text));
-            } else {
-                showToast("ไม่มีข้อมูลใน Google Sheet");
-            }
-        } else {
-            showToast("ดึงข้อมูลไม่สำเร็จ");
-        }
-    } catch (e) {
-        console.error(e);
-        showToast("เกิดข้อผิดพลาดในการดึงข้อมูล");
-    } finally {
-        setButtonLoading(button, false);
-    }
-}
-
-/* =====================================================
-   TEAM QUICK BUTTONS
-===================================================== */
-function renderTeamQuickButtons() {
-    const container1 = document.getElementById("teamQuickButtons1");
-    const container2 = document.getElementById("teamQuickButtons2");
-    container1.innerHTML = "";
-    container2.innerHTML = "";
-
-    (DATA.teamQuickButtons1 || []).forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่มด่วน " + (index + 1);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container1.appendChild(button);
-    });
-
-    (DATA.teamQuickButtons2 || []).forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่มด่วน " + (index + 7);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container2.appendChild(button);
-    });
-}
-
-/* =====================================================
-   VOICE BUTTONS (เสียงพากย์)
-===================================================== */
-function renderVoiceButtons() {
-    const container = document.getElementById("voiceButtons");
-    if(!container) return;
-    container.innerHTML = "";
-
-    (DATA.voiceButtons || []).forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่ม " + (index + 1);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container.appendChild(button);
-    });
-}
-
-/* =====================================================
-   YOUTUBE DESCRIPTION BUTTONS
-===================================================== */
-function renderYtDescButtons() {
-    const container = document.getElementById("ytDescButtons");
-    container.innerHTML = "";
-
-    (DATA.ytDescButtons || []).forEach(function(item, index) {
-        const button = document.createElement("button");
-        button.className = "quick-button";
-        button.textContent = item.name || "ปุ่ม " + (index + 1);
-        button.onclick = function() { fetchAndCopy(button, item); };
-        container.appendChild(button);
-    });
-}
-
-/* =====================================================
-   HELPER: CREATE INLINE QUICK BUTTON
-===================================================== */
-function createInlineQuickButton(item) {
-    if (!item || !item.name) return null;
-    const button = document.createElement("button");
-    button.className = "quick-button";
-    button.textContent = item.name;
-    button.onclick = function() { fetchAndCopy(button, item); };
-    return button;
-}
-
-/* =====================================================
-   TEAM NAMES
-===================================================== */
-function renderTeamNames() {
-    const topBtnContainer = document.getElementById("teamNamesTopBtn");
-    topBtnContainer.innerHTML = "";
-    if (DATA.btnA6_B6) {
-        const btn = createInlineQuickButton(DATA.btnA6_B6);
-        if (btn) topBtnContainer.appendChild(btn);
-    }
-
-    const container = document.getElementById("teamNamesContainer");
-    container.innerHTML = "";
-
-    const row = createInputRow({
-        label: "รวมชื่อทีม",
-        row: 18,
-        hasCopy: true,
-        download: false
-    });
-    container.appendChild(row);
-}
-
-/* =====================================================
-   LOGOS (ซ่อนตาม Default + ย้าย 💯 ไว้หลัง 👁️/🙈)
-===================================================== */
-function renderLogos() {
-    const container = document.getElementById("logoContainer");
-    container.innerHTML = "";
-
-    for (let i = 0; i < 6; i++) {
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const cardHeader = document.createElement("div");
-        cardHeader.className = "card-header-flex";
-        cardHeader.style.marginBottom = "18px";
-
-        const isSent = sentStatus['logo' + (i + 1)];
-        const title = document.createElement("div");
-        title.className = "card-title";
-        
-        title.innerHTML = `⚽ LOGO ทีมที่ ${i + 1} <button id="btnToggleLogo${i+1}" class="toggle-btn" onclick="toggleSection('logoBody${i+1}', 'btnToggleLogo${i+1}')" title="ซ่อน/แสดง">🙈${isSent ? ' 💯' : ''}</button>`;
-
-        cardHeader.appendChild(title);
-        card.appendChild(cardHeader);
-
-        const body = document.createElement("div");
-        body.id = `logoBody${i+1}`;
-        body.style.display = "none"; // โหมดซ่อนเริ่มต้น
-
-        const row = createInputRow({
-            label: "LOGO ทีมที่ " + (i + 1),
-            row: 25 + i,
-            download: true,
-            isLogoRow: true,
-            logoIndex: i + 1
+      valuesF25_G36.forEach(function(row, idx) {
+        ytDescButtons.push({
+          name: row[0] || "",
+          cell: "G" + (25 + idx)
         });
+      });
 
-        body.appendChild(row);
-        card.appendChild(body);
-        container.appendChild(card);
+      const btnF10_G10 = { name: sheet.getRange("F10").getValue() || "", cell: "G10" };
+
+      const teamQuickButtons1 = valuesA_B.slice(17, 23).map(function(row, idx) {
+        return { name: row[0] || "", type: "teamQuick1", index: idx };
+      });
+
+      const teamQuickButtons2 = sheet.getRange("F14:G19").getValues().map(function(row, idx) {
+        return { name: row[0] || "", type: "teamQuick2", index: idx };
+      });
+
+      // 4. BLOGGER AI Data
+      // 4.2 บทวิเคราะห์บอล: ด้านบน A87:B89, ด้านล่าง A93:B96
+      const bloggerAnalysisTop = valuesA_B.slice(85, 88).map(function(row, idx) {
+        return { name: row[0] || "", type: "ballAnalysisTop", index: idx };
+      });
+      const bloggerAnalysisBottom = valuesA_B.slice(91, 95).map(function(row, idx) {
+        return { name: row[0] || "", type: "ballAnalysisBottom", index: idx };
+      });
+
+      // 4.3 ข่าวบอล: ด้านบน A97:B99, ด้านล่าง A100:B103
+      const bloggerNewsTop = valuesA_B.slice(95, 98).map(function(row, idx) {
+        return { name: row[0] || "", type: "ballNewsTop", index: idx };
+      });
+      const bloggerNewsBottom = valuesA_B.slice(98, 102).map(function(row, idx) {
+        return { name: row[0] || "", type: "ballNewsBottom", index: idx };
+      });
+
+      return jsonp({
+        success: true,
+        voiceButtons: voiceButtons,
+        btnA6_B6: btnA6_B6,
+        btnA7_B7: btnA7_B7,
+        btnA8_B8: btnA8_B8,
+        btnA17_B17: btnA17_B17,
+        btnA40_B40: btnA40_B40,
+        btnA39_B39: btnA39_B39,
+        btnF22_G22: btnF22_G22,
+        germanyButtons: germanyButtons,
+        germanyBottomButtons: germanyBottomButtons,
+        soundCreateButtons1: soundCreateButtons1,
+        soundCreateButtons2: soundCreateButtons2,
+        soundPromptButtons: soundPromptButtons,
+        ytDescButtons: ytDescButtons,
+        btnF10_G10: btnF10_G10,
+        teamQuickButtons1: teamQuickButtons1,
+        teamQuickButtons2: teamQuickButtons2,
+        bloggerAnalysisTop: bloggerAnalysisTop,
+        bloggerAnalysisBottom: bloggerAnalysisBottom,
+        bloggerNewsTop: bloggerNewsTop,
+        bloggerNewsBottom: bloggerNewsBottom
+      }, callback);
+
     }
+
+    if (action === "image") {
+      const imageUrl = e.parameter.url;
+      if (!imageUrl) {
+        return jsonp({ success: false, error: "ไม่พบ URL รูปภาพ" }, callback);
+      }
+
+      const response = UrlFetchApp.fetch(imageUrl, {
+        muteHttpExceptions: true,
+        followRedirects: true
+      });
+
+      const code = response.getResponseCode();
+      if (code !== 200) {
+        return jsonp({ success: false, error: "ไม่สามารถโหลดรูปภาพได้ HTTP " + code }, callback);
+      }
+
+      const blob = response.getBlob();
+      const base64 = Utilities.base64Encode(blob.getBytes());
+      const mime = blob.getContentType() || "image/png";
+
+      return jsonp({
+        success: true,
+        mime: mime,
+        base64: base64
+      }, callback);
+    }
+
+    return jsonp({ success: false, error: "ไม่รู้จัก action" }, callback);
+
+  } catch (error) {
+    return jsonp({ success: false, error: error.toString() }, callback);
+  }
 }
 
-/* =====================================================
-   SHORTS AI (ข่าวบอล)
-===================================================== */
-function renderShortsAi() {
-    const topBtnContainer = document.getElementById("shortsAiTopBtn");
-    topBtnContainer.innerHTML = "";
+// =====================================================
+// POST
+// =====================================================
 
-    if (DATA.btnA7_B7) {
-        const btn1 = createInlineQuickButton(DATA.btnA7_B7);
-        if (btn1) topBtnContainer.appendChild(btn1);
+function doPost(e) {
+  try {
+    const sheet = getSheet();
+    const targetCell = e.parameter.cell || "";
+    const value = e.parameter.value || "";
+
+    if (targetCell) {
+      sheet.getRange(targetCell).setValue(value);
+      SpreadsheetApp.flush();
+
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: true, cell: targetCell, value: value }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
-    if (DATA.btnF10_G10) {
-        const btn2 = createInlineQuickButton(DATA.btnF10_G10);
-        if (btn2) topBtnContainer.appendChild(btn2);
+
+    const row = Number(e.parameter.row);
+
+    if (!row || row < 18 || row > 39) {
+      return ContentService
+        .createTextOutput(JSON.stringify({ success: false, error: "Row ต้องอยู่ระหว่าง 18-39 หรือระบุ cell" }))
+        .setMimeType(ContentService.MimeType.JSON);
     }
-    if (DATA.btnA39_B39) {
-        const btn3 = createInlineQuickButton(DATA.btnA39_B39);
-        if (btn3) topBtnContainer.appendChild(btn3);
-    }
 
-    const container = document.getElementById("shortsAiContainer");
-    container.innerHTML = "";
+    sheet.getRange(row, 2).setValue(value);
+    SpreadsheetApp.flush();
 
-    const row1 = createInputRow({ label: "LM Shorts AI", row: 31, download: false, isShortsAiRow: true });
-    container.appendChild(row1);
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: true, row: row, value: value }))
+      .setMimeType(ContentService.MimeType.JSON);
 
-    const row2 = createInputRow({ label: "GPT Shorts AI", row: 39, download: false, isShortsAiRow: true });
-    container.appendChild(row2);
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ success: false, error: error.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
-/* =====================================================
-   AI (บทวิเคราะห์บอล)
-===================================================== */
-function renderAI() {
-    const topBtnContainer = document.getElementById("aiBallTopBtn");
-    topBtnContainer.innerHTML = "";
+// =====================================================
+// HELPER FUNCTIONS
+// =====================================================
 
-    // ปุ่มเก่า (ดึงจาก A8/B8)
-    if (DATA.btnA8_B8) {
-        const btn1 = createInlineQuickButton(DATA.btnA8_B8);
-        if (btn1) topBtnContainer.appendChild(btn1);
-    }
-    
-    // ปุ่มใหม่ (ดึงจาก F22/G22)
-    if (DATA.btnF22_G22) {
-        const btn2 = createInlineQuickButton(DATA.btnF22_G22);
-        if (btn2) topBtnContainer.appendChild(btn2);
-    }
-
-    const container = document.getElementById("aiContainer");
-    container.innerHTML = "";
-
-    for (let i = 0; i < 3; i++) {
-        const rowNum = 32 + i;
-        const row = createInputRow({ label: "บอล AI คู่ที่ " + (i + 1), row: rowNum, download: false, isAiBallRow: true });
-        container.appendChild(row);
-    }
+function getSheet() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheet = spreadsheet.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    throw new Error("ไม่พบ Sheet ชื่อ: " + SHEET_NAME);
+  }
+  return sheet;
 }
 
-/* =====================================================
-   GERMANY COVER PROMPT
-===================================================== */
-function renderGermanyCover() {
-    const topBtnContainer = document.getElementById("germanyTopBtn");
-    topBtnContainer.innerHTML = "";
-
-    (DATA.germanyButtons || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) topBtnContainer.appendChild(btn);
-    });
-
-    const container = document.getElementById("germanyContainer");
-    container.innerHTML = "";
-
-    // แก้ไขตามข้อ 2: ให้ส่งและคัดลอกไปที่ G23
-    const rowUpper = createInputRow({ label: "Prompt ปก Germany", cell: "G23", copyCell: "G23", download: false });
-    container.appendChild(rowUpper);
-
-    const rowLower = createInputRow({ label: "Prompt Germany Script", cell: "G22", copyCell: "G22", download: false });
-    container.appendChild(rowLower);
-
-    const bottomBtnContainer = document.getElementById("germanyBottomBtn");
-    bottomBtnContainer.innerHTML = "";
-
-    (DATA.germanyBottomButtons || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) bottomBtnContainer.appendChild(btn);
-    });
+function jsonp(data, callback) {
+  const json = JSON.stringify(data);
+  const safeCallback = callback.replace(/[^\w.$]/g, "");
+  return ContentService
+    .createTextOutput(safeCallback + "(" + json + ");")
+    .setMimeType(ContentService.MimeType.JAVASCRIPT);
 }
-
-/* =====================================================
-   SOUND TEST
-===================================================== */
-function renderSoundTest() {
-    const c1 = document.getElementById("soundCreateButtons1");
-    const c2 = document.getElementById("soundCreateButtons2");
-    c1.innerHTML = "";
-    c2.innerHTML = "";
-
-    (DATA.soundCreateButtons1 || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) c1.appendChild(btn);
-    });
-
-    (DATA.soundCreateButtons2 || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) c2.appendChild(btn);
-    });
-
-    const cPrompt = document.getElementById("soundPromptButtons");
-    cPrompt.innerHTML = "";
-
-    (DATA.soundPromptButtons || []).forEach(item => {
-        const btn = createInlineQuickButton(item);
-        if (btn) cPrompt.appendChild(btn);
-    });
-
-    const inputsContainer = document.getElementById("soundInputContainers");
-    inputsContainer.innerHTML = "";
-
-    for (let i = 0; i < 5; i++) {
-        const cell = "G" + (58 + i);
-        const card = document.createElement("div");
-        card.className = "card";
-
-        const cardHeader = document.createElement("div");
-        cardHeader.className = "card-header-flex";
-        cardHeader.style.marginBottom = "18px";
-
-        const isSent = sentStatus['sound' + (i + 1)];
-        const title = document.createElement("div");
-        title.className = "card-title";
-        
-        title.innerHTML = `🎶 SOUND ที่ ${i + 1} <button id="btnToggleSoundInput${i+1}" class="toggle-btn" onclick="toggleSection('soundInputBody${i+1}', 'btnToggleSoundInput${i+1}')" title="ซ่อน/แสดง">🙈${isSent ? ' 💯' : ''}</button>`;
-
-        cardHeader.appendChild(title);
-        card.appendChild(cardHeader);
-
-        const body = document.createElement("div");
-        body.id = `soundInputBody${i+1}`;
-        body.style.display = "none";
-
-        const row = createInputRow({
-            label: "SOUND ที่ " + (i + 1),
-            cell: cell,
-            copyCell: cell,
-            download: false,
-            isSoundRow: true,
-            soundIndex: i + 1
-        });
-
-        body.appendChild(row);
-        card.appendChild(body);
-        inputsContainer.appendChild(card);
-    }
-
-    const doubleContainer = document.getElementById("soundDoubleContainer");
-    doubleContainer.innerHTML = "";
-
-    const row1 = createInputRow({ label: "ปก SOUND", cell: "G63", copyCell: "G63", download: false });
-    const row2 = createInputRow({ label: "ชื่อ SOUND", cell: "G64", copyCell: "G64", download: false });
-
-    doubleContainer.appendChild(row1);
-    doubleContainer.appendChild(row2);
-}
-
-/* =====================================================
-   CREATE INPUT ROW
-===================================================== */
-function createInputRow(options) {
-    const rowKey = options.cell || options.row;
-    const row = document.createElement("div");
-    row.className = "input-row";
-
-    const label = document.createElement("div");
-    label.className = "input-label";
-
-    const isSent = sentStatus[rowKey];
-    
-    // หากเป็น LOGO, SOUND, Shorts AI หรือ AI Ball ไม่ต้องใส่ 💯 ด้านหน้าข้อความ ให้ไปใส่ที่ปุ่มซ่อน/แสดงประจำหมวดแทน
-    if (options.isLogoRow || options.isSoundRow || options.isShortsAiRow || options.isAiBallRow) {
-        label.textContent = options.label;
-    } else {
-        label.textContent = (isSent ? "💯 " : "") + options.label;
-    }
-
-    const input = document.createElement("textarea");
-    input.className = "input-box";
-    input.rows = 2;
-    input.value = ""; // เคลียร์ค่าเริ่มต้นให้ว่างเสมอ
-
-    const actions = document.createElement("div");
-    actions.className = "actions";
-
-    /* SEND */
-    const send = document.createElement("button");
-    send.className = "btn btn-send";
-    send.textContent = "ส่ง";
-    send.onclick = async function() {
-        setButtonLoading(send, true);
-        const success = await sendToSheet(options, input);
-        if (success) {
-            sentStatus[rowKey] = true;
-            if (options.isLogoRow) {
-                sentStatus['logo' + options.logoIndex] = true;
-                const toggleBtn = document.getElementById("btnToggleLogo" + options.logoIndex);
-                if (toggleBtn) {
-                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
-                    toggleBtn.textContent = currentIcon + " 💯";
-                }
-            } else if (options.isSoundRow) {
-                sentStatus['sound' + options.soundIndex] = true;
-                const toggleBtn = document.getElementById("btnToggleSoundInput" + options.soundIndex);
-                if (toggleBtn) {
-                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
-                    toggleBtn.textContent = currentIcon + " 💯";
-                }
-            } else if (options.isShortsAiRow) {
-                sentStatus['shortsAi'] = true;
-                const toggleBtn = document.getElementById("btnToggleShortsAi");
-                if (toggleBtn) {
-                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
-                    toggleBtn.textContent = currentIcon + " 💯";
-                }
-            } else if (options.isAiBallRow) {
-                sentStatus['aiBall'] = true;
-                const toggleBtn = document.getElementById("btnToggleAiBall");
-                if (toggleBtn) {
-                    const currentIcon = toggleBtn.textContent.includes("👁️") ? "👁️" : "🙈";
-                    toggleBtn.textContent = currentIcon + " 💯";
-                }
-            } else {
-                label.textContent = "💯 " + options.label;
-            }
-        }
-        setButtonLoading(send, false);
-    };
-    actions.appendChild(send);
-
-    /* COPY */
-    if (options.hasCopy !== false) {
-        const copy = document.createElement("button");
-        copy.className = "btn btn-copy";
-        copy.textContent = "คัดลอก";
-        copy.onclick = async function() {
-            setButtonLoading(copy, true);
-            await copySheetValue(options);
-            setButtonLoading(copy, false);
-        };
-        actions.appendChild(copy);
-    }
-
-    /* DOWNLOAD */
-    if (options.download) {
-        const download = document.createElement("button");
-        download.className = "btn btn-download";
-        download.textContent = "Download";
-        download.onclick = async function() {
-            setButtonLoading(download, true);
-            await downloadLogo(options.row);
-            setButtonLoading(download, false);
-        };
-        actions.appendChild(download);
-    }
-
-    row.appendChild(label);
-    row.appendChild(input);
-    row.appendChild(actions);
-
-    return row;
-}
-
-/* =====================================================
-   SEND TO GOOGLE SHEET
-===================================================== */
-async function sendToSheet(options, input) {
-    const value = input.value;
-    if (!value.trim()) {
-        showToast("กรุณาใส่ข้อมูลก่อนส่ง");
-        return false;
-    }
-
-    const form = document.createElement("form");
-    form.method = "POST";
-    form.action = API_URL;
-    form.target = "postFrame";
-
-    if (options.cell) {
-        const cellInput = document.createElement("input");
-        cellInput.type = "hidden";
-        cellInput.name = "cell";
-        cellInput.value = options.cell;
-        form.appendChild(cellInput);
-    } else {
-        const rowInput = document.createElement("input");
-        rowInput.type = "hidden";
-        rowInput.name = "row";
-        rowInput.value = options.row;
-        form.appendChild(rowInput);
-    }
-
-    const valueInput = document.createElement("textarea");
-    valueInput.style.display = "none";
-    valueInput.name = "value";
-    valueInput.value = value;
-    form.appendChild(valueInput);
-
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-
-    // เคลียร์ค่าในช่องข้อมูลให้กลับมาว่างทันที
-    input.value = "";
-    showToast("ส่งข้อมูลเรียบร้อยแล้ว ✓");
-
-    await new Promise(resolve => setTimeout(resolve, 800));
-    await loadData();
-    return true;
-}
-
-/* =====================================================
-   COPY FROM GOOGLE SHEET
-===================================================== */
-async function copySheetValue(options) {
-    try {
-        let url = API_URL + "?action=getButtonText";
-        if (options.copyCell) {
-            url += "&cell=" + encodeURIComponent(options.copyCell);
-        } else if (options.cell) {
-            url += "&cell=" + encodeURIComponent(options.cell);
-        } else {
-            const row = options.row;
-            if (row === 18) {
-                url += "&cell=B18";
-            } else if (row >= 25 && row <= 30) {
-                url += "&cell=B" + row;
-            } else if (row === 31) {
-                url += "&cell=B31";
-            } else if (row >= 32 && row <= 34) {
-                url += "&cell=B" + row;
-            } else if (row >= 35 && row <= 37) {
-                url += "&cell=B" + row;
-            } else if (row === 38) {
-                url += "&cell=B38";
-            } else if (row === 39) {
-                url += "&cell=B39";
-            }
-        }
-
-        const result = await jsonp(url);
-        if (!result.success) {
-            showToast("ไม่สามารถเชื่อมต่อได้");
-            return;
-        }
-
-        if (result.text === undefined || result.text === null || String(result.text).trim() === "") {
-            showToast("ไม่มีข้อมูลใน Google Sheet");
-            return;
-        }
-
-        await copyText(String(result.text));
-    } catch(error) {
-        console.error(error);
-        showToast("คัดลอกไม่สำเร็จ");
-    }
-}
-
-/* =====================================================
-   DOWNLOAD LOGO
-===================================================== */
-async function downloadLogo(row) {
-    if (row < 25 || row > 30) return;
-
-    let url = "";
-    try {
-        const result = await jsonp(API_URL + "?action=getButtonText&cell=B" + row);
-        if (!result.success) throw new Error("โหลดข้อมูลไม่สำเร็จ");
-        url = result.text || "";
-    } catch(error) {
-        showToast("ไม่สามารถอ่าน URL จาก Google Sheet");
-        return;
-    }
-
-    if (!url) {
-        showToast("ไม่มี URL รูปภาพใน Google Sheet");
-        return;
-    }
-
-    showToast("กำลังเตรียม PNG 3000×3000...");
-
-    try {
-        const result = await jsonp(API_URL + "?action=image&url=" + encodeURIComponent(url));
-        if (!result.success) throw new Error(result.error || "โหลดรูปไม่สำเร็จ");
-
-        await new Promise((resolve, reject) => {
-            const image = new Image();
-            image.onload = function() {
-                const canvas = document.createElement("canvas");
-                canvas.width = 3000;
-                canvas.height = 3000;
-                const ctx = canvas.getContext("2d");
-                ctx.clearRect(0, 0, 3000, 3000);
-
-                const scale = Math.min(3000 / image.width, 3000 / image.height);
-                const width = image.width * scale;
-                const height = image.height * scale;
-                const x = (3000 - width) / 2;
-                const y = (3000 - height) / 2;
-
-                ctx.drawImage(image, x, y, width, height);
-
-                canvas.toBlob(function(blob) {
-                    const downloadUrl = URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    const fileNumber = row - 24;
-                    a.href = downloadUrl;
-                    a.download = fileNumber + ".png";
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
-                    URL.revokeObjectURL(downloadUrl);
-                    showToast("ดาวน์โหลด " + fileNumber + ".png แล้ว ✓");
-                    resolve();
-                }, "image/png");
-            };
-
-            image.onerror = function() {
-                showToast("ไม่สามารถอ่านรูปภาพได้");
-                reject(new Error("Image load error"));
-            };
-
-            image.src = "data:" + result.mime + ";base64," + result.base64;
-        });
-    } catch(error) {
-        console.error(error);
-        showToast("ดาวน์โหลดไม่สำเร็จ");
-    }
-}
-
-/* =====================================================
-   COPY TEXT
-===================================================== */
-async function copyText(text) {
-    if (!text) {
-        showToast("ไม่มีข้อมูลให้คัดลอก");
-        return;
-    }
-
-    let isSuccess = false;
-    if (navigator.clipboard && window.isSecureContext) {
-        try {
-            await navigator.clipboard.writeText(text);
-            isSuccess = true;
-        } catch (err) {
-            isSuccess = false;
-        }
-    }
-
-    if (!isSuccess) {
-        try {
-            const textarea = document.createElement("textarea");
-            textarea.value = text;
-            textarea.style.position = "fixed";
-            textarea.style.left = "-9999px";
-            textarea.style.top = "0";
-            document.body.appendChild(textarea);
-            textarea.focus();
-            textarea.select();
-            isSuccess = document.execCommand("copy");
-            textarea.remove();
-        } catch (e) {
-            isSuccess = false;
-        }
-    }
-
-    if (isSuccess) {
-        showToast("คัดลอกข้อมูลแล้ว ✓");
-    } else {
-        showToast("คัดลอกไม่สำเร็จ");
-    }
-}
-
-/* =====================================================
-   TOAST
-===================================================== */
-let toastTimer;
-function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.classList.add("show");
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function() {
-        toast.classList.remove("show");
-    }, 2500);
-}
-</script>
-
-</body>
-</html>
