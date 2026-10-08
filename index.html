@@ -1128,16 +1128,16 @@ function renderGermanyCover() {
     const container = document.getElementById("germanyContainer");
     container.innerHTML = "";
 
-    // 1. เพิ่มช่องตั้งชื่อ ส่ง/คัดลอก ไปที่ B104
-    const rowName = createInputRow({ label: "ตั้งชื่อ", cell: "B104", copyCell: "B104", download: false });
-    container.appendChild(rowName);
-
-    // 2. ชุดเดิม
+    // 2. แก้ไขชุดบน: ส่งไปที่ G23 และคัดลอกจาก G23
     const rowNew = createInputRow({ label: "Prompt Germany Script", cell: "G23", copyCell: "G23", download: false });
     container.appendChild(rowNew);
 
     const rowOld = createInputRow({ label: "Prompt ปก Germany", row: 38, download: false });
     container.appendChild(rowOld);
+
+    // เพิ่มช่อง "ตั้งชื่อ" ส่ง/คัดลอก Cell B104
+    const rowName = createInputRow({ label: "ตั้งชื่อ", cell: "B104", copyCell: "B104", download: false });
+    container.appendChild(rowName);
 
     const bottomBtnContainer = document.getElementById("germanyBottomBtn");
     bottomBtnContainer.innerHTML = "";
@@ -1234,7 +1234,7 @@ function renderBloggerAi() {
     const ytRow = createInputRow({ label: "Link Youtube", cell: "B90", copyCell: "B90", download: false });
     ytContainer.appendChild(ytRow);
 
-    // 4.2 บทวิเคราะห์บอล
+    // 4.2 บทวิเคราะห์บอล (เพิ่ม isBallAnalysis)
     const analysisTopBtn = document.getElementById("ballAnalysisTopBtn");
     analysisTopBtn.innerHTML = "";
     (DATA.bloggerAnalysisTop || []).forEach(item => {
@@ -1244,13 +1244,12 @@ function renderBloggerAi() {
 
     const analysisContainer = document.getElementById("ballAnalysisContainer");
     analysisContainer.innerHTML = "";
-    
-    // 2. เพิ่มช่องตั้งชื่อ ส่ง/คัดลอก ไปที่ B105
-    const analysisNameRow = createInputRow({ label: "ตั้งชื่อ", cell: "B105", copyCell: "B105", download: false });
-    analysisContainer.appendChild(analysisNameRow);
-
     const analysisRow = createInputRow({ label: "บทความ", cell: "B91", copyCell: "B91", download: false, isBallAnalysis: true });
     analysisContainer.appendChild(analysisRow);
+
+    // เพิ่มช่อง "ตั้งชื่อ" ส่ง/คัดลอก Cell B105
+    const analysisNameRow = createInputRow({ label: "ตั้งชื่อ", cell: "B105", copyCell: "B105", download: false });
+    analysisContainer.appendChild(analysisNameRow);
 
     const analysisBottomBtn = document.getElementById("ballAnalysisBottomBtn");
     analysisBottomBtn.innerHTML = "";
@@ -1259,7 +1258,7 @@ function renderBloggerAi() {
         if (btn) analysisBottomBtn.appendChild(btn);
     });
 
-    // 4.3 ข่าวบอล
+    // 4.3 ข่าวบอล (เพิ่ม isBallNews)
     const newsTopBtn = document.getElementById("ballNewsTopBtn");
     newsTopBtn.innerHTML = "";
     (DATA.bloggerNewsTop || []).forEach(item => {
@@ -1269,13 +1268,12 @@ function renderBloggerAi() {
 
     const newsContainer = document.getElementById("ballNewsContainer");
     newsContainer.innerHTML = "";
-
-    // 3. เพิ่มช่องตั้งชื่อ ส่ง/คัดลอก ไปที่ B106
-    const newsNameRow = createInputRow({ label: "ตั้งชื่อ", cell: "B106", copyCell: "B106", download: false });
-    newsContainer.appendChild(newsNameRow);
-
     const newsRow = createInputRow({ label: "ข่าวบอล", cell: "B92", copyCell: "B92", download: false, isBallNews: true });
     newsContainer.appendChild(newsRow);
+
+    // เพิ่มช่อง "ตั้งชื่อ" ส่ง/คัดลอก Cell B106
+    const newsNameRow = createInputRow({ label: "ตั้งชื่อ", cell: "B106", copyCell: "B106", download: false });
+    newsContainer.appendChild(newsNameRow);
 
     const newsBottomBtn = document.getElementById("ballNewsBottomBtn");
     newsBottomBtn.innerHTML = "";
